@@ -61,6 +61,7 @@ class Timer extends React.Component {
     if (this.state.ready_state === "text-success" && event.key === " ") {
       this.reset();
       this.start();
+      this.props.onStart(Date.now())
     }
   };
 
@@ -79,6 +80,8 @@ class Timer extends React.Component {
     ) {
       this.setState({ ready_state: "" });
       this.stop();
+      this.props.onStop(Date.now())
+
     }
   };
 

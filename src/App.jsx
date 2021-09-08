@@ -19,6 +19,14 @@ class App extends React.Component {
   handle_key_press = (e) => {
     console.log(e);
   };
+  handle_onStart_timer = (timer_start) => {
+    this.setState({timeStart : timer_start})
+    console.log(this.state)
+  }
+  handle_onStop_timer = (timer_finish) => {
+    this.setState({timeFinish : timer_finish})
+    console.log(this.state)
+  }
 
   render() {
     return (
@@ -32,8 +40,9 @@ class App extends React.Component {
             </div>
           </div>
           <Timer
-            timeStart={this.state.timeStart}
-            timeFinish={this.state.timeFinish}
+            onStart={(timer_start) =>this.handle_onStart_timer(timer_start)}
+            onStop={(timer_finish) =>this.handle_onStop_timer(timer_finish)}
+           
           />
           <Setting generated_setting={this.state.generated_setting} />
         

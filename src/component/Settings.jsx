@@ -91,8 +91,8 @@ class Setting extends React.Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
       },
+
       body: JSON.stringify({
         DIFF_BETWEEN_ALGS: "0.89",
         SMART_CUBE: "True",
@@ -112,9 +112,9 @@ class Setting extends React.Component {
         MEMO: "23.32",
       }),
     };
-    fetch("http://127.0.0.1:8080", requestOptions)
-      .then((response) => response.json())
-      .then((data) => console.log("herr", data));
+    fetch("http://127.0.0.1:8080", requestOptions).then((response) =>
+      response.text().then((data) => console.log(data))
+    );
   };
 
   render() {

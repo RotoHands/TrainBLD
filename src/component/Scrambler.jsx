@@ -1,3 +1,4 @@
+// based on rubiks-cube-scramble and cubing.js
 import React, { Component } from "react";
 import scramble from "rubiks-cube-scramble";
 import scrambleGenerator from "rubiks-cube-scramble";

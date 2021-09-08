@@ -9,27 +9,34 @@ class App extends React.Component {
     cube_moves: [],
     cube: null,
     generated_setting: "",
-    timeStart : null,
+    timeStart: null,
     timeFinish: null,
   };
   constructor() {
     super();
     this.GiikerCube = this.GiikerCube.bind(this);
   }
+  handle_key_press = (e) => {
+    console.log(e);
+  };
 
   render() {
     return (
       <React.Fragment>
-        <div className="row">
-          <div className="col-sm-2">
-            <ConnectCube onConnect={this.GiikerCube} />
+          <div className="row">
+            <div className="col-sm-2">
+              <ConnectCube onConnect={this.GiikerCube} />
+            </div>
+            <div className="col sm-2">
+              <Scrambler />{" "}
+            </div>
           </div>
-          <div className="col sm-2">
-            <Scrambler />{" "}
-          </div>
-        </div>
-        <Timer timeStart={this.state.timeStart} timeFinish={this.state.timeFinish}/>
-        <Setting generated_setting={this.state.generated_setting} />
+          <Timer
+            timeStart={this.state.timeStart}
+            timeFinish={this.state.timeFinish}
+          />
+          <Setting generated_setting={this.state.generated_setting} />
+        
       </React.Fragment>
     );
   }

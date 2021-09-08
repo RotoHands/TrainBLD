@@ -6,9 +6,14 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "bootstrap": "^5.1.0",
+    "cubing": "^0.20.2",
     "react": "^17.0.2",
+    "react-bootstrap": "^2.0.0-beta.6",
     "react-dom": "^17.0.2",
+    "react-script-tag": "^1.1.2",
     "react-scripts": "4.0.3",
+    "rubiks-cube-scramble": "^1.0.2",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

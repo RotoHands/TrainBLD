@@ -11,6 +11,7 @@ class App extends React.Component {
     generated_setting: "",
     timeStart: null,
     timeFinish: null,
+    parsingSetting: null,
   };
   constructor() {
     super();
@@ -20,32 +21,41 @@ class App extends React.Component {
     console.log(e);
   };
   handle_onStart_timer = (timer_start) => {
-    this.setState({timeStart : timer_start})
-    console.log(this.state)
-  }
+    this.setState({ timeStart: timer_start });
+    console.log(this.state);
+  };
   handle_onStop_timer = (timer_finish) => {
-    this.setState({timeFinish : timer_finish})
-    console.log(this.state)
-  }
+    this.setState({ timeFinish: timer_finish });
+    console.log(this.state);
+  };
+  handle_parse_solve = () => {};
 
   render() {
     return (
       <React.Fragment>
-          <div className="row">
-            <div className="col-sm-2">
+        <div className="row">
+          <div className="col-sm">
+            <button
+              className="btn btn-primary m-4"
+              onClick={this.handle_parse_solve}
+            >
+              Parse Solve
+            </button>
+            </div>
+            <div className="col-sm">
               <ConnectCube onConnect={this.GiikerCube} />
             </div>
+          <div className="row">
             <div className="col sm-2">
               <Scrambler />{" "}
             </div>
           </div>
-          <Timer
-            onStart={(timer_start) =>this.handle_onStart_timer(timer_start)}
-            onStop={(timer_finish) =>this.handle_onStop_timer(timer_finish)}
-           
-          />
-          <Setting generated_setting={this.state.generated_setting} />
-        
+        </div>
+        <Timer
+          onStart={(timer_start) => this.handle_onStart_timer(timer_start)}
+          onStop={(timer_finish) => this.handle_onStop_timer(timer_finish)}
+        />
+        <Setting generated_setting={this.state.generated_setting} />
       </React.Fragment>
     );
   }
@@ -716,9 +726,12 @@ class App extends React.Component {
 
             const cube_moves_new = [...this_App.state.cube_moves];
             console.log(cube_moves_new);
-            cube_moves_new.push("URFDLB".charAt(axis) + " 2'".charAt(power));
+            cube_moves_new.push([
+              "URFDLB".charAt(axis) + " 2'".charAt(power),
+              Date.now(),
+            ]);
             this_App.setState({ cube_moves: cube_moves_new });
-            console.log(this_App.state.cube_moves.join(" "));
+            // console.log(this_App.state.cube_moves.join(" "));
             // document.getElementById("moves_print").textContent = this.state.cube_moves.join(' ')
           }
         } else if (msgType === 2) {

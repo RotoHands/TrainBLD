@@ -9,8 +9,8 @@ import SettingGeneral from "./SettingsGeneral";
 import SettingLetterScheme from "./SettingLetterScheme";
 
 class Setting extends React.Component {
-  
   state = {
+    setting_save: null,
     parse_with_letter_pair: true,
     gen_with_move_count: true,
     edge_buffer: "UF",
@@ -86,6 +86,37 @@ class Setting extends React.Component {
     this.setState({ letter_pair_dict: letter_pair_dict_new });
   };
 
+  handle_save_setting = () => {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        DIFF_BETWEEN_ALGS: "0.89",
+        SMART_CUBE: "True",
+        COMMS_UNPARSED: "False",
+        EDGES_BUFFER: "UF",
+        CORNER_BUFFER: "UFR",
+        PARSE_TO_LETTER_PAIR: "True",
+        GEN_WITH_MOVE_COUNT: "True",
+        LETTER_PAIRS_DICT:
+          "{'UBL': 'א', 'UBR': 'ב', 'UFL': 'ד', 'UFR': 'ג', 'RFU': 'מ', 'RBU': 'נ', 'RFD': 'ע', 'RBD': 'ס', 'FUL': 'ט', 'FUR': 'י', 'FDL': 'ל', 'FRD': 'כ', 'DFL': \"צ'\", 'DFR': 'ת', 'DBL': \"ג'\", 'DBR': 'ש', 'LBU': 'ה', 'LFU': 'ו', 'LDB': 'ח', 'LFD': 'ז', 'BUR': 'פ', 'BUL': 'צ', 'BRD': 'ר', 'BLD': 'ק', 'UB': 'א', 'UL': 'ד', 'UR': 'ב', 'UF': 'ג', 'RU': 'מ', 'RF': 'ע', 'RB': 'נ', 'RD': 'ס', 'FU': 'ט', 'FL': 'ל', 'FR': 'י', 'FD': 'כ', 'DF': \"צ'\", 'DL': \"ג'\", 'DR': 'ת', 'DB': 'ש', 'LU': 'ה', 'LB': 'ח', 'LF': 'ו', 'LD': 'ז', 'BU': 'פ', 'BR': 'ר', 'BL': 'צ', 'BD': 'ק'}",
+        GEN_PARSED_TO_CUBEDB: "True",
+        NAME_OF_SOLVE: "example_smart_cube",
+        TIME_SOLVE: "56.12",
+        SCRAMBLE: "R2 U' B2 F2 L2 U' R2 D F2 U2 B2 R' D' L' D F' D2 B2 D2 L2\n",
+        SOLVE:
+          "\n U' F' B U B U' F B' R B' R' U U' D R' U' D B B U D' R' U D' \n R U' R' U D' F U F' U' D R' F R F' B U' U' F B' R F' R U' U'\n L D U' F' U' F U D' L' U' U D' F U' D R' U' R U D' F' D R F' \n L' F R' L D' L D L' D' L' D R L' F' L F R' L U' D' R' U U R'\n D R U U R' D' R2 U D D R U R' D R U' R' D D R' U R' D' R U \n U R' D R U R R' D' R D R' D' R U U R' D R D' R' D R U U",
+        MEMO: "23.32",
+      }),
+    };
+    fetch("http://127.0.0.1:8080", requestOptions)
+      .then((response) => response.json())
+      .then((data) => console.log("herr", data));
+  };
+
   render() {
     return (
       <Accordion>
@@ -115,11 +146,15 @@ class Setting extends React.Component {
                     onChange_letter_pair_dict={this.handle_letter_pair_dict}
                   />
                 </Tab>
-                <Tab eventKey="third" title="Import setting">
-                  Hii, I am 3rd tab content
-                </Tab>
+                <Tab eventKey="third" title="Import setting"></Tab>
                 <Tab eventKey="forth" title="Save Setting">
-                  Hii, I am 3rd tab content
+                  <button
+                    onClick={this.handle_save_setting}
+                    className="btn btn-primary btn-sm-2 m-2"
+                  >
+                    Save Settings
+                  </button>
+                  <span>{this.state.setting_save}</span>
                 </Tab>
               </Tabs>
             </div>

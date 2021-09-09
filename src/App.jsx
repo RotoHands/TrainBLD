@@ -10,6 +10,7 @@ class App extends React.Component {
     super();
     this.GiikerCube = this.GiikerCube.bind(this);
     this.state = {
+      solve_status: "Connect Cube",
       last_scramble: null,
       scramble: null,
       parse_solve_bool: false,
@@ -84,8 +85,48 @@ class App extends React.Component {
     this.setState({ parse_settings: parse_setting_new });
     return parse_setting_new;
   };
+
+  handle_solve_status = (next_status) => {
+    if (
+      this.state.solve_status == "Connect Cube" &&
+      next_status == "Connecting..."
+    ) {
+      this.setState({ solve_status: next_status });
+    }
+    if (
+      this.state.solve_status == "Connecting..." &&
+      next_status == "Ready for scrambling"
+    ) {
+      this.setState({ solve_status: next_status });
+    }
+    if (
+      this.state.solve_status == "Ready for scrambling" &&
+      next_status == "Scrambling"
+    ) {
+      this.setState({ solve_status: next_status });
+    }
+    if (
+      this.state.solve_status == "Scrambling" &&
+      next_status == "Ready for scrambling"
+    ) {
+      this.setState({ solve_status: next_status });
+    }
+    if (this.state.solve_status == "Scrambling" && next_status == "Memo") {
+      this.setState({ solve_status: next_status });
+    }
+    if (this.state.solve_status == "Memo" && next_status == "Solving") {
+      this.setState({ solve_status: next_status });
+    }
+    if (
+      this.state.solve_status == "Solving" &&
+      next_status == "Ready for scrambling"
+    ) {
+      this.setState({ solve_status: next_status });
+    }
+  };
   handle_onStart_timer = (timer_start) => {
     this.setState({ timeStart: timer_start });
+    this.handle_solve_status("Memo");
   };
   handle_onStop_timer = (timer_finish) => {
     this.setState({ timeFinish: timer_finish });
@@ -107,6 +148,7 @@ class App extends React.Component {
   handle_reset_cube = () => {
     this.setState({ cube_moves: [] });
     this.setState({ cube_moves_time: [] });
+    this.handle_solve_status("Ready for scrambling");
   };
   handle_parse_solve = (timer_finish) => {
     const setting = this.extract_solve_from_cube_moves(timer_finish);
@@ -126,12 +168,13 @@ class App extends React.Component {
     );
   };
   handle_scramble = () => {
-    this.setState({last_scramble : this.state.scramble})
+    this.setState({ last_scramble: this.state.scramble });
     this.setState({ scramble: scrambleGenerator() });
   };
-  handle_last_scramble = () =>{
-    this.setState({scramble : this.state.last_scramble})
-  }
+  handle_last_scramble = () => {
+    this.setState({ scramble: this.state.last_scramble });
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -178,6 +221,7 @@ class App extends React.Component {
           </div>
         </div>
         <Timer
+          solve_status={this.state.solve_status}
           onStart={(timer_start) => this.handle_onStart_timer(timer_start)}
           onStop={(timer_finish) => this.handle_onStop_timer(timer_finish)}
         />
@@ -212,6 +256,7 @@ class App extends React.Component {
         return device.gatt
           .connect()
           .then(function (server) {
+            this_App.handle_solve_status("Ready for scrambling");
             _server = server;
             return server.getPrimaryService(SERVICE_UUID_DATA);
           })
@@ -486,6 +531,7 @@ class App extends React.Component {
         return device.gatt
           .connect()
           .then(function (server) {
+            this_App.handle_solve_status("Ready for scrambling");
             _server = server;
             return checkHardware(server);
           })
@@ -781,6 +827,7 @@ class App extends React.Component {
         return device.gatt
           .connect()
           .then(function (server) {
+            this_App.handle_solve_status("Ready for scrambling");
             _server = server;
             return server.getPrimaryService(SERVICE_UUID);
           })
@@ -855,6 +902,12 @@ class App extends React.Component {
 
             const cube_moves_new = [...this_App.state.cube_moves];
             const cube_moves_time_new = [...this_App.state.cube_moves_time];
+            if (cube_moves_new.length === 0) {
+              this_App.handle_solve_status("Scrambling");
+            }
+            if (this_App.state.solve_status == "Memo") {
+              this_App.handle_solve_status("Solving");
+            }
             cube_moves_new.push("URFDLB".charAt(axis) + " 2'".charAt(power));
             cube_moves_time_new.push(Date.now());
             this_App.setState({ cube_moves: cube_moves_new });
@@ -957,6 +1010,7 @@ class App extends React.Component {
         .then(function (device) {
           console.log(device);
           _device = device;
+          this_App.handle_solve_status("Connecting...");
           if (
             device.name.startsWith("Gi") ||
             device.name.startsWith("Mi Smart Magic Cube")

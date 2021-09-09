@@ -93,7 +93,7 @@ class Timer extends React.Component {
         tabIndex="0"
       >
         <div className="">
-          <span className={this.state.ready_state}>Ready</span>
+          <span className={this.state.ready_state}>{this.props.solve_status}</span>
           <span>
             {this.formatTime(this.state.currentTimeMin)}:
             {this.formatTime(this.state.currentTimeSec)}:

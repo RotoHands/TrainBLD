@@ -161,7 +161,7 @@ class App extends React.Component {
       },
       body: JSON.stringify(setting),
     };
-    fetch("http://127.0.0.1:8080", requestOptions).then((response) =>
+    fetch("http://rotohands-bld-parser.herokuapp.com/", requestOptions).then((response) =>
       response.text().then((data) => {
         result = data;
         this.setState({ parsed_solve: result });

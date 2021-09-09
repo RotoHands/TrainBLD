@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import scrambleGenerator from "rubiks-cube-scramble";
+import * as SRScrambler from "sr-scrambler";
 import ConnectCube from "./component/ConnectCube";
 import Setting from "./component/Settings";
 import "bootstrap/dist/css/bootstrap.css";
@@ -169,7 +170,7 @@ class App extends React.Component {
   };
   handle_scramble = () => {
     this.setState({ last_scramble: this.state.scramble });
-    this.setState({ scramble: scrambleGenerator() });
+    this.setState({ scramble: SRScrambler.generateHtmlScramble(3, 25) });
   };
   handle_last_scramble = () => {
     this.setState({ scramble: this.state.last_scramble });

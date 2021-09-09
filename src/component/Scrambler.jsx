@@ -1,4 +1,4 @@
-// based on rubiks-cube-scramble and cubing.js
+// based on sr-scrambler and cubing.js
 import React, { Component } from "react";
 import scramble from "rubiks-cube-scramble";
 import { ScrambleDisplay } from "scramble-display";

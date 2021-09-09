@@ -15,6 +15,7 @@
     "react-scripts": "4.0.3",
     "rubiks-cube-scramble": "^1.0.2",
     "scramble-display": "^0.3.1",
+    "sr-scrambler": "^1.0.1",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

@@ -18,21 +18,13 @@ class Scrambler extends React.Component {
     this.setState({ scramble: scrambleGenerator() });
   };
   render() {
-    const el = new ScrambleDisplay();
-    el.event = "pyram";
-    el.scramble = "B U' L U' L B' U' L' l' r u'";
     return (
       <div>
         <button className="btn btn-primary m-2" onClick={this.handle_scramble}>
           {" "}
           scramble
         </button>
-
         <div>
-          <ScriptTag
-            src="https://cdn.cubing.net/js/scramble-display/latest/scramble-display.browser.js"
-            defer
-          ></ScriptTag>
           <scramble-display scramble={this.state.scramble}></scramble-display>
         </div>
         <div className="m-2">{this.state.scramble}</div>

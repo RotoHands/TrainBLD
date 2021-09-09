@@ -12,6 +12,7 @@ class Setting extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      setting_save_statue : "",
       import_setting: {},
       setting_save: {},
       parse_with_letter_pair: true,
@@ -76,21 +77,31 @@ class Setting extends React.Component {
 
   handle_move_count_change = (event) => {
     this.setState({ gen_with_move_count: event.target.checked });
+    this.setState({setting_save_statue : " - Changes unsaved"})
+
   };
   handle_apply_letter_pairs_change = (event) => {
     this.setState({ parse_with_letter_pair: event.target.checked });
+    this.setState({setting_save_statue : " - Changes unsaved"})
+
   };
   handle_corner_buffer = (event) => {
     this.setState({ corner_buffer: event.target.value });
+    this.setState({setting_save_statue : " - Changes unsaved"})
+
   };
   handle_edge_buffer = (event) => {
     this.setState({ edge_buffer: event.target.value });
+    this.setState({setting_save_statue : " - Changes unsaved"})
+
   };
 
   handle_letter_pair_dict = (event) => {
     const letter_pair_dict_new = { ...this.state.letter_pair_dict };
     letter_pair_dict_new[event.target.id] = event.target.value;
     this.setState({ letter_pair_dict: letter_pair_dict_new });
+    this.setState({setting_save_statue : " - Changes unsaved"})
+
   };
 
   handle_save_setting = () => {
@@ -102,36 +113,30 @@ class Setting extends React.Component {
       LETTER_PAIRS_DICT: JSON.stringify(this.state.letter_pair_dict),
     };
     this.setState({ setting_save: setting });
+    this.props.export_setting(setting);
+    this.setState({setting_save_statue : ""})
   };
   handle_import_onClick = (event) => {
+    let new_settings = JSON.parse(this.state.import_setting);
     this.setState({ setting_save: JSON.parse(this.state.import_setting) });
+    this.props.export_setting(new_settings);
   };
   handle_import_onChange = (event) => {
     let setting = event.target.value;
-    console.log(setting);
-
-    if (
-      setting.slice(0, 1) === '"' &&
-      setting.slice(setting.length - 1, setting.length) === '"'
-    ) {
-      setting = setting.slice(1, setting.length - 1);
-    }
-    console.log(setting);
     this.setState({ import_setting: setting });
   };
 
   render() {
-    console.log(this.state);
+    
     return (
       <Accordion>
         <Accordion.Item eventKey="0">
-          <Accordion.Header>setting</Accordion.Header>
+          <Accordion.Header><div className="fw-bold primary">Settings {this.state.setting_save_statue}</div></Accordion.Header>
           <Accordion.Body>
             <div>
               <Tabs defaultActiveKey="first">
                 <Tab eventKey="first" title="General">
                   <SettingGeneral
-                    diff={this.state.diff}
                     parse_with_letter_pair={this.state.parse_with_letter_pair}
                     onChange_move_count={this.handle_move_count_change}
                     onChange_apply_letter_pair={
@@ -139,7 +144,6 @@ class Setting extends React.Component {
                     }
                     onChange_corner_buffer={this.handle_corner_buffer}
                     onChange_edge_buffer={this.handle_edge_buffer}
-                    gen_to_cube_db={this.state.gen_to_cube_db}
                     edge_buffer={this.state.edge_buffer}
                     corner_buffer={this.state.corner_buffer}
                   />
@@ -207,9 +211,9 @@ class Setting extends React.Component {
                       <div className="row">
                         <div className="col-sm m-1">
                           <span className="fw-bold">
-                            Click "Save Settings" ={'>'} "Copy!" and paste output to
-                            a .txt file, next time paste it in the "Import
-                            Setting" section
+                            Click "Save Settings" ={">"} "Copy!" and paste
+                            output to a .txt file, next time paste it in the
+                            "Import Setting" section
                           </span>
                         </div>
                       </div>

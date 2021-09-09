@@ -12,7 +12,8 @@ class SettingGeneral extends React.Component {
                 value=""
                 id="gen_with_move_count"
                 onChange={this.props.onChange_move_count}
-                checked
+                defaultChecked="true"
+
               />
               <label className="form-check-label">
                 <span> generate with move count </span>
@@ -27,7 +28,7 @@ class SettingGeneral extends React.Component {
                 value=""
                 id="apply_letter_pairs"
                 onChange={this.props.onChange_apply_letter_pair}
-                checked
+                defaultChecked="true"
               />
               <label className="form-check-label">
                 <span className="">apply letter pairs </span>

@@ -5,7 +5,7 @@ class ConnectCube extends React.Component {
     const onConnect = this.props.onConnect;
     return (
       <React.Fragment>
-        <button className="btn btn-primary m-3" onClick={onConnect}>
+        <button className="btn btn-primary m-4" onClick={onConnect}>
           Connect Cube
         </button>
       </React.Fragment>

@@ -5,58 +5,109 @@ import "bootstrap/dist/css/bootstrap.css";
 import Scrambler from "./component/Scrambler";
 import Timer from "./component/Timer";
 class App extends React.Component {
-  state = {
-    cube_moves: [],
-    cube: null,
-    generated_setting: "",
-    timeStart: null,
-    timeFinish: null,
-    parsingSetting: null,
-    parsed_solve: null,
-  };
   constructor() {
     super();
     this.GiikerCube = this.GiikerCube.bind(this);
+    this.state = {
+      GoCube: null,
+      cube_moves: [],
+      cube_moves_time: [],
+      cube: null,
+      generated_setting: "",
+      timeStart: null,
+      timeFinish: null,
+      parsed_solve: null,
+      parse_settings: {
+        DIFF_BETWEEN_ALGS: "0.89",
+        MEMO: "23.32",
+        TIME_SOLVE: "56.12",
+        NAME_OF_SOLVE: "example_smart_cube",
+        GEN_PARSED_TO_CUBEDB: true,
+        SMART_CUBE: true,
+        COMMS_UNPARSED: false,
+        EDGES_BUFFER: "UF",
+        CORNER_BUFFER: "UFR",
+        PARSE_TO_LETTER_PAIR: true,
+        GEN_WITH_MOVE_COUNT: true,
+        LETTER_PAIRS_DICT:
+          '{"UBL":"A","UBR":"B","UFR":"C","UFL":"D","LBU":"E","LFU":"F","LFD":"G","LDB":"H","FUL":"I","FUR":"J","FRD":"K","FDL":"L","RFU":"M","RBU":"N","RBD":"O","RFD":"P","BUR":"Q","BUL":"R","BLD":"S","BRD":"T","DFL":"U","DFR":"V","DBR":"W","DBL":"X","UB":"A","UR":"B","UF":"C","UL":"D","LU":"E","LF":"F","LD":"G","LB":"H","FU":"I","FR":"J","FD":"K","FL":"L","RU":"M","RB":"N","RD":"O","RF":"P","BU":"Q","BL":"R","BD":"S","BR":"T","DF":"U","DR":"V","DB":"W","DL":"X"}',
+        SCRAMBLE: "R2 U' B2 F2 L2 U' R2 D F2 U2 B2 R' D' L' D F' D2 B2 D2 L2\n",
+        SOLVE:
+          "\n U' F' B U B U' F B' R B' R' U U' D R' U' D B B U D' R' U D' \n R U' R' U D' F U F' U' D R' F R F' B U' U' F B' R F' R U' U'\n L D U' F' U' F U D' L' U' U D' F U' D R' U' R U D' F' D R F' \n L' F R' L D' L D L' D' L' D R L' F' L F R' L U' D' R' U U R'\n D R U U R' D' R2 U D D R U R' D R U' R' D D R' U R' D' R U \n U R' D R U R R' D' R D R' D' R U U R' D R D' R' D R U U",
+      },
+    };
   }
   handle_key_press = (e) => {
     console.log(e);
   };
+  extract_solve_from_cube_moves = () => {
+    let parse_setting_new = { ...this.state.parse_settings };
+    let scramble = [];
+    let solve = [];
+    let memo_time = 0;
+    let solve_time = 0;
+    let moves = this.state.cube_moves;
+    let moves_time = this.state.cube_moves_time;
+    let time_start_solve = this.state.timeStart;
+    let time_end_solve = this.state.timeFinish;
+
+    for (let i = 0; i < moves.length; i++) {
+      if (moves_time[i] < time_start_solve) {
+        scramble.push(moves[i]);
+      }
+      if (moves_time[i] < time_end_solve && moves_time[i] > time_start_solve) {
+        if (memo_time === 0) {
+          memo_time = (moves_time[i] - time_start_solve) / 1000;
+        }
+        solve.push(moves[i]);
+      }
+    }
+
+    solve_time = (time_end_solve - time_start_solve) / 1000 - memo_time; 
+    parse_setting_new["SCRAMBLE"] = scramble.join(" ").toString().replace(/  +/g, ' ');
+    parse_setting_new["SOLVE"] = solve.join(" ").toString().replace(/  +/g, ' ');
+    parse_setting_new["MEMO"] = memo_time.toString();
+    parse_setting_new["TIME_SOLVE"] = solve_time.toString();
+    this.setState({ parse_settings: parse_setting_new });
+  
+    return parse_setting_new;
+  };
   handle_onStart_timer = (timer_start) => {
     this.setState({ timeStart: timer_start });
-    console.log(this.state);
   };
   handle_onStop_timer = (timer_finish) => {
     this.setState({ timeFinish: timer_finish });
-    console.log(this.state);
+  };
+  handle_export_setting = (settings) => {
+    let new_settings = { ...this.state.parse_settings };
+    for (var key in settings) {
+      if (!(key in this.state.parse_settings)) {
+        console.log("wrong keys : ", key);
+      } else {
+        new_settings[key] = settings[key];
+      }
+      this.setState({ parse_settings: new_settings });
+    }
+  };
+  handle_reset_cube = () => {
+    this.setState({ cube_moves: [] });
+    this.setState({ cube_moves_time: [] });
   };
   handle_parse_solve = () => {
+    const setting = this.extract_solve_from_cube_moves();
+    let result;
     const requestOptions = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-
-      body: JSON.stringify({
-        DIFF_BETWEEN_ALGS: "0.89",
-        SMART_CUBE: "True",
-        COMMS_UNPARSED: "False",
-        EDGES_BUFFER: "UF",
-        CORNER_BUFFER: "UFR",
-        PARSE_TO_LETTER_PAIR: "True",
-        GEN_WITH_MOVE_COUNT: "True",
-        LETTER_PAIRS_DICT:
-          "{'UBL': 'א', 'UBR': 'ב', 'UFL': 'ד', 'UFR': 'ג', 'RFU': 'מ', 'RBU': 'נ', 'RFD': 'ע', 'RBD': 'ס', 'FUL': 'ט', 'FUR': 'י', 'FDL': 'ל', 'FRD': 'כ', 'DFL': \"צ'\", 'DFR': 'ת', 'DBL': \"ג'\", 'DBR': 'ש', 'LBU': 'ה', 'LFU': 'ו', 'LDB': 'ח', 'LFD': 'ז', 'BUR': 'פ', 'BUL': 'צ', 'BRD': 'ר', 'BLD': 'ק', 'UB': 'א', 'UL': 'ד', 'UR': 'ב', 'UF': 'ג', 'RU': 'מ', 'RF': 'ע', 'RB': 'נ', 'RD': 'ס', 'FU': 'ט', 'FL': 'ל', 'FR': 'י', 'FD': 'כ', 'DF': \"צ'\", 'DL': \"ג'\", 'DR': 'ת', 'DB': 'ש', 'LU': 'ה', 'LB': 'ח', 'LF': 'ו', 'LD': 'ז', 'BU': 'פ', 'BR': 'ר', 'BL': 'צ', 'BD': 'ק'}",
-        GEN_PARSED_TO_CUBEDB: "True",
-        NAME_OF_SOLVE: "example_smart_cube",
-        TIME_SOLVE: "56.12",
-        SCRAMBLE: "R2 U' B2 F2 L2 U' R2 D F2 U2 B2 R' D' L' D F' D2 B2 D2 L2\n",
-        SOLVE:
-          "\n U' F' B U B U' F B' R B' R' U U' D R' U' D B B U D' R' U D' \n R U' R' U D' F U F' U' D R' F R F' B U' U' F B' R F' R U' U'\n L D U' F' U' F U D' L' U' U D' F U' D R' U' R U D' F' D R F' \n L' F R' L D' L D L' D' L' D R L' F' L F R' L U' D' R' U U R'\n D R U U R' D' R2 U D D R U R' D R U' R' D D R' U R' D' R U \n U R' D R U R R' D' R D R' D' R U U R' D R D' R' D R U U",
-        MEMO: "23.32",
-      }),
+      body: JSON.stringify(setting),
     };
-    fetch("http://rotohands-bld-parser.herokuapp.com/", requestOptions).then(
-      (response) => response.text().then((data) => console.log(data))
+    fetch("http://127.0.0.1:8080", requestOptions).then((response) =>
+      response.text().then((data) => {
+        result = data;
+        this.setState({ parsed_solve: result });
+      })
     );
   };
 
@@ -73,19 +124,42 @@ class App extends React.Component {
             </button>
           </div>
           <div className="col-sm">
+            <button
+              role="button"
+              className="btn btn-primary m-4"
+              onClick={() => window.open(this.state.parsed_solve)}
+            >
+              CUBEDB
+            </button>
+          </div>
+          <div className="col-sm">
             <ConnectCube onConnect={this.GiikerCube} />
+          </div>
+          <div className="col-sm">
+            <button
+              className="btn btn-primary m-4"
+              onClick={this.handle_reset_cube}
+            >
+              Reset cube to solved state
+            </button>
           </div>
           <div className="row">
             <div className="col sm-2">
               <Scrambler />{" "}
             </div>
           </div>
+          <div className="row">
+            <div className="col sm-2">{this.state.cube_moves.join(" ")}</div>
+          </div>
         </div>
         <Timer
           onStart={(timer_start) => this.handle_onStart_timer(timer_start)}
           onStop={(timer_finish) => this.handle_onStop_timer(timer_finish)}
         />
-        <Setting generated_setting={this.state.generated_setting} />
+        <Setting export_setting={this.handle_export_setting} />
+        <div className="row">
+          <iframe src={this.state.parsed_solve} title="solve"></iframe>
+        </div>
       </React.Fragment>
     );
   }
@@ -755,12 +829,11 @@ class App extends React.Component {
             var m = axis * 3 + power;
 
             const cube_moves_new = [...this_App.state.cube_moves];
-            console.log(cube_moves_new);
-            cube_moves_new.push([
-              "URFDLB".charAt(axis) + " 2'".charAt(power),
-              Date.now(),
-            ]);
+            const cube_moves_time_new = [...this_App.state.cube_moves_time];
+            cube_moves_new.push("URFDLB".charAt(axis) + " 2'".charAt(power));
+            cube_moves_time_new.push(Date.now());
             this_App.setState({ cube_moves: cube_moves_new });
+            this_App.setState({ cube_moves_time: cube_moves_time_new });
             // console.log(this_App.state.cube_moves.join(" "));
             // document.getElementById("moves_print").textContent = this.state.cube_moves.join(' ')
           }

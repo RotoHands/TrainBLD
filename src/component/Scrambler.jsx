@@ -7,16 +7,26 @@ class Scrambler extends React.Component {
     super(props);
     this.state = {
       scramble: this.props.scramble,
+      last_scramble: this.props.last_scramble,
     };
   }
- 
 
   render() {
     return (
       <div>
-        <button className="btn btn-primary m-2" onClick={this.props.onClick_scramble}>
+        <button
+          className="btn btn-primary m-2"
+          onClick={this.props.onClick_last_scramble}
+        >
           {" "}
-          scramble
+          Last scramble
+        </button>
+        <button
+          className="btn btn-primary m-2"
+          onClick={this.props.onClick_scramble}
+        >
+          {" "}
+          Next scramble
         </button>
         <div>
           <scramble-display scramble={this.props.scramble}></scramble-display>

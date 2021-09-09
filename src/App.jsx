@@ -10,6 +10,7 @@ class App extends React.Component {
     super();
     this.GiikerCube = this.GiikerCube.bind(this);
     this.state = {
+      last_scramble: null,
       scramble: null,
       parse_solve_bool: false,
       cube_moves: [],
@@ -125,21 +126,24 @@ class App extends React.Component {
     );
   };
   handle_scramble = () => {
-    console.log(this.state.scramble);
+    this.setState({last_scramble : this.state.scramble})
     this.setState({ scramble: scrambleGenerator() });
   };
+  handle_last_scramble = () =>{
+    this.setState({scramble : this.state.last_scramble})
+  }
   render() {
     return (
       <React.Fragment>
         <div className="row">
-          <div className="col-sm">
-            <button
-              className="btn btn-primary m-4"
-              onClick={this.handle_parse_solve}
-            >
-              Parse Solve
-            </button>
-          </div>
+          {/* <div className="col-sm"> */}
+          {/* <button */}
+          {/* className="btn btn-primary m-4" */}
+          {/* onClick={this.handle_parse_solve} */}
+          {/* > */}
+          {/* Parse Solve */}
+          {/* </button> */}
+          {/* </div> */}
           <div className="col-sm">
             <button
               role="button"
@@ -165,6 +169,7 @@ class App extends React.Component {
               <Scrambler
                 scramble={this.state.scramble}
                 onClick_scramble={this.handle_scramble}
+                onClick_last_scramble={this.handle_last_scramble}
               />{" "}
             </div>
           </div>

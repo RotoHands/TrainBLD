@@ -12,6 +12,7 @@ class App extends React.Component {
     timeStart: null,
     timeFinish: null,
     parsingSetting: null,
+    parsed_solve: null,
   };
   constructor() {
     super();
@@ -28,7 +29,36 @@ class App extends React.Component {
     this.setState({ timeFinish: timer_finish });
     console.log(this.state);
   };
-  handle_parse_solve = () => {};
+  handle_parse_solve = () => {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        DIFF_BETWEEN_ALGS: "0.89",
+        SMART_CUBE: "True",
+        COMMS_UNPARSED: "False",
+        EDGES_BUFFER: "UF",
+        CORNER_BUFFER: "UFR",
+        PARSE_TO_LETTER_PAIR: "True",
+        GEN_WITH_MOVE_COUNT: "True",
+        LETTER_PAIRS_DICT:
+          "{'UBL': 'א', 'UBR': 'ב', 'UFL': 'ד', 'UFR': 'ג', 'RFU': 'מ', 'RBU': 'נ', 'RFD': 'ע', 'RBD': 'ס', 'FUL': 'ט', 'FUR': 'י', 'FDL': 'ל', 'FRD': 'כ', 'DFL': \"צ'\", 'DFR': 'ת', 'DBL': \"ג'\", 'DBR': 'ש', 'LBU': 'ה', 'LFU': 'ו', 'LDB': 'ח', 'LFD': 'ז', 'BUR': 'פ', 'BUL': 'צ', 'BRD': 'ר', 'BLD': 'ק', 'UB': 'א', 'UL': 'ד', 'UR': 'ב', 'UF': 'ג', 'RU': 'מ', 'RF': 'ע', 'RB': 'נ', 'RD': 'ס', 'FU': 'ט', 'FL': 'ל', 'FR': 'י', 'FD': 'כ', 'DF': \"צ'\", 'DL': \"ג'\", 'DR': 'ת', 'DB': 'ש', 'LU': 'ה', 'LB': 'ח', 'LF': 'ו', 'LD': 'ז', 'BU': 'פ', 'BR': 'ר', 'BL': 'צ', 'BD': 'ק'}",
+        GEN_PARSED_TO_CUBEDB: "True",
+        NAME_OF_SOLVE: "example_smart_cube",
+        TIME_SOLVE: "56.12",
+        SCRAMBLE: "R2 U' B2 F2 L2 U' R2 D F2 U2 B2 R' D' L' D F' D2 B2 D2 L2\n",
+        SOLVE:
+          "\n U' F' B U B U' F B' R B' R' U U' D R' U' D B B U D' R' U D' \n R U' R' U D' F U F' U' D R' F R F' B U' U' F B' R F' R U' U'\n L D U' F' U' F U D' L' U' U D' F U' D R' U' R U D' F' D R F' \n L' F R' L D' L D L' D' L' D R L' F' L F R' L U' D' R' U U R'\n D R U U R' D' R2 U D D R U R' D R U' R' D D R' U R' D' R U \n U R' D R U R R' D' R D R' D' R U U R' D R D' R' D R U U",
+        MEMO: "23.32",
+      }),
+    };
+    fetch("http://rotohands-bld-parser.herokuapp.com/", requestOptions).then(
+      (response) => response.text().then((data) => console.log(data))
+    );
+  };
 
   render() {
     return (
@@ -41,10 +71,10 @@ class App extends React.Component {
             >
               Parse Solve
             </button>
-            </div>
-            <div className="col-sm">
-              <ConnectCube onConnect={this.GiikerCube} />
-            </div>
+          </div>
+          <div className="col-sm">
+            <ConnectCube onConnect={this.GiikerCube} />
+          </div>
           <div className="row">
             <div className="col sm-2">
               <Scrambler />{" "}

@@ -9,63 +9,70 @@ import SettingGeneral from "./SettingsGeneral";
 import SettingLetterScheme from "./SettingLetterScheme";
 
 class Setting extends React.Component {
-  state = {
-    setting_save: null,
-    parse_with_letter_pair: true,
-    gen_with_move_count: true,
-    edge_buffer: "UF",
-    corner_buffer: "UFR",
-    letter_pair_dict: {
-      UBL: "A",
-      UBR: "B",
-      UFR: "C",
-      UFL: "D",
-      LBU: "E",
-      LFU: "F",
-      LFD: "G",
-      LDB: "H",
-      FUL: "I",
-      FUR: "J",
-      FRD: "K",
-      FDL: "L",
-      RFU: "M",
-      RBU: "N",
-      RBD: "O",
-      RFD: "P",
-      BUR: "Q",
-      BUL: "R",
-      BLD: "S",
-      BRD: "T",
-      DFL: "U",
-      DFR: "V",
-      DBR: "W",
-      DBL: "X",
-      UB: "A",
-      UR: "B",
-      UF: "C",
-      UL: "D",
-      LU: "E",
-      LF: "F",
-      LD: "G",
-      LB: "H",
-      FU: "I",
-      FR: "J",
-      FD: "K",
-      FL: "L",
-      RU: "M",
-      RB: "N",
-      RD: "O",
-      RF: "P",
-      BU: "Q",
-      BL: "R",
-      BD: "S",
-      BR: "T",
-      DF: "U",
-      DR: "V",
-      DB: "W",
-      DL: "X",
-    },
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      import_setting: {},
+      setting_save: {},
+      parse_with_letter_pair: true,
+      gen_with_move_count: true,
+      edge_buffer: "UF",
+      corner_buffer: "UFR",
+      letter_pair_dict: {
+        UBL: "A",
+        UBR: "B",
+        UFR: "C",
+        UFL: "D",
+        LBU: "E",
+        LFU: "F",
+        LFD: "G",
+        LDB: "H",
+        FUL: "I",
+        FUR: "J",
+        FRD: "K",
+        FDL: "L",
+        RFU: "M",
+        RBU: "N",
+        RBD: "O",
+        RFD: "P",
+        BUR: "Q",
+        BUL: "R",
+        BLD: "S",
+        BRD: "T",
+        DFL: "U",
+        DFR: "V",
+        DBR: "W",
+        DBL: "X",
+        UB: "A",
+        UR: "B",
+        UF: "C",
+        UL: "D",
+        LU: "E",
+        LF: "F",
+        LD: "G",
+        LB: "H",
+        FU: "I",
+        FR: "J",
+        FD: "K",
+        FL: "L",
+        RU: "M",
+        RB: "N",
+        RD: "O",
+        RF: "P",
+        BU: "Q",
+        BL: "R",
+        BD: "S",
+        BR: "T",
+        DF: "U",
+        DR: "V",
+        DB: "W",
+        DL: "X",
+      },
+    };
+  }
+  componentDidMount() {
+    this.handle_save_setting();
+  }
 
   handle_move_count_change = (event) => {
     this.setState({ gen_with_move_count: event.target.checked });
@@ -87,37 +94,26 @@ class Setting extends React.Component {
   };
 
   handle_save_setting = () => {
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify({
-        DIFF_BETWEEN_ALGS: "0.89",
-        SMART_CUBE: "True",
-        COMMS_UNPARSED: "False",
-        EDGES_BUFFER: "UF",
-        CORNER_BUFFER: "UFR",
-        PARSE_TO_LETTER_PAIR: "True",
-        GEN_WITH_MOVE_COUNT: "True",
-        LETTER_PAIRS_DICT:
-          "{'UBL': 'א', 'UBR': 'ב', 'UFL': 'ד', 'UFR': 'ג', 'RFU': 'מ', 'RBU': 'נ', 'RFD': 'ע', 'RBD': 'ס', 'FUL': 'ט', 'FUR': 'י', 'FDL': 'ל', 'FRD': 'כ', 'DFL': \"צ'\", 'DFR': 'ת', 'DBL': \"ג'\", 'DBR': 'ש', 'LBU': 'ה', 'LFU': 'ו', 'LDB': 'ח', 'LFD': 'ז', 'BUR': 'פ', 'BUL': 'צ', 'BRD': 'ר', 'BLD': 'ק', 'UB': 'א', 'UL': 'ד', 'UR': 'ב', 'UF': 'ג', 'RU': 'מ', 'RF': 'ע', 'RB': 'נ', 'RD': 'ס', 'FU': 'ט', 'FL': 'ל', 'FR': 'י', 'FD': 'כ', 'DF': \"צ'\", 'DL': \"ג'\", 'DR': 'ת', 'DB': 'ש', 'LU': 'ה', 'LB': 'ח', 'LF': 'ו', 'LD': 'ז', 'BU': 'פ', 'BR': 'ר', 'BL': 'צ', 'BD': 'ק'}",
-        GEN_PARSED_TO_CUBEDB: "True",
-        NAME_OF_SOLVE: "example_smart_cube",
-        TIME_SOLVE: "56.12",
-        SCRAMBLE: "R2 U' B2 F2 L2 U' R2 D F2 U2 B2 R' D' L' D F' D2 B2 D2 L2\n",
-        SOLVE:
-          "\n U' F' B U B U' F B' R B' R' U U' D R' U' D B B U D' R' U D' \n R U' R' U D' F U F' U' D R' F R F' B U' U' F B' R F' R U' U'\n L D U' F' U' F U D' L' U' U D' F U' D R' U' R U D' F' D R F' \n L' F R' L D' L D L' D' L' D R L' F' L F R' L U' D' R' U U R'\n D R U U R' D' R2 U D D R U R' D R U' R' D D R' U R' D' R U \n U R' D R U R R' D' R D R' D' R U U R' D R D' R' D R U U",
-        MEMO: "23.32",
-      }),
+    const setting = {
+      EDGES_BUFFER: this.state.edge_buffer,
+      CORNER_BUFFER: this.state.corner_buffer,
+      PARSE_TO_LETTER_PAIR: this.state.parse_with_letter_pair,
+      GEN_WITH_MOVE_COUNT: this.state.gen_with_move_count,
+      LETTER_PAIRS_DICT: JSON.stringify(this.state.letter_pair_dict),
     };
-    fetch("http://127.0.0.1:8080", requestOptions).then((response) =>
-      response.text().then((data) => console.log(data))
-    );
+    this.setState({ setting_save: JSON.stringify(setting) });
+    console.log(this.state);
   };
+  handle_import_onClick = (event) => {
+    this.setState({ setting_save: JSON.parse(this.state.import_setting) });
+    console.log(this.state.setting_save)
+  };
+  handle_import_onChange = (event) =>{
+    this.setState({import_setting : (event.target.value)})
+  }
 
   render() {
+    console.log(this.state);
     return (
       <Accordion>
         <Accordion.Item eventKey="0">
@@ -146,15 +142,73 @@ class Setting extends React.Component {
                     onChange_letter_pair_dict={this.handle_letter_pair_dict}
                   />
                 </Tab>
-                <Tab eventKey="third" title="Import setting"></Tab>
+                <Tab eventKey="third" title="Import setting">
+                  <div className="container">
+                    <div className="row">
+                      <div className="col-sm">
+                        <button
+                          className="btn btn-primary btn-sm m-2"
+                          onClick={this.handle_import_onClick}
+                        >
+                          Import!
+                        </button>
+                        <span>
+                          Paste the setting you saved here and then click
+                          "Import!"
+                        </span>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-sm-2">
+                        <input onChange={this.handle_import_onChange} type="text" className="text m-2" />
+                      </div>
+                    </div>
+                  </div>
+                </Tab>
                 <Tab eventKey="forth" title="Save Setting">
-                  <button
-                    onClick={this.handle_save_setting}
-                    className="btn btn-primary btn-sm-2 m-2"
-                  >
-                    Save Settings
-                  </button>
-                  <span>{this.state.setting_save}</span>
+                  <div className="container">
+                    <div className="row">
+                      <div className="col-sm m-2">
+                        <div
+                          className="btn-toolbar"
+                          role="group"
+                          aria-label="Basic example"
+                        >
+                          <button
+                            onClick={this.handle_save_setting}
+                            className="btn btn-primary btn-sm-2 m-1"
+                          >
+                            Save Settings
+                          </button>
+                          <button
+                            className="btn btn-primary m-1"
+                            onClick={() =>
+                              navigator.clipboard.writeText(
+                                this.state.setting_save
+                              )
+                            }
+                          >
+                            Copy!
+                          </button>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-sm m-1">
+                          <span className="fw-bold">
+                            Save the output to a .txt file, next time paste it
+                            in the "Import Setting" section
+                          </span>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-sm m-2">
+                          <p className="text-break" styles="flexShrink: 1">
+                            {JSON.stringify(this.state.setting_save)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </Tab>
               </Tabs>
             </div>

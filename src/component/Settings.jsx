@@ -101,16 +101,24 @@ class Setting extends React.Component {
       GEN_WITH_MOVE_COUNT: this.state.gen_with_move_count,
       LETTER_PAIRS_DICT: JSON.stringify(this.state.letter_pair_dict),
     };
-    this.setState({ setting_save: JSON.stringify(setting) });
-    console.log(this.state);
+    this.setState({ setting_save: setting });
   };
   handle_import_onClick = (event) => {
     this.setState({ setting_save: JSON.parse(this.state.import_setting) });
-    console.log(this.state.setting_save)
   };
-  handle_import_onChange = (event) =>{
-    this.setState({import_setting : (event.target.value)})
-  }
+  handle_import_onChange = (event) => {
+    let setting = event.target.value;
+    console.log(setting);
+
+    if (
+      setting.slice(0, 1) === '"' &&
+      setting.slice(setting.length - 1, setting.length) === '"'
+    ) {
+      setting = setting.slice(1, setting.length - 1);
+    }
+    console.log(setting);
+    this.setState({ import_setting: setting });
+  };
 
   render() {
     console.log(this.state);
@@ -160,7 +168,11 @@ class Setting extends React.Component {
                     </div>
                     <div className="row">
                       <div className="col-sm-2">
-                        <input onChange={this.handle_import_onChange} type="text" className="text m-2" />
+                        <input
+                          onChange={this.handle_import_onChange}
+                          type="text"
+                          className="text m-2"
+                        />
                       </div>
                     </div>
                   </div>
@@ -184,7 +196,7 @@ class Setting extends React.Component {
                             className="btn btn-primary m-1"
                             onClick={() =>
                               navigator.clipboard.writeText(
-                                this.state.setting_save
+                                JSON.stringify(this.state.setting_save)
                               )
                             }
                           >
@@ -195,8 +207,9 @@ class Setting extends React.Component {
                       <div className="row">
                         <div className="col-sm m-1">
                           <span className="fw-bold">
-                            Save the output to a .txt file, next time paste it
-                            in the "Import Setting" section
+                            Click "Save Settings" ={'>'} "Copy!" and paste output to
+                            a .txt file, next time paste it in the "Import
+                            Setting" section
                           </span>
                         </div>
                       </div>

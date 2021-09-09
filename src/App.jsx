@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import scrambleGenerator from "rubiks-cube-scramble";
 import ConnectCube from "./component/ConnectCube";
 import Setting from "./component/Settings";
 import "bootstrap/dist/css/bootstrap.css";
@@ -9,7 +10,8 @@ class App extends React.Component {
     super();
     this.GiikerCube = this.GiikerCube.bind(this);
     this.state = {
-      GoCube: null,
+      scramble: null,
+      parse_solve_bool: false,
       cube_moves: [],
       cube_moves_time: [],
       cube: null,
@@ -37,10 +39,14 @@ class App extends React.Component {
       },
     };
   }
+
+  componentDidMount = () => {
+    this.handle_scramble();
+  };
   handle_key_press = (e) => {
     console.log(e);
   };
-  extract_solve_from_cube_moves = () => {
+  extract_solve_from_cube_moves = (timer_finish) => {
     let parse_setting_new = { ...this.state.parse_settings };
     let scramble = [];
     let solve = [];
@@ -49,7 +55,7 @@ class App extends React.Component {
     let moves = this.state.cube_moves;
     let moves_time = this.state.cube_moves_time;
     let time_start_solve = this.state.timeStart;
-    let time_end_solve = this.state.timeFinish;
+    let time_end_solve = timer_finish;
 
     for (let i = 0; i < moves.length; i++) {
       if (moves_time[i] < time_start_solve) {
@@ -63,13 +69,18 @@ class App extends React.Component {
       }
     }
 
-    solve_time = (time_end_solve - time_start_solve) / 1000 - memo_time; 
-    parse_setting_new["SCRAMBLE"] = scramble.join(" ").toString().replace(/  +/g, ' ');
-    parse_setting_new["SOLVE"] = solve.join(" ").toString().replace(/  +/g, ' ');
+    solve_time = (time_end_solve - time_start_solve) / 1000 - memo_time;
+    parse_setting_new["SCRAMBLE"] = scramble
+      .join(" ")
+      .toString()
+      .replace(/  +/g, " ");
+    parse_setting_new["SOLVE"] = solve
+      .join(" ")
+      .toString()
+      .replace(/  +/g, " ");
     parse_setting_new["MEMO"] = memo_time.toString();
     parse_setting_new["TIME_SOLVE"] = solve_time.toString();
     this.setState({ parse_settings: parse_setting_new });
-  
     return parse_setting_new;
   };
   handle_onStart_timer = (timer_start) => {
@@ -77,6 +88,9 @@ class App extends React.Component {
   };
   handle_onStop_timer = (timer_finish) => {
     this.setState({ timeFinish: timer_finish });
+    this.handle_parse_solve(timer_finish);
+    this.handle_reset_cube();
+    this.handle_scramble();
   };
   handle_export_setting = (settings) => {
     let new_settings = { ...this.state.parse_settings };
@@ -93,8 +107,8 @@ class App extends React.Component {
     this.setState({ cube_moves: [] });
     this.setState({ cube_moves_time: [] });
   };
-  handle_parse_solve = () => {
-    const setting = this.extract_solve_from_cube_moves();
+  handle_parse_solve = (timer_finish) => {
+    const setting = this.extract_solve_from_cube_moves(timer_finish);
     let result;
     const requestOptions = {
       method: "POST",
@@ -110,7 +124,10 @@ class App extends React.Component {
       })
     );
   };
-
+  handle_scramble = () => {
+    console.log(this.state.scramble);
+    this.setState({ scramble: scrambleGenerator() });
+  };
   render() {
     return (
       <React.Fragment>
@@ -145,7 +162,10 @@ class App extends React.Component {
           </div>
           <div className="row">
             <div className="col sm-2">
-              <Scrambler />{" "}
+              <Scrambler
+                scramble={this.state.scramble}
+                onClick_scramble={this.handle_scramble}
+              />{" "}
             </div>
           </div>
           <div className="row">

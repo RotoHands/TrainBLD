@@ -22,12 +22,14 @@ class App extends React.Component {
       timeStart: null,
       timeFinish: null,
       parsed_solve: null,
+      parsed_solve_txt: null,
+      parsed_solve_cubedb: null,
       parse_settings: {
         DIFF_BETWEEN_ALGS: "0.89",
         MEMO: "23.32",
         TIME_SOLVE: "56.12",
         NAME_OF_SOLVE: "example_smart_cube",
-        GEN_PARSED_TO_CUBEDB: true,
+        GEN_PARSED_TO_CUBEDB: false ,
         SMART_CUBE: true,
         COMMS_UNPARSED: false,
         EDGES_BUFFER: "UF",
@@ -161,11 +163,20 @@ class App extends React.Component {
       },
       body: JSON.stringify(setting),
     };
-    fetch("http://rotohands-bld-parser.herokuapp.com/", requestOptions).then((response) =>
-      response.text().then((data) => {
-        result = data;
-        this.setState({ parsed_solve: result });
-      })
+    fetch("http://127.0.0.1:8080", requestOptions).then(
+      (response) =>
+        response.json().then((data) => {
+          result = data;
+          this.setState({ parsed_solve: result });
+          if ("cubedb" in result) {
+            this.setState({ parsed_solve_cubedb: result["cubedb"] });
+            window.open(result["cubedb"]);
+          }
+          if ("txt" in result) {
+            console.log(result["txt"]);
+            this.setState({ parsed_solve_txt: result["txt"] });
+          }
+        })
     );
   };
   handle_scramble = () => {
@@ -218,18 +229,34 @@ class App extends React.Component {
             </div>
           </div>
           <div className="row">
+            <button
+              target="_blank"
+              href="https://www.buymeacoffee.com/rotohands"
+            >
+              <image
+                src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg"
+                alt="Buy me a coffee"
+              />
+              <text>Buy me a coffee</text>
+            </button>
             <div className="col sm-2">{this.state.cube_moves.join(" ")}</div>
           </div>
         </div>
+        <div className="row">
+          <div style={{ whiteSpace: "pre-wrap" }}>
+            {this.state.parsed_solve_txt}
+          </div>
+        </div>
+        {/* <div className="row"> */}
+        {/* <iframe src={this.state.parsed_solve} title="solve"></iframe> */}
+        {/* </div> */}
         <Timer
           solve_status={this.state.solve_status}
           onStart={(timer_start) => this.handle_onStart_timer(timer_start)}
           onStop={(timer_finish) => this.handle_onStop_timer(timer_finish)}
         />
+
         <Setting export_setting={this.handle_export_setting} />
-        <div className="row">
-          <iframe src={this.state.parsed_solve} title="solve"></iframe>
-        </div>
       </React.Fragment>
     );
   }

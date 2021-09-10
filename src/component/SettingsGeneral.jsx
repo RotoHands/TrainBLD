@@ -36,6 +36,22 @@ class SettingGeneral extends React.Component {
             </div>
           </div>{" "}
           <div className="row">
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                value=""
+                id="gen_to_cube_db"
+                onChange={this.props.onChange_cubedb}
+                defaultChecked="true"
+
+              />
+              <label className="form-check-label">
+                <span> generate to cubedb (uncheck for txt format) </span>
+              </label>
+            </div>{" "}
+          </div>
+          <div className="row">
             <div className="col-sm-3">
               <div>
                 <span className="m-2">edge buffer </span>

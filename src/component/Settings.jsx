@@ -19,6 +19,7 @@ class Setting extends React.Component {
       gen_with_move_count: true,
       edge_buffer: "UF",
       corner_buffer: "UFR",
+      GEN_PARSED_TO_CUBEDB : true,
       letter_pair_dict: {
         UBL: "A",
         UBR: "B",
@@ -110,6 +111,7 @@ class Setting extends React.Component {
       CORNER_BUFFER: this.state.corner_buffer,
       PARSE_TO_LETTER_PAIR: this.state.parse_with_letter_pair,
       GEN_WITH_MOVE_COUNT: this.state.gen_with_move_count,
+      GEN_PARSED_TO_CUBEDB : this.state.GEN_PARSED_TO_CUBEDB,
       LETTER_PAIRS_DICT: JSON.stringify(this.state.letter_pair_dict),
     };
     this.setState({ setting_save: setting });
@@ -125,7 +127,10 @@ class Setting extends React.Component {
     let setting = event.target.value;
     this.setState({ import_setting: setting });
   };
-
+  handle_cubedb_txt = (event) =>{
+    this.setState({ GEN_PARSED_TO_CUBEDB: event.target.checked });
+    this.setState({setting_save_statue : " - Changes unsaved"})
+  }
   render() {
     
     return (
@@ -137,6 +142,7 @@ class Setting extends React.Component {
               <Tabs defaultActiveKey="first">
                 <Tab eventKey="first" title="General">
                   <SettingGeneral
+                     onChange_cubedb={this.handle_cubedb_txt}
                     parse_with_letter_pair={this.state.parse_with_letter_pair}
                     onChange_move_count={this.handle_move_count_change}
                     onChange_apply_letter_pair={

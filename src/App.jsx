@@ -196,7 +196,6 @@ class App extends React.Component {
             <style>{"body { background-color: white; }"}</style>
           </Helmet>
         </div>
-        <div className="row">
           {/* <div className="col-sm"> */}
           {/* <button */}
           {/* className="btn btn-primary m-4" */}
@@ -214,19 +213,25 @@ class App extends React.Component {
           {/* CUBEDB */}
           {/* </button> */}
           {/* </div> */}
-        </div>
         <div className="col-sm">
           <button
-            className="btn btn-primary m-1"
+            className="btn btn-primary m-1 text-sm-start"
+            style={{ width: "180px" }}
             onClick={this.handle_reset_cube}
           >
-            Reset cube to solved state
+            Reset moves applied
           </button>
         </div>
         <div className="col-sm">
           <ConnectCube onConnect={this.GiikerCube} />
         </div>
-
+        <div className="col sm-2">
+            <Scrambler
+              scramble={this.state.scramble}
+              onClick_scramble={this.handle_scramble}
+              onClick_last_scramble={this.handle_last_scramble}
+            />{" "}
+          </div>
         <div className="col">
           <div>
             <Setting export_setting={this.handle_export_setting} />
@@ -236,7 +241,7 @@ class App extends React.Component {
         <div className="col-sm">
           <button
             className="btn btn-primary m-1 text-sm-start"
-            style={{ width: "212px" }}
+            style={{ width: "180px" }}
             onClick={() =>
               window.open(
                 "https://www.paypal.com/donate?hosted_button_id=X9X9VZEAYK3DJ"
@@ -247,13 +252,7 @@ class App extends React.Component {
           </button>
         </div>
         <div className="row">
-          <div className="col sm-2">
-            <Scrambler
-              scramble={this.state.scramble}
-              onClick_scramble={this.handle_scramble}
-              onClick_last_scramble={this.handle_last_scramble}
-            />{" "}
-          </div>
+         
         </div>
         <div className="row">
           <div className="col sm-2">{this.state.cube_moves.join(" ")}</div>

@@ -8,7 +8,7 @@ class ConnectCube extends React.Component {
         <button
           className="btn btn-primary m-1 text-sm-start"
           onClick={onConnect}
-          style={{ width: "212px" }}
+          style={{ width: "180px" }}
         >
           Connect Cube
         </button>

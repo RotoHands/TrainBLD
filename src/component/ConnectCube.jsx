@@ -5,7 +5,11 @@ class ConnectCube extends React.Component {
     const onConnect = this.props.onConnect;
     return (
       <React.Fragment>
-        <button className="btn btn-primary m-4" onClick={onConnect}>
+        <button
+          className="btn btn-primary m-1 text-sm-start"
+          onClick={onConnect}
+          style={{ width: "212px" }}
+        >
           Connect Cube
         </button>
       </React.Fragment>

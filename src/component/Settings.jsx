@@ -1,4 +1,5 @@
-import React, { useState, Component } from "react";
+import React, { Component } from "react";
+import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import Accordion from "react-bootstrap/Accordion";
 import Nav from "react-bootstrap/Nav";
@@ -7,19 +8,21 @@ import Tabs from "react-bootstrap/Tabs";
 import Container from "react-bootstrap/Container";
 import SettingGeneral from "./SettingsGeneral";
 import SettingLetterScheme from "./SettingLetterScheme";
+import Collapse from "react-bootstrap/Collapse";
 
 class Setting extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      setting_save_statue : "",
+      open: false,
+      setting_save_statue: "",
       import_setting: {},
       setting_save: {},
       parse_with_letter_pair: true,
       gen_with_move_count: true,
       edge_buffer: "UF",
       corner_buffer: "UFR",
-      GEN_PARSED_TO_CUBEDB : true,
+      GEN_PARSED_TO_CUBEDB: true,
       letter_pair_dict: {
         UBL: "A",
         UBR: "B",
@@ -78,31 +81,26 @@ class Setting extends React.Component {
 
   handle_move_count_change = (event) => {
     this.setState({ gen_with_move_count: event.target.checked });
-    this.setState({setting_save_statue : " - Changes unsaved"})
-
+    this.setState({ setting_save_statue: " - Changes unsaved" });
   };
   handle_apply_letter_pairs_change = (event) => {
     this.setState({ parse_with_letter_pair: event.target.checked });
-    this.setState({setting_save_statue : " - Changes unsaved"})
-
+    this.setState({ setting_save_statue: " - Changes unsaved" });
   };
   handle_corner_buffer = (event) => {
     this.setState({ corner_buffer: event.target.value });
-    this.setState({setting_save_statue : " - Changes unsaved"})
-
+    this.setState({ setting_save_statue: " - Changes unsaved" });
   };
   handle_edge_buffer = (event) => {
     this.setState({ edge_buffer: event.target.value });
-    this.setState({setting_save_statue : " - Changes unsaved"})
-
+    this.setState({ setting_save_statue: " - Changes unsaved" });
   };
 
   handle_letter_pair_dict = (event) => {
     const letter_pair_dict_new = { ...this.state.letter_pair_dict };
     letter_pair_dict_new[event.target.id] = event.target.value;
     this.setState({ letter_pair_dict: letter_pair_dict_new });
-    this.setState({setting_save_statue : " - Changes unsaved"})
-
+    this.setState({ setting_save_statue: " - Changes unsaved" });
   };
 
   handle_save_setting = () => {
@@ -111,12 +109,12 @@ class Setting extends React.Component {
       CORNER_BUFFER: this.state.corner_buffer,
       PARSE_TO_LETTER_PAIR: this.state.parse_with_letter_pair,
       GEN_WITH_MOVE_COUNT: this.state.gen_with_move_count,
-      GEN_PARSED_TO_CUBEDB : this.state.GEN_PARSED_TO_CUBEDB,
+      GEN_PARSED_TO_CUBEDB: this.state.GEN_PARSED_TO_CUBEDB,
       LETTER_PAIRS_DICT: JSON.stringify(this.state.letter_pair_dict),
     };
     this.setState({ setting_save: setting });
     this.props.export_setting(setting);
-    this.setState({setting_save_statue : ""})
+    this.setState({ setting_save_statue: "" });
   };
   handle_import_onClick = (event) => {
     let new_settings = JSON.parse(this.state.import_setting);
@@ -127,22 +125,33 @@ class Setting extends React.Component {
     let setting = event.target.value;
     this.setState({ import_setting: setting });
   };
-  handle_cubedb_txt = (event) =>{
+  handle_cubedb_txt = (event) => {
     this.setState({ GEN_PARSED_TO_CUBEDB: event.target.checked });
-    this.setState({setting_save_statue : " - Changes unsaved"})
-  }
+    this.setState({ setting_save_statue: " - Changes unsaved" });
+  };
+
   render() {
-    
     return (
-      <Accordion>
-        <Accordion.Item eventKey="0">
-          <Accordion.Header><div className="fw-bold primary">Settings {this.state.setting_save_statue}</div></Accordion.Header>
-          <Accordion.Body>
+      <React.Fragment>
+        <button
+          className="btn btn-primary m-1 text-sm-start"
+          style={{width:"212px"}}
+          onClick={() => this.setState({ open: !this.state.open })}
+          aria-controls="example-collapse-text"
+          aria-expanded={this.state.open}
+        >
+          Settings
+          <div className="primary">
+            {this.state.setting_save_statue}
+          </div>
+        </button>
+        <Collapse in={this.state.open}>
+          <div id="example-collapse-text">
             <div>
               <Tabs defaultActiveKey="first">
                 <Tab eventKey="first" title="General">
                   <SettingGeneral
-                     onChange_cubedb={this.handle_cubedb_txt}
+                    onChange_cubedb={this.handle_cubedb_txt}
                     parse_with_letter_pair={this.state.parse_with_letter_pair}
                     onChange_move_count={this.handle_move_count_change}
                     onChange_apply_letter_pair={
@@ -235,9 +244,9 @@ class Setting extends React.Component {
                 </Tab>
               </Tabs>
             </div>
-          </Accordion.Body>
-        </Accordion.Item>
-      </Accordion>
+          </div>
+        </Collapse>{" "}
+      </React.Fragment>
     );
   }
 }

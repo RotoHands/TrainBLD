@@ -15,18 +15,18 @@ class Scrambler extends React.Component {
     return (
       <div>
         <button
-          className="btn btn-primary m-2"
+          className="btn btn-primary m-1"
           onClick={this.props.onClick_last_scramble}
         >
           {" "}
-          Last scramble
+          Last
         </button>
         <button
-          className="btn btn-primary m-2"
+          className="btn btn-primary m-1"
           onClick={this.props.onClick_scramble}
         >
           {" "}
-          Next scramble
+          Next
         </button>
         <div>
           <scramble-display scramble={this.props.scramble}></scramble-display>

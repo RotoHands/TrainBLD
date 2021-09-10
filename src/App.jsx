@@ -6,6 +6,8 @@ import Setting from "./component/Settings";
 import "bootstrap/dist/css/bootstrap.css";
 import Scrambler from "./component/Scrambler";
 import Timer from "./component/Timer";
+import { Helmet } from "react-helmet";
+
 class App extends React.Component {
   constructor() {
     super();
@@ -29,7 +31,7 @@ class App extends React.Component {
         MEMO: "23.32",
         TIME_SOLVE: "56.12",
         NAME_OF_SOLVE: "example_smart_cube",
-        GEN_PARSED_TO_CUBEDB: false ,
+        GEN_PARSED_TO_CUBEDB: false,
         SMART_CUBE: true,
         COMMS_UNPARSED: false,
         EDGES_BUFFER: "UF",
@@ -163,20 +165,19 @@ class App extends React.Component {
       },
       body: JSON.stringify(setting),
     };
-    fetch("http://127.0.0.1:8080", requestOptions).then(
-      (response) =>
-        response.json().then((data) => {
-          result = data;
-          this.setState({ parsed_solve: result });
-          if ("cubedb" in result) {
-            this.setState({ parsed_solve_cubedb: result["cubedb"] });
-            window.open(result["cubedb"]);
-          }
-          if ("txt" in result) {
-            console.log(result["txt"]);
-            this.setState({ parsed_solve_txt: result["txt"] });
-          }
-        })
+    fetch("http://127.0.0.1:8080", requestOptions).then((response) =>
+      response.json().then((data) => {
+        result = data;
+        this.setState({ parsed_solve: result });
+        if ("cubedb" in result) {
+          this.setState({ parsed_solve_cubedb: result["cubedb"] });
+          window.open(result["cubedb"]);
+        }
+        if ("txt" in result) {
+          console.log(result["txt"]);
+          this.setState({ parsed_solve_txt: result["txt"] });
+        }
+      })
     );
   };
   handle_scramble = () => {
@@ -190,6 +191,11 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <div className="application">
+          <Helmet>
+            <style>{"body { background-color: white; }"}</style>
+          </Helmet>
+        </div>
         <div className="row">
           {/* <div className="col-sm"> */}
           {/* <button */}
@@ -199,48 +205,58 @@ class App extends React.Component {
           {/* Parse Solve */}
           {/* </button> */}
           {/* </div> */}
-          <div className="col-sm">
-            <button
-              role="button"
-              className="btn btn-primary m-4"
-              onClick={() => window.open(this.state.parsed_solve)}
-            >
-              CUBEDB
-            </button>
+          {/* <div className="col-sm"> */}
+          {/* <button */}
+          {/* role="button" */}
+          {/* className="btn btn-primary m-4" */}
+          {/* onClick={() => window.open(this.state.parsed_solve)} */}
+          {/* > */}
+          {/* CUBEDB */}
+          {/* </button> */}
+          {/* </div> */}
+        </div>
+        <div className="col-sm">
+          <button
+            className="btn btn-primary m-1"
+            onClick={this.handle_reset_cube}
+          >
+            Reset cube to solved state
+          </button>
+        </div>
+        <div className="col-sm">
+          <ConnectCube onConnect={this.GiikerCube} />
+        </div>
+
+        <div className="col">
+          <div>
+            <Setting export_setting={this.handle_export_setting} />
           </div>
-          <div className="col-sm">
-            <ConnectCube onConnect={this.GiikerCube} />
+        </div>
+
+        <div className="col-sm">
+          <button
+            className="btn btn-primary m-1 text-sm-start"
+            style={{ width: "212px" }}
+            onClick={() =>
+              window.open(
+                "https://www.paypal.com/donate?hosted_button_id=X9X9VZEAYK3DJ"
+              )
+            }
+          >
+            Support :)
+          </button>
+        </div>
+        <div className="row">
+          <div className="col sm-2">
+            <Scrambler
+              scramble={this.state.scramble}
+              onClick_scramble={this.handle_scramble}
+              onClick_last_scramble={this.handle_last_scramble}
+            />{" "}
           </div>
-          <div className="col-sm">
-            <button
-              className="btn btn-primary m-4"
-              onClick={this.handle_reset_cube}
-            >
-              Reset cube to solved state
-            </button>
-          </div>
-          <div className="row">
-            <div className="col sm-2">
-              <Scrambler
-                scramble={this.state.scramble}
-                onClick_scramble={this.handle_scramble}
-                onClick_last_scramble={this.handle_last_scramble}
-              />{" "}
-            </div>
-          </div>
-          <div className="row">
-            <button
-              target="_blank"
-              href="https://www.buymeacoffee.com/rotohands"
-            >
-              <image
-                src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg"
-                alt="Buy me a coffee"
-              />
-              <text>Buy me a coffee</text>
-            </button>
-            <div className="col sm-2">{this.state.cube_moves.join(" ")}</div>
-          </div>
+        </div>
+        <div className="row">
+          <div className="col sm-2">{this.state.cube_moves.join(" ")}</div>
         </div>
         <div className="row">
           <div style={{ whiteSpace: "pre-wrap" }}>
@@ -255,8 +271,6 @@ class App extends React.Component {
           onStart={(timer_start) => this.handle_onStart_timer(timer_start)}
           onStop={(timer_finish) => this.handle_onStop_timer(timer_finish)}
         />
-
-        <Setting export_setting={this.handle_export_setting} />
       </React.Fragment>
     );
   }

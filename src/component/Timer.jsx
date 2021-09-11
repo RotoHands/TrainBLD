@@ -84,13 +84,22 @@ class Timer extends React.Component {
       this.props.onStop(Date.now());
     }
   };
-
+  // componentDidUpdate() {
+  // document.getElementById('timer_element_2').focus();
+  // }
   render() {
     return (
       <div
+        id="timer_element_2"
+        style={{
+          border: "none",
+          backgroundColor: "transparent",
+          resize: "none",
+          outline: "none",
+        }}
+        tabIndex="0"
         onKeyUp={this.handle_key_press_up}
         onKeyDown={this.handle_key_press_down}
-        tabIndex="0"
       >
         <div className="">
           <div className="row text-center">
@@ -103,7 +112,17 @@ class Timer extends React.Component {
           </div>
         </div>
         <div className="row ">
-          <div className="col-3"></div>
+          <div className="col-3 ms-2">
+            <div
+              style={{
+                whiteSpace: "pre-wrap",
+                fontSize: 20,
+                fontFamily: "Rubik",
+              }}
+            >
+              {this.props.parsed_solve_txt}
+            </div>
+          </div>
           <div
             className="col-6 text-start"
             style={{
@@ -121,7 +140,6 @@ class Timer extends React.Component {
               style={{
                 width: "100%",
                 height: "100%",
-                
               }}
               scramble={this.props.scramble}
             ></scramble-display>

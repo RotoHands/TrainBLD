@@ -13,6 +13,7 @@ class App extends React.Component {
     super();
     this.GiikerCube = this.GiikerCube.bind(this);
     this.state = {
+      timer_focus: null,
       moves_to_show: null,
       solve_status: "Connect Cube",
       last_scramble: null,
@@ -50,6 +51,9 @@ class App extends React.Component {
 
   componentDidMount = () => {
     this.handle_scramble();
+  };
+  componentDidUpdate = () => {
+    document.getElementById("timer_element_2").focus();
   };
   handle_key_press = (e) => {
     console.log(e);
@@ -170,6 +174,7 @@ class App extends React.Component {
   handle_reset_cube = () => {
     this.setState({ cube_moves: [] });
     this.setState({ cube_moves_time: [] });
+    this.setState({ moves_to_show: "" });
     this.handle_solve_status("Ready for scrambling");
   };
   handle_parse_solve = (timer_finish) => {
@@ -207,9 +212,10 @@ class App extends React.Component {
     this.setState({ scramble: SRScrambler.generateHtmlScramble(3, 23) });
   };
   handle_moves_to_show = (cube_moves) => {
-    if (this.state.solve_status == "Scrambling") {
+    if (this.state.solve_status === "Scrambling") {
       this.setState({ moves_to_show: cube_moves.join(" ") });
     } else {
+      console.log("here");
       this.setState({ moves_to_show: "" });
     }
   };
@@ -251,8 +257,7 @@ class App extends React.Component {
         <div style={styleBG}>
           <div className="row align-items-center m-2">
             <div className="col-2">
-              
-              <div className="row">
+              <div className="row mt-5">
                 <ConnectCube onConnect={this.GiikerCube} />
               </div>
             </div>
@@ -303,18 +308,24 @@ class App extends React.Component {
           </div>
         </div>
         <div className="row">
-        
           <div className="col-12">
-
             <Scrambler
+              onReset={this.handle_reset_cube}
               scramble={this.state.scramble}
               onClick_scramble={this.handle_scramble}
               onClick_last_scramble={this.handle_last_scramble}
             />{" "}
           </div>
         </div>
+        <div
+          className="row text-center"
+          style={{ fontFamily: "Rubik", fontSize: 20 }}
+        >
+          <div className="">{this.state.moves_to_show}</div>
+        </div>
         <div className="row">
           <Timer
+            parsed_solve_txt={this.state.parsed_solve_txt}
             scramble={this.state.scramble}
             solve_status={this.state.solve_status}
             onStart={(timer_start) => this.handle_onStart_timer(timer_start)}
@@ -323,14 +334,7 @@ class App extends React.Component {
         </div>
 
         <div className="row">
-          <div className="">{this.state.moves_to_show}</div>
-        </div>
-        <div className="row">
-          <div className="col">
-            <div style={{ whiteSpace: "pre-wrap" }}>
-              {this.state.parsed_solve_txt}
-            </div>
-          </div>
+          <div className="col"></div>
         </div>
         {/* <div className="row"> */}
         {/* <iframe src={this.state.parsed_solve} title="solve"></iframe> */}

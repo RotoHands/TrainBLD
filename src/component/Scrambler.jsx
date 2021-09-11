@@ -40,7 +40,7 @@ class Scrambler extends React.Component {
             <button
               className="btn btn-primary m-1"
               // style={{ width: "140px" }}
-              onClick={this.handle_reset_cube}
+              onClick={this.props.onReset}
             >
               Reset moves
             </button>

@@ -134,7 +134,7 @@ class Setting extends React.Component {
     return (
       <React.Fragment>
         <button
-          className="btn btn-primary m-1 text-sm-start"
+          className="btn btn-primary m-1 ms-2 text-sm-start"
           style={{width:"180px"}}
           onClick={() => this.setState({ open: !this.state.open })}
           aria-controls="example-collapse-text"

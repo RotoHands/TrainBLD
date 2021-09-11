@@ -76,7 +76,7 @@ class App extends React.Component {
       }
     }
 
-    solve_time = (time_end_solve - time_start_solve) / 1000 - memo_time;
+    solve_time = ((time_end_solve - time_start_solve) / 1000 - memo_time).toFixed(2);
     parse_setting_new["SCRAMBLE"] = scramble
       .join(" ")
       .toString()
@@ -92,6 +92,14 @@ class App extends React.Component {
   };
 
   handle_solve_status = (next_status) => {
+    if (next_status == "Parsing didn't succeed") {
+      this.setState({ solve_status: next_status });
+    }
+    if (this.state.solve_status == "Parsing didn't succeed") {
+      new Promise((r) => setTimeout(r, 2000)).then(() => {
+        this.setState({ solve_status: "Ready for scrambling" });
+      });
+    }
     if (
       this.state.solve_status == "Connect Cube" &&
       next_status == "Connecting..."
@@ -122,8 +130,11 @@ class App extends React.Component {
     if (this.state.solve_status == "Memo" && next_status == "Solving") {
       this.setState({ solve_status: next_status });
     }
+    if (this.state.solve_status == "Solving" && next_status == "Parsing...") {
+      this.setState({ solve_status: next_status });
+    }
     if (
-      this.state.solve_status == "Solving" &&
+      this.state.solve_status == "Parsing..." &&
       next_status == "Ready for scrambling"
     ) {
       this.setState({ solve_status: next_status });
@@ -135,8 +146,10 @@ class App extends React.Component {
   };
   handle_onStop_timer = (timer_finish) => {
     this.setState({ timeFinish: timer_finish });
+    this.handle_solve_status("Parsing...");
     this.handle_parse_solve(timer_finish);
-    this.handle_reset_cube();
+    this.setState({ cube_moves: [] });
+    this.setState({ cube_moves_time: [] });
     this.handle_scramble();
   };
   handle_export_setting = (settings) => {
@@ -165,20 +178,25 @@ class App extends React.Component {
       },
       body: JSON.stringify(setting),
     };
-    fetch("http://127.0.0.1:8080", requestOptions).then((response) =>
-      response.json().then((data) => {
-        result = data;
-        this.setState({ parsed_solve: result });
-        if ("cubedb" in result) {
-          this.setState({ parsed_solve_cubedb: result["cubedb"] });
-          window.open(result["cubedb"]);
-        }
-        if ("txt" in result) {
-          console.log(result["txt"]);
-          this.setState({ parsed_solve_txt: result["txt"] });
-        }
-      })
-    );
+    fetch("http://127.0.0.1:8080", requestOptions)
+      .then((response) =>
+        response.json().then((data) => {
+          result = data;
+          this.setState({ parsed_solve: result });
+          if ("cubedb" in result) {
+            this.setState({ parsed_solve_cubedb: result["cubedb"] });
+            window.open(result["cubedb"]);
+          }
+          if ("txt" in result) {
+            console.log(result["txt"]);
+            this.setState({ parsed_solve_txt: result["txt"] });
+          }
+          this.handle_solve_status("Ready for scrambling");
+        })
+      )
+      .catch((data) => {
+        this.handle_solve_status("Parsing didn't succeed");
+      });
   };
   handle_scramble = () => {
     this.setState({ last_scramble: this.state.scramble });
@@ -190,9 +208,9 @@ class App extends React.Component {
 
   render() {
     const styleBG = {
-      "border-radius": "40px",
+      borderRadius: "40px",
       background: "#73AD21",
-      padding: "1px",
+      padding: "4px",
     };
 
     return (
@@ -236,7 +254,6 @@ class App extends React.Component {
               </div>
             </div>
             <div className="col-8 text-center" style={{ fontSize: 80 }}>
-      
               trainBLD
             </div>
             <div className="col-2 mt-2">
@@ -297,6 +314,18 @@ class App extends React.Component {
             onStart={(timer_start) => this.handle_onStart_timer(timer_start)}
             onStop={(timer_finish) => this.handle_onStop_timer(timer_finish)}
           />
+        </div>
+        <div className="row">
+          <div>
+            <scramble-display
+              style={{
+                width: "35vh",
+                height: "25vh",
+                overflow: "hidden",
+              }}
+              scramble={this.state.scramble}
+            ></scramble-display>
+          </div>
         </div>
         <div className="row">
           <div className="">{this.state.cube_moves.join(" ")}</div>

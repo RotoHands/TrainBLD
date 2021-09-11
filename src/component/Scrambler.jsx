@@ -30,16 +30,7 @@ class Scrambler extends React.Component {
         </button>
         <div className="m-2">{this.props.scramble}</div>
 
-        <div>
-          {/* <scramble-display */}
-            {/* style={{ */}
-              {/* width: "35vh", */}
-              {/* height: "25vh", */}
-              {/* overflow: "hidden", */}
-            {/* }} */}
-            {/* scramble={this.props.scramble} */}
-          {/* ></scramble-display> */}
-        </div>
+        
       </div>
     );
   }

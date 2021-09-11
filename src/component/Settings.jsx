@@ -133,8 +133,9 @@ class Setting extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <div className="text-black" style={{fontSize:20}}>
         <button
-          className="btn btn-primary m-1 ms-2 text-sm-start"
+          className="btn btn-primary mb-2 mt-2  text-sm-start"
           style={{width:"180px"}}
           onClick={() => this.setState({ open: !this.state.open })}
           aria-controls="example-collapse-text"
@@ -146,7 +147,7 @@ class Setting extends React.Component {
           </div>
         </button>
         <Collapse in={this.state.open}>
-          <div id="example-collapse-text">
+          <div style={{fontFamily:"Rubik"}} id="example-collapse-text">
             <div>
               <Tabs defaultActiveKey="first">
                 <Tab eventKey="first" title="General">
@@ -246,6 +247,7 @@ class Setting extends React.Component {
             </div>
           </div>
         </Collapse>{" "}
+        </div>
       </React.Fragment>
     );
   }

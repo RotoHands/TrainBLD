@@ -51,7 +51,7 @@ class SettingGeneral extends React.Component {
               </label>
             </div>{" "}
           </div>
-          <div className="row">
+          <div className="row mb-2">
             <div className="col-sm-3">
               <div>
                 <span className="m-2">edge buffer </span>

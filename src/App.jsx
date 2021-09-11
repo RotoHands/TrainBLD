@@ -7,6 +7,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import Scrambler from "./component/Scrambler";
 import Timer from "./component/Timer";
 import { Helmet } from "react-helmet";
+import logo from './images/logo2.png'
 
 class App extends React.Component {
   constructor() {
@@ -225,16 +226,21 @@ class App extends React.Component {
 
   render() {
     const styleBG = {
-      borderRadius: "40px",
-      background: "#73AD21",
-      padding: "4px",
+      borderRadius: "0px",
+      background: "#A1CAE5",
+      // background: "#A7C5EB",
+      // background: "#79A3B1",
+
+      // background: "#BAE8E8",
+      // background: "#BAE8E8",
+
     };
     // document.body.style.overflow = "hidden";
     return (
       <React.Fragment>
         <div className="application">
           <Helmet>
-            <style>{"body { background-color: white; }"}</style>
+            <style>{"body { background-color: #11324D;color: #F6F6F6 }"}</style>
           </Helmet>
         </div>
         {/* <div className="col-sm"> */}
@@ -255,16 +261,18 @@ class App extends React.Component {
         {/* </button> */}
         {/* </div> */}
         <div style={styleBG}>
-          <div className="row align-items-center m-2">
+          <div className="row align-items-center">
             <div className="col-2">
-              <div className="row mt-5">
+              <div className="row">
+                <img src={logo} className="rounded mx-auto" alt="Responsive image" style={{width:"60%"}}/></div>
+              <div className="row">
                 <ConnectCube onConnect={this.GiikerCube} />
               </div>
             </div>
-            <div className="col-8 text-center" style={{ fontSize: 80 }}>
-              trainBLD
+            <div className="col-8 text-center fst-italic mt-1"  style={{ fontSize: 80 }}>
+              TrainBLD
             </div>
-            <div className="col-2 mt-2">
+            <div className="col-2">
               <div
                 className="btn-toolbar"
                 role="group"
@@ -300,10 +308,13 @@ class App extends React.Component {
               >
                 Support :)
               </button>
-              <div className="text-center">By Rotem Ifrach</div>
+              <div className="text-center fst-italic" style={{fontSize:16}}>By Rotem Ifrach</div>
+              
             </div>
+            
           </div>
           <div className="row ms-4">
+
             <Setting export_setting={this.handle_export_setting} />
           </div>
         </div>

@@ -1,5 +1,6 @@
 // based on https://codesandbox.io/s/31rvox7ojm Patryk Mazurkiewicz patmaz
 import React, { Component } from "react";
+import { ScrambleDisplay } from "scramble-display";
 
 class Timer extends React.Component {
   constructor(props) {
@@ -92,17 +93,41 @@ class Timer extends React.Component {
         tabIndex="0"
       >
         <div className="">
-          <span className={this.state.ready_state}>
-            {this.props.solve_status}
-          </span>
+          <div className="row text-center">
+            <div
+              className={this.state.ready_state}
+              style={{ fontSize: 40, fontFamily: "Rubik" }}
+            >
+              {this.props.solve_status}
+            </div>
+          </div>
         </div>
-        <div>
-          <span>
+        <div className="row ">
+          <div className="col-3"></div>
+          <div
+            className="col-6 text-start"
+            style={{
+              fontSize: 190,
+              fontFamily: "digital-7",
+              src: "./digital-7.ttf",
+            }}
+          >
             {this.formatTime(this.state.currentTimeMin)}:
             {this.formatTime(this.state.currentTimeSec)}:
             {this.formatTime(this.state.currentTimeMs, "ms")}
-          </span>
+          </div>
+          <div className="col-2">
+            <scramble-display
+              style={{
+                width: "100%",
+                height: "100%",
+                
+              }}
+              scramble={this.props.scramble}
+            ></scramble-display>
+          </div>
         </div>
+        <div className="row"></div>
       </div>
     );
   }

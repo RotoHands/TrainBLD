@@ -13,6 +13,7 @@ class App extends React.Component {
     super();
     this.GiikerCube = this.GiikerCube.bind(this);
     this.state = {
+      moves_to_show: null,
       solve_status: "Connect Cube",
       last_scramble: null,
       scramble: null,
@@ -76,7 +77,10 @@ class App extends React.Component {
       }
     }
 
-    solve_time = ((time_end_solve - time_start_solve) / 1000 - memo_time).toFixed(2);
+    solve_time = (
+      (time_end_solve - time_start_solve) / 1000 -
+      memo_time
+    ).toFixed(2);
     parse_setting_new["SCRAMBLE"] = scramble
       .join(" ")
       .toString()
@@ -200,7 +204,14 @@ class App extends React.Component {
   };
   handle_scramble = () => {
     this.setState({ last_scramble: this.state.scramble });
-    this.setState({ scramble: SRScrambler.generateHtmlScramble(3, 25) });
+    this.setState({ scramble: SRScrambler.generateHtmlScramble(3, 23) });
+  };
+  handle_moves_to_show = (cube_moves) => {
+    if (this.state.solve_status == "Scrambling") {
+      this.setState({ moves_to_show: cube_moves.join(" ") });
+    } else {
+      this.setState({ moves_to_show: "" });
+    }
   };
   handle_last_scramble = () => {
     this.setState({ scramble: this.state.last_scramble });
@@ -212,7 +223,7 @@ class App extends React.Component {
       background: "#73AD21",
       padding: "4px",
     };
-
+    // document.body.style.overflow = "hidden";
     return (
       <React.Fragment>
         <div className="application">
@@ -240,15 +251,7 @@ class App extends React.Component {
         <div style={styleBG}>
           <div className="row align-items-center m-2">
             <div className="col-2">
-              <div className="row">
-                <button
-                  className="btn btn-primary m-2 ms-4 text-sm-start"
-                  style={{ width: "180px" }}
-                  onClick={this.handle_reset_cube}
-                >
-                  Reset moves applied
-                </button>
-              </div>
+              
               <div className="row">
                 <ConnectCube onConnect={this.GiikerCube} />
               </div>
@@ -300,7 +303,9 @@ class App extends React.Component {
           </div>
         </div>
         <div className="row">
+        
           <div className="col-12">
+
             <Scrambler
               scramble={this.state.scramble}
               onClick_scramble={this.handle_scramble}
@@ -310,25 +315,15 @@ class App extends React.Component {
         </div>
         <div className="row">
           <Timer
+            scramble={this.state.scramble}
             solve_status={this.state.solve_status}
             onStart={(timer_start) => this.handle_onStart_timer(timer_start)}
             onStop={(timer_finish) => this.handle_onStop_timer(timer_finish)}
           />
         </div>
+
         <div className="row">
-          <div>
-            <scramble-display
-              style={{
-                width: "35vh",
-                height: "25vh",
-                overflow: "hidden",
-              }}
-              scramble={this.state.scramble}
-            ></scramble-display>
-          </div>
-        </div>
-        <div className="row">
-          <div className="">{this.state.cube_moves.join(" ")}</div>
+          <div className="">{this.state.moves_to_show}</div>
         </div>
         <div className="row">
           <div className="col">
@@ -1023,6 +1018,8 @@ class App extends React.Component {
             cube_moves_time_new.push(Date.now());
             this_App.setState({ cube_moves: cube_moves_new });
             this_App.setState({ cube_moves_time: cube_moves_time_new });
+            this_App.handle_moves_to_show(cube_moves_new);
+
             // console.log(this_App.state.cube_moves.join(" "));
             // document.getElementById("moves_print").textContent = this.state.cube_moves.join(' ')
           }

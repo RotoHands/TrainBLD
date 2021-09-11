@@ -6,7 +6,7 @@ class ConnectCube extends React.Component {
     return (
       <React.Fragment>
         <button
-          className="btn btn-primary m-1 text-sm-start"
+          className="btn btn-primary  mt-3 ms-4 text-sm-start"
           onClick={onConnect}
           style={{ width: "180px" }}
         >

@@ -189,6 +189,12 @@ class App extends React.Component {
   };
 
   render() {
+    const styleBG = {
+      "border-radius": "40px",
+      background: "#73AD21",
+      padding: "1px",
+    };
+
     return (
       <React.Fragment>
         <div className="application">
@@ -196,80 +202,115 @@ class App extends React.Component {
             <style>{"body { background-color: white; }"}</style>
           </Helmet>
         </div>
-          {/* <div className="col-sm"> */}
-          {/* <button */}
-          {/* className="btn btn-primary m-4" */}
-          {/* onClick={this.handle_parse_solve} */}
-          {/* > */}
-          {/* Parse Solve */}
-          {/* </button> */}
-          {/* </div> */}
-          {/* <div className="col-sm"> */}
-          {/* <button */}
-          {/* role="button" */}
-          {/* className="btn btn-primary m-4" */}
-          {/* onClick={() => window.open(this.state.parsed_solve)} */}
-          {/* > */}
-          {/* CUBEDB */}
-          {/* </button> */}
-          {/* </div> */}
-        <div className="col-sm">
-          <button
-            className="btn btn-primary m-1 text-sm-start"
-            style={{ width: "180px" }}
-            onClick={this.handle_reset_cube}
-          >
-            Reset moves applied
-          </button>
+        {/* <div className="col-sm"> */}
+        {/* <button */}
+        {/* className="btn btn-primary m-4" */}
+        {/* onClick={this.handle_parse_solve} */}
+        {/* > */}
+        {/* Parse Solve */}
+        {/* </button> */}
+        {/* </div> */}
+        {/* <div className="col-sm"> */}
+        {/* <button */}
+        {/* role="button" */}
+        {/* className="btn btn-primary m-4" */}
+        {/* onClick={() => window.open(this.state.parsed_solve)} */}
+        {/* > */}
+        {/* CUBEDB */}
+        {/* </button> */}
+        {/* </div> */}
+        <div style={styleBG}>
+          <div className="row align-items-center m-2">
+            <div className="col-2">
+              <div className="row">
+                <button
+                  className="btn btn-primary m-2 ms-4 text-sm-start"
+                  style={{ width: "180px" }}
+                  onClick={this.handle_reset_cube}
+                >
+                  Reset moves applied
+                </button>
+              </div>
+              <div className="row">
+                <ConnectCube onConnect={this.GiikerCube} />
+              </div>
+            </div>
+            <div className="col-8 text-center" style={{ fontSize: 80 }}>
+      
+              trainBLD
+            </div>
+            <div className="col-2 mt-2">
+              <div
+                className="btn-toolbar"
+                role="group"
+                aria-label="Basic example"
+              >
+                <button
+                  className="btn btn-primary m-1 text-end"
+                  // style={{ width: "180px" }}
+                  onClick={() =>
+                    window.open(
+                      "https://www.youtube.com/channel/UCVGKCZFamCuYXiln9w3Cnxw"
+                    )
+                  }
+                >
+                  Youtube
+                </button>
+                <button
+                  className="btn btn-primary m-1 text-end"
+                  // style={{ width: "180px" }}
+                  onClick={() => window.open("https://github.com/RotoHands")}
+                >
+                  Github
+                </button>
+              </div>
+              <button
+                className="btn btn-primary m-1 mt-2"
+                style={{ width: "167px" }}
+                onClick={() =>
+                  window.open(
+                    "https://www.paypal.com/donate?hosted_button_id=X9X9VZEAYK3DJ"
+                  )
+                }
+              >
+                Support :)
+              </button>
+              <div className="text-center">By Rotem Ifrach</div>
+            </div>
+          </div>
+          <div className="row ms-4">
+            <Setting export_setting={this.handle_export_setting} />
+          </div>
         </div>
-        <div className="col-sm">
-          <ConnectCube onConnect={this.GiikerCube} />
-        </div>
-        <div className="col sm-2">
+        <div className="row">
+          <div className="col-12">
             <Scrambler
               scramble={this.state.scramble}
               onClick_scramble={this.handle_scramble}
               onClick_last_scramble={this.handle_last_scramble}
             />{" "}
           </div>
-        <div className="col">
-          <div>
-            <Setting export_setting={this.handle_export_setting} />
-          </div>
-        </div>
-
-        <div className="col-sm">
-          <button
-            className="btn btn-primary m-1 text-sm-start"
-            style={{ width: "180px" }}
-            onClick={() =>
-              window.open(
-                "https://www.paypal.com/donate?hosted_button_id=X9X9VZEAYK3DJ"
-              )
-            }
-          >
-            Support :)
-          </button>
         </div>
         <div className="row">
-         
+          <Timer
+            solve_status={this.state.solve_status}
+            onStart={(timer_start) => this.handle_onStart_timer(timer_start)}
+            onStop={(timer_finish) => this.handle_onStop_timer(timer_finish)}
+          />
         </div>
         <div className="row">
-          <div className="col sm-2">{this.state.cube_moves.join(" ")}</div>
+          <div className="">{this.state.cube_moves.join(" ")}</div>
         </div>
         <div className="row">
-          <div style={{ whiteSpace: "pre-wrap" }}>
-            {this.state.parsed_solve_txt}
+          <div className="col">
+            <div style={{ whiteSpace: "pre-wrap" }}>
+              {this.state.parsed_solve_txt}
+            </div>
           </div>
         </div>
         {/* <div className="row"> */}
         {/* <iframe src={this.state.parsed_solve} title="solve"></iframe> */}
         {/* </div> */}
-        <Timer
-          solve_status={this.state.solve_status}
-          onStart={(timer_start) => this.handle_onStart_timer(timer_start)}
-          onStop={(timer_finish) => this.handle_onStop_timer(timer_finish)}
-        />
       </React.Fragment>
     );
   }

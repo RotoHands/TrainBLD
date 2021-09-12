@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import Scrambler from "./component/Scrambler";
 import Timer from "./component/Timer";
 import { Helmet } from "react-helmet";
-import logo from './images/logo2.png'
+import logo from "./images/logo2.png";
 
 class App extends React.Component {
   constructor() {
@@ -30,7 +30,7 @@ class App extends React.Component {
       parsed_solve_txt: null,
       parsed_solve_cubedb: null,
       parse_settings: {
-        DIFF_BETWEEN_ALGS: "0.89",
+        DIFF_BETWEEN_ALGS: "0.88",
         MEMO: "23.32",
         TIME_SOLVE: "56.12",
         NAME_OF_SOLVE: "example_smart_cube",
@@ -233,7 +233,6 @@ class App extends React.Component {
 
       // background: "#BAE8E8",
       // background: "#BAE8E8",
-
     };
     // document.body.style.overflow = "hidden";
     return (
@@ -264,12 +263,21 @@ class App extends React.Component {
           <div className="row align-items-center">
             <div className="col-2">
               <div className="row">
-                <img src={logo} className="rounded mx-auto" alt="Responsive image" style={{width:"60%"}}/></div>
+                <img
+                  src={logo}
+                  className="rounded mx-auto"
+                  alt="Responsive image"
+                  style={{ width: "60%" }}
+                />
+              </div>
               <div className="row">
                 <ConnectCube onConnect={this.GiikerCube} />
               </div>
             </div>
-            <div className="col-8 text-center fst-italic mt-1"  style={{ fontSize: 80 }}>
+            <div
+              className="col-8 text-center fst-italic mt-1"
+              style={{ fontSize: 80 }}
+            >
               TrainBLD
             </div>
             <div className="col-2">
@@ -308,13 +316,12 @@ class App extends React.Component {
               >
                 Support :)
               </button>
-              <div className="text-center fst-italic" style={{fontSize:16}}>By Rotem Ifrach</div>
-              
+              <div className="text-center fst-italic" style={{ fontSize: 16 }}>
+                By Rotem Ifrach
+              </div>
             </div>
-            
           </div>
           <div className="row ms-4">
-
             <Setting export_setting={this.handle_export_setting} />
           </div>
         </div>
@@ -487,6 +494,9 @@ class App extends React.Component {
         var moves = valhex.slice(32, 40);
         var prevMoves = [];
         for (var i = 0; i < moves.length; i += 2) {
+          console.log(
+            "BDLURF".charAt(moves[i] - 1) + " 2'".charAt((moves[i + 1] - 1) % 7)
+          );
           prevMoves.push(
             "BDLURF".charAt(moves[i] - 1) + " 2'".charAt((moves[i + 1] - 1) % 7)
           );

@@ -9,7 +9,6 @@ import Timer from "./component/Timer";
 import { Helmet } from "react-helmet";
 import logo from "./images/logo2.png";
 import LZString from "lz-string";
-
 class App extends React.Component {
   constructor() {
     super();
@@ -412,10 +411,13 @@ class App extends React.Component {
           })
           .then(function (value) {
             var initState = parseState(value);
-            // if (initState[0] != kernel.getProp('giiSolved', mathlib.SOLVED_FACELET)) {
+            // if (initState[0] != kernel.getProp("giiSolved", SOLVED_FACELET)) {
+            // console.log("here");
+            // }
+
             // 	var rst = kernel.getProp('giiRST');
             // if (rst == 'a' || rst == 'p' && confirm(CONFIRM_GIIRST)) {
-            // 	giikerutil.markSolved();
+            // giikerutil.markSolved();
             // }
             // }
             return _chrct.addEventListener(
@@ -484,7 +486,7 @@ class App extends React.Component {
       }
 
       function parseState(value) {
-        // var timestamp = $.now();
+        var timestamp = Date.now();
 
         var valhex = toHexVal(value);
         var eo = [];
@@ -493,13 +495,15 @@ class App extends React.Component {
             eo.push(valhex[i + 28] & mask ? 1 : 0);
           }
         }
+
         // var cc = new mathlib.CubieCube();
         // var coMask = [-1, 1, -1, 1, 1, -1, 1, -1];
         // for (var i = 0; i < 8; i++) {
-        // 	cc.ca[i] = (valhex[i] - 1) | ((3 + valhex[i + 8] * coMask[i]) % 3) << 3;
+          // cc.ca[i] =
+            // (valhex[i] - 1) | ((3 + valhex[i + 8] * coMask[i]) % 3 << 3);
         // }
         // for (var i = 0; i < 12; i++) {
-        // 	cc.ea[i] = (valhex[i + 16] - 1) << 1 | eo[i];
+          // cc.ea[i] = ((valhex[i + 16] - 1) << 1) | eo[i];
         // }
         // var facelet = cc.toFaceCube(cFacelet, eFacelet);
 
@@ -513,19 +517,20 @@ class App extends React.Component {
             "BDLURF".charAt(moves[i] - 1) + " 2'".charAt((moves[i + 1] - 1) % 7)
           );
         }
+        console.log(prevMoves);
         // if (DEBUG) {
         // var hexstr = [];
         // for (var i = 0; i < 40; i++) {
         // hexstr.push("0123456789abcdef".charAt(valhex[i]));
         // }
-        console.log("[giiker]", "Raw Data: ", valhex.join(""));
+        // console.log("[giiker]", "Raw Data: ", valhex.join(""));
         // console.log('[giiker]', "Current State: ", facelet);
         // console.log('[giiker]', "A Valid Generator: ", scramble_333.genFacelet(facelet));
-        console.log(
-          "[giiker]",
-          "Previous Moves: ",
-          prevMoves.reverse().join(" ")
-        );
+        // console.log(
+        // "[giiker]",
+        //  "Previous Moves: ",
+        //  prevMoves.reverse().join(" ")
+        // );
         prevMoves.reverse();
         // }
         // callback(facelet, prevMoves, timestamp, deviceName);

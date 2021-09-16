@@ -8,6 +8,7 @@ import Scrambler from "./component/Scrambler";
 import Timer from "./component/Timer";
 import { Helmet } from "react-helmet";
 import logo from "./images/logo2.png";
+import LZString from "lz-string";
 
 class App extends React.Component {
   constructor() {
@@ -69,23 +70,23 @@ class App extends React.Component {
     let moves_time = this.state.cube_moves_time;
     let time_start_solve = this.state.timeStart;
     let time_end_solve = timer_finish;
+    console.log(time_end_solve - time_start_solve);
 
     for (let i = 0; i < moves.length; i++) {
       if (moves_time[i] < time_start_solve) {
         scramble.push(moves[i]);
       }
-      if (moves_time[i] < time_end_solve && moves_time[i] > time_start_solve) {
+      if (moves_time[i] > time_start_solve && moves_time[i] < timer_finish) {
         if (memo_time === 0) {
           memo_time = (moves_time[i] - time_start_solve) / 1000;
         }
         solve.push(moves[i]);
       }
     }
+    console.log("scramble :\n", scramble.join(" "));
+    console.log("solve :\n", solve.join(" "));
 
-    solve_time = (
-      (time_end_solve - time_start_solve) / 1000 -
-      memo_time
-    ).toFixed(2);
+    solve_time = ((time_end_solve - time_start_solve) / 1000).toFixed(2);
     parse_setting_new["SCRAMBLE"] = scramble
       .join(" ")
       .toString()
@@ -105,7 +106,7 @@ class App extends React.Component {
       this.setState({ solve_status: next_status });
     }
     if (this.state.solve_status == "Parsing didn't succeed") {
-      new Promise((r) => setTimeout(r, 2000)).then(() => {
+      new Promise((r) => setTimeout(r, 1500)).then(() => {
         this.setState({ solve_status: "Ready for scrambling" });
       });
     }
@@ -151,15 +152,26 @@ class App extends React.Component {
   };
   handle_onStart_timer = (timer_start) => {
     this.setState({ timeStart: timer_start });
+    console.log("start", timer_start);
     this.handle_solve_status("Memo");
   };
   handle_onStop_timer = (timer_finish) => {
-    this.setState({ timeFinish: timer_finish });
-    this.handle_solve_status("Parsing...");
-    this.handle_parse_solve(timer_finish);
-    this.setState({ cube_moves: [] });
-    this.setState({ cube_moves_time: [] });
-    this.handle_scramble();
+    console.log(this.state.timeStart);
+    console.log(timer_finish);
+    console.log(timer_finish - this.state.timeStart);
+
+    new Promise((resolve) => setTimeout(resolve, 1))
+      .then((data) => {
+        console.log(this.state.cube_moves);
+        console.log("fibish");
+        this.setState({ timeFinish: timer_finish });
+        this.handle_solve_status("Parsing...");
+        this.handle_parse_solve(timer_finish);
+        this.setState({ cube_moves: [] });
+        this.setState({ cube_moves_time: [] });
+        this.handle_scramble();
+      })
+      .catch((data) => console.log(data));
   };
   handle_export_setting = (settings) => {
     let new_settings = { ...this.state.parse_settings };
@@ -216,7 +228,6 @@ class App extends React.Component {
     if (this.state.solve_status === "Scrambling") {
       this.setState({ moves_to_show: cube_moves.join(" ") });
     } else {
-      console.log("here");
       this.setState({ moves_to_show: "" });
     }
   };
@@ -364,6 +375,7 @@ class App extends React.Component {
   GiikerCube = () => {
     const this_App = this;
     var _device = null;
+
     var GiikerCube = (function () {
       var _server = null;
       var _chrct = null;
@@ -494,9 +506,9 @@ class App extends React.Component {
         var moves = valhex.slice(32, 40);
         var prevMoves = [];
         for (var i = 0; i < moves.length; i += 2) {
-          console.log(
-            "BDLURF".charAt(moves[i] - 1) + " 2'".charAt((moves[i + 1] - 1) % 7)
-          );
+          // console.log(
+          // "BDLURF".charAt(moves[i] - 1) + " 2'".charAt((moves[i + 1] - 1) % 7)
+          // );
           prevMoves.push(
             "BDLURF".charAt(moves[i] - 1) + " 2'".charAt((moves[i + 1] - 1) % 7)
           );
@@ -595,7 +607,7 @@ class App extends React.Component {
         if (!key) {
           return;
         }
-        // key = JSON.parse(LZString.decompressFromEncodedURIComponent(key));
+        key = JSON.parse(LZString.decompressFromEncodedURIComponent(key));
         for (var i = 0; i < 6; i++) {
           key[i] = (key[i] + value.getUint8(5 - i)) & 0xff;
         }
@@ -662,7 +674,6 @@ class App extends React.Component {
         return device.gatt
           .connect()
           .then(function (server) {
-            this_App.handle_solve_status("Ready for scrambling");
             _server = server;
             return checkHardware(server);
           })
@@ -682,6 +693,7 @@ class App extends React.Component {
             return _service_data.getCharacteristic(CHRCT_UUID_F6);
           })
           .then(function (chrct) {
+            this_App.handle_solve_status("Ready for scrambling");
             _chrct_f6 = chrct;
             return _service_data.getCharacteristic(CHRCT_UUID_F7);
           })
@@ -746,6 +758,7 @@ class App extends React.Component {
             prevMoves = [];
             for (var i = 0; i < 6; i++) {
               var m = value[13 + i];
+              // console.log("URFDLB".charAt(~~(m / 3)) + " 2'".charAt(m % 3));
               prevMoves.unshift(
                 "URFDLB".charAt(~~(m / 3)) + " 2'".charAt(m % 3)
               );
@@ -800,10 +813,44 @@ class App extends React.Component {
                   prevTimestamp += timestamp - _timestamp;
                 }
 
+                let moves = {
+                  0: "U",
+                  1: "U2",
+                  2: "U'",
+                  3: "R",
+                  4: "R2",
+                  5: "R'",
+                  6: "F",
+                  7: "F2",
+                  8: "F'",
+                  9: "D",
+                  10: "D2",
+                  11: "D'",
+                  12: "L",
+                  13: "L2",
+                  14: "L'",
+                  15: "B",
+                  16: "B2",
+                  17: "B'",
+                };
+                const cube_moves_new = [...this_App.state.cube_moves];
+                const cube_moves_time_new = [...this_App.state.cube_moves_time];
                 for (var i = moveDiff - 1; i >= 0; i--) {
+                  if (cube_moves_new.length === 0) {
+                    this_App.handle_solve_status("Scrambling");
+                  }
+                  if (this_App.state.solve_status == "Memo") {
+                    this_App.handle_solve_status("Solving");
+                  }
                   var m =
                     "URFDLB".indexOf(prevMoves[i][0]) * 3 +
                     " 2'".indexOf(prevMoves[i][1]);
+                  cube_moves_new.push(moves[m]);
+                  console.log(moves[m]);
+                  cube_moves_time_new.push(Date.now());
+                  this_App.setState({ cube_moves: cube_moves_new });
+                  this_App.setState({ cube_moves_time: cube_moves_time_new });
+                  this_App.handle_moves_to_show(cube_moves_new);
                   // mathlib.CubieCube.EdgeMult(prevCubie, mathlib.CubieCube.moveCube[m], curCubie);
                   // mathlib.CubieCube.CornMult(prevCubie, mathlib.CubieCube.moveCube[m], curCubie);
                   prevTimestamp += timeOffs[i];

@@ -7,6 +7,8 @@ class Timer extends React.Component {
     super(props);
 
     this.state = {
+      start_time: null,
+      update_ref: null,
       ready_state: "",
       running: false,
       currentTimeMs: 0,
@@ -29,6 +31,8 @@ class Timer extends React.Component {
 
   start = () => {
     if (!this.state.running) {
+      this.setState({ start_time: Date.now() });
+      this.setState({ update_ref: Date.now() });
       this.setState({ running: true });
       this.watch = setInterval(() => this.pace(), 10);
     }
@@ -37,18 +41,15 @@ class Timer extends React.Component {
   stop = () => {
     this.setState({ running: false });
     clearInterval(this.watch);
+    this.pace();
   };
 
   pace = () => {
-    this.setState({ currentTimeMs: this.state.currentTimeMs + 10 });
-    if (this.state.currentTimeMs >= 1000) {
-      this.setState({ currentTimeSec: this.state.currentTimeSec + 1 });
-      this.setState({ currentTimeMs: 0 });
-    }
-    if (this.state.currentTimeSec >= 60) {
-      this.setState({ currentTimeMin: this.state.currentTimeMin + 1 });
-      this.setState({ currentTimeSec: 0 });
-    }
+    const diff = Date.now() - this.state.start_time;
+    this.setState({ currentTimeMs: diff % 1000 });
+    this.setState({ update_ref: Date.now() });
+    this.setState({ currentTimeSec: Math.floor(diff / 1000) % 60 });
+    this.setState({ currentTimeMin: Math.floor(diff / 1000 / 60) });
   };
 
   reset = () => {
@@ -81,7 +82,7 @@ class Timer extends React.Component {
     ) {
       this.setState({ ready_state: "" });
       this.stop();
-      this.props.onStop(Date.now());
+      this.props.onStop(this.state.update_ref);
     }
   };
   // componentDidUpdate() {
@@ -132,7 +133,7 @@ class Timer extends React.Component {
             }}
           >
             {this.formatTime(this.state.currentTimeMin)}:
-            {this.formatTime(this.state.currentTimeSec)}:
+            {this.formatTime(this.state.currentTimeSec)}.
             {this.formatTime(this.state.currentTimeMs, "ms")}
           </div>
           <div className="col-2">

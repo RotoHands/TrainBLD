@@ -35,7 +35,8 @@ class App extends React.Component {
         MEMO: "23.32",
         TIME_SOLVE: "56.12",
         NAME_OF_SOLVE: "example_smart_cube",
-        GEN_PARSED_TO_CUBEDB: false,
+        GEN_PARSED_TO_CUBEDB: true,
+        GEN_PARSED_TO_TXT: true,
         SMART_CUBE: true,
         COMMS_UNPARSED: false,
         EDGES_BUFFER: "UF",
@@ -102,7 +103,10 @@ class App extends React.Component {
     console.log(this.state.cube_moves_time);
 
     let cube_moves_time_diff = [];
-    let only_solve_moves = this.state.cube_moves_time.slice(scramble.length, this.state.cube_moves_time.length);
+    let only_solve_moves = this.state.cube_moves_time.slice(
+      scramble.length,
+      this.state.cube_moves_time.length
+    );
     console.log(
       "asd",
       this.state.cube_moves_time.slice(scramble.length).join(" ")
@@ -110,7 +114,7 @@ class App extends React.Component {
     cube_moves_time_diff.push("0.0");
     for (var i = 0; i < only_solve_moves.length - 1; i++) {
       cube_moves_time_diff.push(
-        ((only_solve_moves[i + 1] - only_solve_moves[i]) / 1000).toFixed(2)
+        ((only_solve_moves[i + 1] - only_solve_moves[0]) / 1000).toFixed(2)
       );
     }
     console.log(cube_moves_time_diff);

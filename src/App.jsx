@@ -47,6 +47,7 @@ class App extends React.Component {
         SCRAMBLE: "R2 U' B2 F2 L2 U' R2 D F2 U2 B2 R' D' L' D F' D2 B2 D2 L2\n",
         SOLVE:
           "\n U' F' B U B U' F B' R B' R' U U' D R' U' D B B U D' R' U D' \n R U' R' U D' F U F' U' D R' F R F' B U' U' F B' R F' R U' U'\n L D U' F' U' F U D' L' U' U D' F U' D R' U' R U D' F' D R F' \n L' F R' L D' L D L' D' L' D R L' F' L F R' L U' D' R' U U R'\n D R U U R' D' R2 U D D R U R' D R U' R' D D R' U R' D' R U \n U R' D R U R R' D' R D R' D' R U U R' D R D' R' D R U U",
+        SOLVE_TIME_MOVES: [],
       },
     };
   }
@@ -97,6 +98,25 @@ class App extends React.Component {
       .replace(/  +/g, " ");
     parse_setting_new["MEMO"] = memo_time.toString();
     parse_setting_new["TIME_SOLVE"] = solve_time.toString();
+    console.log(scramble.length);
+    console.log(this.state.cube_moves_time);
+
+    let cube_moves_time_diff = [];
+    let only_solve_moves = this.state.cube_moves_time.slice(scramble.length, this.state.cube_moves_time.length);
+    console.log(
+      "asd",
+      this.state.cube_moves_time.slice(scramble.length).join(" ")
+    );
+    cube_moves_time_diff.push("0.0");
+    for (var i = 0; i < only_solve_moves.length - 1; i++) {
+      cube_moves_time_diff.push(
+        ((only_solve_moves[i + 1] - only_solve_moves[i]) / 1000).toFixed(2)
+      );
+    }
+    console.log(cube_moves_time_diff);
+
+    parse_setting_new["SOLVE_TIME_MOVES"] =
+      JSON.stringify(cube_moves_time_diff);
     this.setState({ parse_settings: parse_setting_new });
     return parse_setting_new;
   };
@@ -106,7 +126,7 @@ class App extends React.Component {
       this.setState({ solve_status: next_status });
     }
     if (this.state.solve_status == "Parsing didn't succeed") {
-      new Promise((r) => setTimeout(r, 1500)).then(() => {
+      new Promise((r) => setTimeout(r, 2000)).then(() => {
         this.setState({ solve_status: "Ready for scrambling" });
       });
     }
@@ -543,6 +563,7 @@ class App extends React.Component {
               break;
             }
           }
+
           let cube_moves = [...this_App.state.cube_moves];
           let cube_moves_time = [...this_App.state.cube_moves_time];
           if (cube_moves.length === 0) {
@@ -553,7 +574,9 @@ class App extends React.Component {
           }
           for (var i = 0; i < new_moves.length; i++) {
             cube_moves.push(new_moves[i]);
-            cube_moves_time.push(new_moves_time[i]);
+            cube_moves_time.push(
+              ((new_moves_time[i] - this_App.state.timeStart) / 1000).toFixed(2)
+            );
           }
           this_App.setState({ cube_moves: cube_moves });
           this_App.setState({ cube_moves_time: cube_moves_time });

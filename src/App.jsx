@@ -31,9 +31,10 @@ class App extends React.Component {
       parsed_solve_txt: null,
       parsed_solve_cubedb: null,
       parse_settings: {
-        DIFF_BETWEEN_ALGS: "0.88",
-        MEMO: "23.32",
-        TIME_SOLVE: "56.12",
+        DATE_SOLVE: "9/18/2021, 12:22 AM",
+        DIFF_BETWEEN_ALGS: "0.87",
+        MEMO: "1.39",
+        TIME_SOLVE: "30.48",
         NAME_OF_SOLVE: "example_smart_cube",
         GEN_PARSED_TO_CUBEDB: true,
         GEN_PARSED_TO_TXT: true,
@@ -45,9 +46,10 @@ class App extends React.Component {
         GEN_WITH_MOVE_COUNT: true,
         LETTER_PAIRS_DICT:
           '{"UBL":"A","UBR":"B","UFR":"C","UFL":"D","LBU":"E","LFU":"F","LFD":"G","LDB":"H","FUL":"I","FUR":"J","FRD":"K","FDL":"L","RFU":"M","RBU":"N","RBD":"O","RFD":"P","BUR":"Q","BUL":"R","BLD":"S","BRD":"T","DFL":"U","DFR":"V","DBR":"W","DBL":"X","UB":"A","UR":"B","UF":"C","UL":"D","LU":"E","LF":"F","LD":"G","LB":"H","FU":"I","FR":"J","FD":"K","FL":"L","RU":"M","RB":"N","RD":"O","RF":"P","BU":"Q","BL":"R","BD":"S","BR":"T","DF":"U","DR":"V","DB":"W","DL":"X"}',
-        SCRAMBLE: "R2 U' B2 F2 L2 U' R2 D F2 U2 B2 R' D' L' D F' D2 B2 D2 L2\n",
+        SCRAMBLE:
+          "F' R' B' D L' B' B' D' D' L' U B' R R F' R R B D' D' B U U L L U U L L B' R' U'",
         SOLVE:
-          "\n U' F' B U B U' F B' R B' R' U U' D R' U' D B B U D' R' U D' \n R U' R' U D' F U F' U' D R' F R F' B U' U' F B' R F' R U' U'\n L D U' F' U' F U D' L' U' U D' F U' D R' U' R U D' F' D R F' \n L' F R' L D' L D L' D' L' D R L' F' L F R' L U' D' R' U U R'\n D R U U R' D' R2 U D D R U R' D R U' R' D D R' U R' D' R U \n U R' D R U R R' D' R D R' D' R U U R' D R D' R' D R U U",
+          "R F' L' F R' L D' L D L' U' U' L' R B R B' R' L U R' U R' R' U D' F U' F' U' D R U R R' F' L F L' R U' L' U L R' R' U' R U' D B' B' U D' R U R R F' R' U D' F F D U' R' F R' D D U R U' R' D D R U R' U' R R U R' D' R' D R U U R' D' R U D U R U U' U' R' D R R U R' R' U' R R D' R' R' U R R U' R' R' R D' R' D R U R' D' R U' D R'",
         SOLVE_TIME_MOVES: [],
       },
     };
@@ -111,10 +113,12 @@ class App extends React.Component {
       "asd",
       this.state.cube_moves_time.slice(scramble.length).join(" ")
     );
-    cube_moves_time_diff.push("0.0");
+    cube_moves_time_diff.push(0);
     for (var i = 0; i < only_solve_moves.length - 1; i++) {
       cube_moves_time_diff.push(
-        ((only_solve_moves[i + 1] - only_solve_moves[0]) / 1000).toFixed(2)
+        parseFloat(
+          ((only_solve_moves[i + 1] - only_solve_moves[0]) / 1000).toFixed(2)
+        )
       );
     }
     console.log(cube_moves_time_diff);
@@ -176,6 +180,20 @@ class App extends React.Component {
   };
   handle_onStart_timer = (timer_start) => {
     this.setState({ timeStart: timer_start });
+    let parse_setting_new = { ...this.state.parse_settings };
+    var options = {
+      hour: "2-digit",
+      minute: "2-digit",
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+    };
+    var today = new Date();
+    parse_setting_new["DATE_SOLVE"] = today.toLocaleDateString(
+      "en-US",
+      options
+    );
+    this.setState({ parse_settings: parse_setting_new });
     console.log("start", timer_start);
     this.handle_solve_status("Memo");
   };
@@ -227,6 +245,7 @@ class App extends React.Component {
     fetch("http://127.0.0.1:8080", requestOptions)
       .then((response) =>
         response.json().then((data) => {
+          console.log(this.state);
           result = data;
           this.setState({ parsed_solve: result });
           if ("cubedb" in result) {

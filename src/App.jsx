@@ -16,6 +16,7 @@ class App extends React.Component {
     this.state = {
       timer_focus: null,
       moves_to_show: null,
+      giiker_prev_moves: [],
       solve_status: "Connect Cube",
       last_scramble: null,
       scramble: null,
@@ -499,16 +500,18 @@ class App extends React.Component {
         // var cc = new mathlib.CubieCube();
         // var coMask = [-1, 1, -1, 1, 1, -1, 1, -1];
         // for (var i = 0; i < 8; i++) {
-          // cc.ca[i] =
-            // (valhex[i] - 1) | ((3 + valhex[i + 8] * coMask[i]) % 3 << 3);
+        // cc.ca[i] =
+        // (valhex[i] - 1) | ((3 + valhex[i + 8] * coMask[i]) % 3 << 3);
         // }
         // for (var i = 0; i < 12; i++) {
-          // cc.ea[i] = ((valhex[i + 16] - 1) << 1) | eo[i];
+        // cc.ea[i] = ((valhex[i + 16] - 1) << 1) | eo[i];
         // }
         // var facelet = cc.toFaceCube(cFacelet, eFacelet);
 
         var moves = valhex.slice(32, 40);
         var prevMoves = [];
+        let new_moves = [];
+        let new_moves_time = [];
         for (var i = 0; i < moves.length; i += 2) {
           // console.log(
           // "BDLURF".charAt(moves[i] - 1) + " 2'".charAt((moves[i + 1] - 1) % 7)
@@ -517,7 +520,48 @@ class App extends React.Component {
             "BDLURF".charAt(moves[i] - 1) + " 2'".charAt((moves[i + 1] - 1) % 7)
           );
         }
-        console.log(prevMoves);
+        // prevMoves.reverse();
+
+        if (this_App.state.giiker_prev_moves.length == 0) {
+          this_App.setState({ giiker_prev_moves: prevMoves });
+        } else {
+          let last_moves = [...this_App.state.giiker_prev_moves];
+          // console.log("last moves 1", last_moves);
+          // console.log("prev_moves", prevMoves);
+
+          for (var i = 0; i < 4; i++) {
+            let move = prevMoves[i];
+            last_moves.unshift(move);
+            // console.log("last moves", last_moves);
+            // console.log("last_moves_slice", last_moves.slice(0, 4).join(" "));
+            // console.log("prevmoves", prevMoves.join(" "));
+
+            if (last_moves.slice(0, 4).join(" ") === prevMoves.join(" ")) {
+              // console.log(move);
+              new_moves.push(move);
+              new_moves_time.push(Date.now());
+              break;
+            }
+          }
+          let cube_moves = [...this_App.state.cube_moves];
+          let cube_moves_time = [...this_App.state.cube_moves_time];
+          if (cube_moves.length === 0) {
+            this_App.handle_solve_status("Scrambling");
+          }
+          if (this_App.state.solve_status == "Memo") {
+            this_App.handle_solve_status("Solving");
+          }
+          for (var i = 0; i < new_moves.length; i++) {
+            cube_moves.push(new_moves[i]);
+            cube_moves_time.push(new_moves_time[i]);
+          }
+          this_App.setState({ cube_moves: cube_moves });
+          this_App.setState({ cube_moves_time: cube_moves_time });
+          this_App.setState({ giiker_prev_moves: prevMoves });
+          console.log(this_App.state.cube_moves.join(" "));
+          this_App.handle_moves_to_show(cube_moves);
+        }
+
         // if (DEBUG) {
         // var hexstr = [];
         // for (var i = 0; i < 40; i++) {
@@ -531,7 +575,6 @@ class App extends React.Component {
         //  "Previous Moves: ",
         //  prevMoves.reverse().join(" ")
         // );
-        prevMoves.reverse();
         // }
         // callback(facelet, prevMoves, timestamp, deviceName);
         // return [facelet, prevMoves];

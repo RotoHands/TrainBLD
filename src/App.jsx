@@ -245,7 +245,7 @@ class App extends React.Component {
     fetch("http://127.0.0.1:8080", requestOptions)
       .then((response) =>
         response.json().then((data) => {
-          console.log(this.state);
+          console.log(setting);
           result = data;
           this.setState({ parsed_solve: result });
           if ("cubedb" in result) {

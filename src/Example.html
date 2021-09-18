@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="3BLD timer that can help you analyze your solves and find your mistakes">
+      <script >
+        let parse_settings= {
+          COMMS_UNPARSED: false,
+          CORNER_BUFFER: "UFR",
+          DATE_SOLVE: "9/18/2021, 09:52 PM",
+          DIFF_BETWEEN_ALGS: "0.87",
+          EDGES_BUFFER: "UF",
+          GEN_PARSED_TO_CUBEDB: true,
+          GEN_PARSED_TO_TXT: true,
+          GEN_WITH_MOVE_COUNT: true,
+          LETTER_PAIRS_DICT: "{\"UBL\":\"A\",\"UBR\":\"B\",\"UFR\":\"C\",\"UFL\":\"D\",\"LBU\":\"E\",\"LFU\":\"F\",\"LFD\":\"G\",\"LDB\":\"H\",\"FUL\":\"I\",\"FUR\":\"J\",\"FRD\":\"K\",\"FDL\":\"L\",\"RFU\":\"M\",\"RBU\":\"N\",\"RBD\":\"O\",\"RFD\":\"P\",\"BUR\":\"Q\",\"BUL\":\"R\",\"BLD\":\"S\",\"BRD\":\"T\",\"DFL\":\"U\",\"DFR\":\"V\",\"DBR\":\"W\",\"DBL\":\"X\",\"UB\":\"A\",\"UR\":\"B\",\"UF\":\"C\",\"UL\":\"D\",\"LU\":\"E\",\"LF\":\"F\",\"LD\":\"G\",\"LB\":\"H\",\"FU\":\"I\",\"FR\":\"J\",\"FD\":\"K\",\"FL\":\"L\",\"RU\":\"M\",\"RB\":\"N\",\"RD\":\"O\",\"RF\":\"P\",\"BU\":\"Q\",\"BL\":\"R\",\"BD\":\"S\",\"BR\":\"T\",\"DF\":\"U\",\"DR\":\"V\",\"DB\":\"W\",\"DL\":\"X\"}",
+          MEMO: "2.68",
+          NAME_OF_SOLVE: "example_smart_cube",
+          PARSE_TO_LETTER_PAIR: true,
+          SCRAMBLE: "D B U' L U' R D' R' D R' D F' U U R B' L U R U' R R B' U' L'",
+          SMART_CUBE: true,
+          SOLVE: "R L' B R B' R' R' L L F R' F' L' R R R U' R' U D' F U F' D U' R' R' F' L F R L' U' L' U L R' L F L F' L' R U L' U' D F U' D R' R' U D' F D' R D' R' U R' D R U' R' D' R U' R D R' U D' R D R' U' R D' R' D U D R' D' R U' R' D R U D' R' U' D' R U R' D R U' R' U R U D' R' D R U' R' D' R D R U R' F' R U R' U' R' F R R U' R' U'",
+          SOLVE_TIME_MOVES: "[0,0.06,0.16,0.25,0.34,0.46,0.61,0.65,0.71,1.12,1.24,1.36,1.51,1.63,3.28,3.33,3.46,3.58,3.63,3.68,3.73,3.81,3.88,4,4.05,4.17,5.2,5.29,5.41,5.56,5.83,5.87,6.04,6.13,6.22,6.31,7.45,7.5,7.6,7.81,7.86,7.99,8.04,8.2,8.38,8.56,10,10.15,10.27,10.31,10.38,10.48,10.69,10.73,10.87,10.93,13.24,13.33,13.48,13.54,13.63,13.72,13.81,13.9,13.94,14.07,14.22,14.29,14.41,14.5,14.68,14.8,16.24,16.42,16.54,16.66,16.75,16.84,16.93,17.11,17.26,17.31,18.94,19.03,19.12,19.27,19.3,19.39,19.45,19.57,19.74,19.77,20.89,21.04,21.09,21.25,21.34,21.4,21.48,21.57,21.64,21.73,21.82,21.93,22.66,22.72,22.84,23.11,23.35,23.41,23.5,23.55,23.68,23.8,23.95,24.16,24.25,24.36,24.46,24.57,24.67,24.75,24.85,24.93,24.98,25.02,25.06,25.11,25.27]",
+          TIME_SOLVE: "28.16",
+      }
+      const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(parse_settings),
+  };
+	fetch("http://127.0.0.1:8080", requestOptions)
+      	.then((response) =>
+        response.json().then((data) => {
+          result = data;
+          document.getElementById("solve").innerHTML = result["txt"];                 
+                  })
+      )
+    
+      </script>
+    </head>
+
+        <body>
+       	<div id="solve" style="white-space: pre-line"> </div>
+        </body>
+</html>
+

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import scrambleGenerator from "rubiks-cube-scramble";
 import * as SRScrambler from "sr-scrambler";
 import ConnectCube from "./component/ConnectCube";
@@ -9,7 +9,9 @@ import Timer from "./component/Timer";
 import { Helmet } from "react-helmet";
 import logo from "./images/logo2.png";
 import LZString from "lz-string";
+
 class App extends React.Component {
+  
   constructor() {
     super();
     this.GiikerCube = this.GiikerCube.bind(this);
@@ -56,6 +58,7 @@ class App extends React.Component {
   }
 
   componentDidMount = () => {
+    document.title="TrainBLD";
     this.handle_scramble();
   };
   componentDidUpdate = () => {
@@ -233,6 +236,7 @@ class App extends React.Component {
       .then((response) =>
         response.json().then((data) => {
           result = data;
+          console.log(requestOptions);
           this.setState({ parsed_solve: result });
           if ("cubedb" in result) {
             this.setState({ parsed_solve_cubedb: result["cubedb"] });
@@ -247,7 +251,7 @@ class App extends React.Component {
         })
       )
       .catch((data) => {
-        console.log(data);
+        console.log(requestOptions);
         this.handle_solve_status("Parsing didn't succeed");
       });
   };
@@ -278,6 +282,7 @@ class App extends React.Component {
     };
     // document.body.style.overflow = "hidden";
     return (
+      
       <React.Fragment>
         <div className="application">
           <Helmet>

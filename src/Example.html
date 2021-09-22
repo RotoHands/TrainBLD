@@ -30,10 +30,11 @@
     },
     body: JSON.stringify(parse_settings),
   };
-	fetch("http://127.0.0.1:8080", requestOptions)
+	fetch("http://rotohands-bld-parser.herokuapp.com/", requestOptions)
       	.then((response) =>
         response.json().then((data) => {
           result = data;
+          console.log(result);
           document.getElementById("solve").innerHTML = result["txt"];                 
                   })
       )

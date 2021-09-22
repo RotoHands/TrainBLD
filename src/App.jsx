@@ -61,10 +61,7 @@ class App extends React.Component {
   componentDidUpdate = () => {
     document.getElementById("timer_element_2").focus();
   };
-  handle_key_press = (e) => {
-    console.log(e);
-  };
-  extract_solve_from_cube_moves = (timer_finish) => {
+    extract_solve_from_cube_moves = (timer_finish) => {
     let parse_setting_new = { ...this.state.parse_settings };
     let scramble = [];
     let solve = [];
@@ -242,10 +239,9 @@ class App extends React.Component {
       },
       body: JSON.stringify(setting),
     };
-    fetch("http://127.0.0.1:8080", requestOptions)
+    fetch("http://rotohands-bld-parser.herokuapp.com/", requestOptions)
       .then((response) =>
         response.json().then((data) => {
-          console.log(setting);
           result = data;
           this.setState({ parsed_solve: result });
           if ("cubedb" in result) {
@@ -256,10 +252,12 @@ class App extends React.Component {
             console.log(result["txt"]);
             this.setState({ parsed_solve_txt: result["txt"] });
           }
+          
           this.handle_solve_status("Ready for scrambling");
         })
       )
       .catch((data) => {
+        // console.log(setting);
         this.handle_solve_status("Parsing didn't succeed");
       });
   };
@@ -296,23 +294,7 @@ class App extends React.Component {
             <style>{"body { background-color: #11324D;color: #F6F6F6 }"}</style>
           </Helmet>
         </div>
-        {/* <div className="col-sm"> */}
-        {/* <button */}
-        {/* className="btn btn-primary m-4" */}
-        {/* onClick={this.handle_parse_solve} */}
-        {/* > */}
-        {/* Parse Solve */}
-        {/* </button> */}
-        {/* </div> */}
-        {/* <div className="col-sm"> */}
-        {/* <button */}
-        {/* role="button" */}
-        {/* className="btn btn-primary m-4" */}
-        {/* onClick={() => window.open(this.state.parsed_solve)} */}
-        {/* > */}
-        {/* CUBEDB */}
-        {/* </button> */}
-        {/* </div> */}
+        
         <div style={styleBG}>
           <div className="row align-items-center">
             <div className="col-2">
@@ -370,7 +352,7 @@ class App extends React.Component {
               >
                 Support :)
               </button>
-              <div className="text-center fst-italic" style={{ fontSize: 16 }}>
+              <div className=" ms-1 text-start fst-italic" style={{ fontSize: 16 }}>
                 By Rotem Ifrach
               </div>
             </div>
@@ -391,13 +373,13 @@ class App extends React.Component {
         </div>
         <div
           className="row text-center"
-          style={{ fontFamily: "Rubik", fontSize: 20 }}
+          style={{ fontFamily: "Rubik", fontSize: 26 }}
         >
           <div className="">{this.state.moves_to_show}</div>
         </div>
         <div className="row">
           <Timer
-            parsed_solve_txt={this.state.parsed_solve_txt}
+            // parsed_solve_txt={this.state.parsed_solve_txt}
             scramble={this.state.scramble}
             solve_status={this.state.solve_status}
             onStart={(timer_start) => this.handle_onStart_timer(timer_start)}
@@ -408,9 +390,6 @@ class App extends React.Component {
         <div className="row">
           <div className="col"></div>
         </div>
-        {/* <div className="row"> */}
-        {/* <iframe src={this.state.parsed_solve} title="solve"></iframe> */}
-        {/* </div> */}
       </React.Fragment>
     );
   }
@@ -604,7 +583,6 @@ class App extends React.Component {
           this_App.setState({ cube_moves: cube_moves });
           this_App.setState({ cube_moves_time: cube_moves_time });
           this_App.setState({ giiker_prev_moves: prevMoves });
-          console.log(this_App.state.cube_moves.join(" "));
           this_App.handle_moves_to_show(cube_moves);
         }
 
@@ -940,7 +918,6 @@ class App extends React.Component {
                     "URFDLB".indexOf(prevMoves[i][0]) * 3 +
                     " 2'".indexOf(prevMoves[i][1]);
                   cube_moves_new.push(moves[m]);
-                  console.log(moves[m]);
                   cube_moves_time_new.push(Date.now());
                   this_App.setState({ cube_moves: cube_moves_new });
                   this_App.setState({ cube_moves_time: cube_moves_time_new });

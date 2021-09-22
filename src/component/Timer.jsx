@@ -113,17 +113,7 @@ class Timer extends React.Component {
           </div>
         </div>
         <div className="row ">
-          <div className="col-3 ms-2">
-            <div
-              style={{
-                whiteSpace: "pre-wrap",
-                fontSize: 20,
-                fontFamily: "Rubik",
-              }}
-            >
-              {this.props.parsed_solve_txt}
-            </div>
-          </div>
+          <div className="col-3"></div>
           <div
             className="col-6 text-start"
             style={{
@@ -145,6 +135,7 @@ class Timer extends React.Component {
               scramble={this.props.scramble}
             ></scramble-display>
           </div>
+          <div className="col-1"></div>
         </div>
         <div className="row"></div>
       </div>

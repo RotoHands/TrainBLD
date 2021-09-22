@@ -58,7 +58,7 @@ class App extends React.Component {
   }
 
   componentDidMount = () => {
-    document.title="TrainBLD";
+    // document.title="TrainBLD";
     this.handle_scramble();
   };
   componentDidUpdate = () => {

@@ -71,7 +71,7 @@ class App extends React.Component {
     let moves_time = this.state.cube_moves_time;
     let time_start_solve = this.state.timeStart;
     let time_end_solve = timer_finish;
-    console.log(time_end_solve - time_start_solve);
+    // console.log(time_end_solve - time_start_solve);
 
     for (let i = 0; i < moves.length; i++) {
       if (moves_time[i] < time_start_solve) {
@@ -84,8 +84,8 @@ class App extends React.Component {
         solve.push(moves[i]);
       }
     }
-    console.log("scramble :\n", scramble.join(" "));
-    console.log("solve :\n", solve.join(" "));
+    // console.log("scramble :\n", scramble.join(" "));
+    // console.log("solve :\n", solve.join(" "));
 
     solve_time = ((time_end_solve - time_start_solve) / 1000).toFixed(2);
     parse_setting_new["SCRAMBLE"] = scramble
@@ -98,17 +98,13 @@ class App extends React.Component {
       .replace(/  +/g, " ");
     parse_setting_new["MEMO"] = memo_time.toString();
     parse_setting_new["TIME_SOLVE"] = solve_time.toString();
-    console.log(scramble.length);
-    console.log(this.state.cube_moves_time);
+    // console.log(scramble.length);
+    // console.log(this.state.cube_moves_time);
 
     let cube_moves_time_diff = [];
     let only_solve_moves = this.state.cube_moves_time.slice(
       scramble.length,
       this.state.cube_moves_time.length
-    );
-    console.log(
-      "asd",
-      this.state.cube_moves_time.slice(scramble.length).join(" ")
     );
     cube_moves_time_diff.push(0);
     for (var i = 0; i < only_solve_moves.length - 1; i++) {
@@ -118,7 +114,7 @@ class App extends React.Component {
         )
       );
     }
-    console.log(cube_moves_time_diff);
+    // console.log(cube_moves_time_diff);
 
     parse_setting_new["SOLVE_TIME_MOVES"] =
       JSON.stringify(cube_moves_time_diff);
@@ -191,18 +187,12 @@ class App extends React.Component {
       options
     );
     this.setState({ parse_settings: parse_setting_new });
-    console.log("start", timer_start);
     this.handle_solve_status("Memo");
   };
   handle_onStop_timer = (timer_finish) => {
-    console.log(this.state.timeStart);
-    console.log(timer_finish);
-    console.log(timer_finish - this.state.timeStart);
-
     new Promise((resolve) => setTimeout(resolve, 1))
       .then((data) => {
-        console.log(this.state.cube_moves);
-        console.log("fibish");
+    
         this.setState({ timeFinish: timer_finish });
         this.handle_solve_status("Parsing...");
         this.handle_parse_solve(timer_finish);
@@ -257,7 +247,7 @@ class App extends React.Component {
         })
       )
       .catch((data) => {
-        // console.log(setting);
+        console.log(data);
         this.handle_solve_status("Parsing didn't succeed");
       });
   };
@@ -373,7 +363,7 @@ class App extends React.Component {
         </div>
         <div
           className="row text-center"
-          style={{ fontFamily: "Rubik", fontSize: 26 }}
+          style={{ fontFamily: "Rubik", fontSize: 22 }}
         >
           <div className="">{this.state.moves_to_show}</div>
         </div>

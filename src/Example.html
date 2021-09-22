@@ -30,7 +30,7 @@
     },
     body: JSON.stringify(parse_settings),
   };
-	fetch("http://rotohands-bld-parser.herokuapp.com/", requestOptions)
+	fetch("https://rotohands-bld-parser.herokuapp.com/", requestOptions)
       	.then((response) =>
         response.json().then((data) => {
           result = data;

@@ -229,7 +229,7 @@ class App extends React.Component {
       },
       body: JSON.stringify(setting),
     };
-    fetch("http://rotohands-bld-parser.herokuapp.com/", requestOptions)
+    fetch("https://rotohands-bld-parser.herokuapp.com/", requestOptions)
       .then((response) =>
         response.json().then((data) => {
           result = data;

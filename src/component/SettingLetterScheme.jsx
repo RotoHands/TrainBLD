@@ -38,7 +38,7 @@ class SettingLetterScheme extends React.Component {
       <React.Fragment>
         <div className="container">
           {Object.entries(letter_pairs_dict).map(([key, value]) => (
-            <div className="row m-1">
+            <div key={key} className="row m-1">
               <div className="col-sm-2">
                 <label className="m-1">{key}</label>
               </div>

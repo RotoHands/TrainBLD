@@ -1,35 +1,395 @@
 import React, { Component } from "react";
+import scrambleGenerator from "rubiks-cube-scramble";
+import * as SRScrambler from "sr-scrambler";
 import ConnectCube from "./component/ConnectCube";
 import Setting from "./component/Settings";
 import "bootstrap/dist/css/bootstrap.css";
 import Scrambler from "./component/Scrambler";
 import Timer from "./component/Timer";
+import { Helmet } from "react-helmet";
+import logo from "./images/logo2.png";
+import LZString from "lz-string";
 class App extends React.Component {
-  state = {
-    cube_moves: [],
-    cube: null,
-    generated_setting: "",
-    timeStart : null,
-    timeFinish: null,
-  };
   constructor() {
     super();
     this.GiikerCube = this.GiikerCube.bind(this);
+    this.state = {
+      timer_focus: null,
+      moves_to_show: null,
+      giiker_prev_moves: [],
+      solve_status: "Connect Cube",
+      last_scramble: null,
+      scramble: null,
+      parse_solve_bool: false,
+      cube_moves: [],
+      cube_moves_time: [],
+      cube: null,
+      generated_setting: "",
+      timeStart: null,
+      timeFinish: null,
+      parsed_solve: null,
+      parsed_solve_txt: null,
+      parsed_solve_cubedb: null,
+      parse_settings: {
+        DATE_SOLVE: "9/18/2021, 12:22 AM",
+        DIFF_BETWEEN_ALGS: "0.87",
+        MEMO: "1.39",
+        TIME_SOLVE: "30.48",
+        NAME_OF_SOLVE: "example_smart_cube",
+        GEN_PARSED_TO_CUBEDB: true,
+        GEN_PARSED_TO_TXT: true,
+        SMART_CUBE: true,
+        COMMS_UNPARSED: false,
+        EDGES_BUFFER: "UF",
+        CORNER_BUFFER: "UFR",
+        PARSE_TO_LETTER_PAIR: true,
+        GEN_WITH_MOVE_COUNT: true,
+        LETTER_PAIRS_DICT:
+          '{"UBL":"A","UBR":"B","UFR":"C","UFL":"D","LBU":"E","LFU":"F","LFD":"G","LDB":"H","FUL":"I","FUR":"J","FRD":"K","FDL":"L","RFU":"M","RBU":"N","RBD":"O","RFD":"P","BUR":"Q","BUL":"R","BLD":"S","BRD":"T","DFL":"U","DFR":"V","DBR":"W","DBL":"X","UB":"A","UR":"B","UF":"C","UL":"D","LU":"E","LF":"F","LD":"G","LB":"H","FU":"I","FR":"J","FD":"K","FL":"L","RU":"M","RB":"N","RD":"O","RF":"P","BU":"Q","BL":"R","BD":"S","BR":"T","DF":"U","DR":"V","DB":"W","DL":"X"}',
+        SCRAMBLE:
+          "F' R' B' D L' B' B' D' D' L' U B' R R F' R R B D' D' B U U L L U U L L B' R' U'",
+        SOLVE:
+          "R F' L' F R' L D' L D L' U' U' L' R B R B' R' L U R' U R' R' U D' F U' F' U' D R U R R' F' L F L' R U' L' U L R' R' U' R U' D B' B' U D' R U R R F' R' U D' F F D U' R' F R' D D U R U' R' D D R U R' U' R R U R' D' R' D R U U R' D' R U D U R U U' U' R' D R R U R' R' U' R R D' R' R' U R R U' R' R' R D' R' D R U R' D' R U' D R'",
+        SOLVE_TIME_MOVES: [],
+      },
+    };
   }
 
+  componentDidMount = () => {
+    this.handle_scramble();
+  };
+  componentDidUpdate = () => {
+    document.getElementById("timer_element_2").focus();
+  };
+    extract_solve_from_cube_moves = (timer_finish) => {
+    let parse_setting_new = { ...this.state.parse_settings };
+    let scramble = [];
+    let solve = [];
+    let memo_time = 0;
+    let solve_time = 0;
+    let moves = this.state.cube_moves;
+    let moves_time = this.state.cube_moves_time;
+    let time_start_solve = this.state.timeStart;
+    let time_end_solve = timer_finish;
+    console.log(time_end_solve - time_start_solve);
+
+    for (let i = 0; i < moves.length; i++) {
+      if (moves_time[i] < time_start_solve) {
+        scramble.push(moves[i]);
+      }
+      if (moves_time[i] > time_start_solve && moves_time[i] < timer_finish) {
+        if (memo_time === 0) {
+          memo_time = (moves_time[i] - time_start_solve) / 1000;
+        }
+        solve.push(moves[i]);
+      }
+    }
+    console.log("scramble :\n", scramble.join(" "));
+    console.log("solve :\n", solve.join(" "));
+
+    solve_time = ((time_end_solve - time_start_solve) / 1000).toFixed(2);
+    parse_setting_new["SCRAMBLE"] = scramble
+      .join(" ")
+      .toString()
+      .replace(/  +/g, " ");
+    parse_setting_new["SOLVE"] = solve
+      .join(" ")
+      .toString()
+      .replace(/  +/g, " ");
+    parse_setting_new["MEMO"] = memo_time.toString();
+    parse_setting_new["TIME_SOLVE"] = solve_time.toString();
+    console.log(scramble.length);
+    console.log(this.state.cube_moves_time);
+
+    let cube_moves_time_diff = [];
+    let only_solve_moves = this.state.cube_moves_time.slice(
+      scramble.length,
+      this.state.cube_moves_time.length
+    );
+    console.log(
+      "asd",
+      this.state.cube_moves_time.slice(scramble.length).join(" ")
+    );
+    cube_moves_time_diff.push(0);
+    for (var i = 0; i < only_solve_moves.length - 1; i++) {
+      cube_moves_time_diff.push(
+        parseFloat(
+          ((only_solve_moves[i + 1] - only_solve_moves[0]) / 1000).toFixed(2)
+        )
+      );
+    }
+    console.log(cube_moves_time_diff);
+
+    parse_setting_new["SOLVE_TIME_MOVES"] =
+      JSON.stringify(cube_moves_time_diff);
+    this.setState({ parse_settings: parse_setting_new });
+    return parse_setting_new;
+  };
+
+  handle_solve_status = (next_status) => {
+    if (next_status == "Parsing didn't succeed") {
+      this.setState({ solve_status: next_status });
+    }
+    if (this.state.solve_status == "Parsing didn't succeed") {
+      new Promise((r) => setTimeout(r, 2000)).then(() => {
+        this.setState({ solve_status: "Ready for scrambling" });
+      });
+    }
+    if (
+      this.state.solve_status == "Connect Cube" &&
+      next_status == "Connecting..."
+    ) {
+      this.setState({ solve_status: next_status });
+    }
+    if (
+      this.state.solve_status == "Connecting..." &&
+      next_status == "Ready for scrambling"
+    ) {
+      this.setState({ solve_status: next_status });
+    }
+    if (
+      this.state.solve_status == "Ready for scrambling" &&
+      next_status == "Scrambling"
+    ) {
+      this.setState({ solve_status: next_status });
+    }
+    if (
+      this.state.solve_status == "Scrambling" &&
+      next_status == "Ready for scrambling"
+    ) {
+      this.setState({ solve_status: next_status });
+    }
+    if (this.state.solve_status == "Scrambling" && next_status == "Memo") {
+      this.setState({ solve_status: next_status });
+    }
+    if (this.state.solve_status == "Memo" && next_status == "Solving") {
+      this.setState({ solve_status: next_status });
+    }
+    if (this.state.solve_status == "Solving" && next_status == "Parsing...") {
+      this.setState({ solve_status: next_status });
+    }
+    if (
+      this.state.solve_status == "Parsing..." &&
+      next_status == "Ready for scrambling"
+    ) {
+      this.setState({ solve_status: next_status });
+    }
+  };
+  handle_onStart_timer = (timer_start) => {
+    this.setState({ timeStart: timer_start });
+    let parse_setting_new = { ...this.state.parse_settings };
+    var options = {
+      hour: "2-digit",
+      minute: "2-digit",
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+    };
+    var today = new Date();
+    parse_setting_new["DATE_SOLVE"] = today.toLocaleDateString(
+      "en-US",
+      options
+    );
+    this.setState({ parse_settings: parse_setting_new });
+    console.log("start", timer_start);
+    this.handle_solve_status("Memo");
+  };
+  handle_onStop_timer = (timer_finish) => {
+    console.log(this.state.timeStart);
+    console.log(timer_finish);
+    console.log(timer_finish - this.state.timeStart);
+
+    new Promise((resolve) => setTimeout(resolve, 1))
+      .then((data) => {
+        console.log(this.state.cube_moves);
+        console.log("fibish");
+        this.setState({ timeFinish: timer_finish });
+        this.handle_solve_status("Parsing...");
+        this.handle_parse_solve(timer_finish);
+        this.setState({ cube_moves: [] });
+        this.setState({ cube_moves_time: [] });
+        this.handle_scramble();
+      })
+      .catch((data) => console.log(data));
+  };
+  handle_export_setting = (settings) => {
+    let new_settings = { ...this.state.parse_settings };
+    for (var key in settings) {
+      if (!(key in this.state.parse_settings)) {
+        console.log("wrong keys : ", key);
+      } else {
+        new_settings[key] = settings[key];
+      }
+      this.setState({ parse_settings: new_settings });
+    }
+  };
+  handle_reset_cube = () => {
+    this.setState({ cube_moves: [] });
+    this.setState({ cube_moves_time: [] });
+    this.setState({ moves_to_show: "" });
+    this.handle_solve_status("Ready for scrambling");
+  };
+  handle_parse_solve = (timer_finish) => {
+    const setting = this.extract_solve_from_cube_moves(timer_finish);
+    let result;
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(setting),
+    };
+    fetch("http://rotohands-bld-parser.herokuapp.com/", requestOptions)
+      .then((response) =>
+        response.json().then((data) => {
+          result = data;
+          this.setState({ parsed_solve: result });
+          if ("cubedb" in result) {
+            this.setState({ parsed_solve_cubedb: result["cubedb"] });
+            window.open(result["cubedb"]);
+          }
+          if ("txt" in result) {
+            console.log(result["txt"]);
+            this.setState({ parsed_solve_txt: result["txt"] });
+          }
+          
+          this.handle_solve_status("Ready for scrambling");
+        })
+      )
+      .catch((data) => {
+        // console.log(setting);
+        this.handle_solve_status("Parsing didn't succeed");
+      });
+  };
+  handle_scramble = () => {
+    this.setState({ last_scramble: this.state.scramble });
+    this.setState({ scramble: SRScrambler.generateHtmlScramble(3, 23) });
+  };
+  handle_moves_to_show = (cube_moves) => {
+    if (this.state.solve_status === "Scrambling") {
+      this.setState({ moves_to_show: cube_moves.join(" ") });
+    } else {
+      this.setState({ moves_to_show: "" });
+    }
+  };
+  handle_last_scramble = () => {
+    this.setState({ scramble: this.state.last_scramble });
+  };
+
   render() {
+    const styleBG = {
+      borderRadius: "0px",
+      background: "#A1CAE5",
+      // background: "#A7C5EB",
+      // background: "#79A3B1",
+
+      // background: "#BAE8E8",
+      // background: "#BAE8E8",
+    };
+    // document.body.style.overflow = "hidden";
     return (
       <React.Fragment>
-        <div className="row">
-          <div className="col-sm-2">
-            <ConnectCube onConnect={this.GiikerCube} />
+        <div className="application">
+          <Helmet>
+            <style>{"body { background-color: #11324D;color: #F6F6F6 }"}</style>
+          </Helmet>
+        </div>
+        
+        <div style={styleBG}>
+          <div className="row align-items-center">
+            <div className="col-2">
+              <div className="row">
+                <img
+                  src={logo}
+                  className="rounded mx-auto"
+                  alt="Responsive image"
+                  style={{ width: "60%" }}
+                />
+              </div>
+              <div className="row">
+                <ConnectCube onConnect={this.GiikerCube} />
+              </div>
+            </div>
+            <div
+              className="col-8 text-center fst-italic mt-1"
+              style={{ fontSize: 80 }}
+            >
+              TrainBLD
+            </div>
+            <div className="col-2">
+              <div
+                className="btn-toolbar"
+                role="group"
+                aria-label="Basic example"
+              >
+                <button
+                  className="btn btn-primary m-1 text-end"
+                  // style={{ width: "180px" }}
+                  onClick={() =>
+                    window.open(
+                      "https://www.youtube.com/channel/UCVGKCZFamCuYXiln9w3Cnxw"
+                    )
+                  }
+                >
+                  Youtube
+                </button>
+                <button
+                  className="btn btn-primary m-1 text-end"
+                  // style={{ width: "180px" }}
+                  onClick={() => window.open("https://github.com/RotoHands")}
+                >
+                  Github
+                </button>
+              </div>
+              <button
+                className="btn btn-primary m-1 mt-2"
+                style={{ width: "167px" }}
+                onClick={() =>
+                  window.open(
+                    "https://www.paypal.com/donate?hosted_button_id=X9X9VZEAYK3DJ"
+                  )
+                }
+              >
+                Support :)
+              </button>
+              <div className=" ms-1 text-start fst-italic" style={{ fontSize: 16 }}>
+                By Rotem Ifrach
+              </div>
+            </div>
           </div>
-          <div className="col sm-2">
-            <Scrambler />{" "}
+          <div className="row ms-4">
+            <Setting export_setting={this.handle_export_setting} />
           </div>
         </div>
-        <Timer timeStart={this.state.timeStart} timeFinish={this.state.timeFinish}/>
-        <Setting generated_setting={this.state.generated_setting} />
+        <div className="row">
+          <div className="col-12">
+            <Scrambler
+              onReset={this.handle_reset_cube}
+              scramble={this.state.scramble}
+              onClick_scramble={this.handle_scramble}
+              onClick_last_scramble={this.handle_last_scramble}
+            />{" "}
+          </div>
+        </div>
+        <div
+          className="row text-center"
+          style={{ fontFamily: "Rubik", fontSize: 26 }}
+        >
+          <div className="">{this.state.moves_to_show}</div>
+        </div>
+        <div className="row">
+          <Timer
+            // parsed_solve_txt={this.state.parsed_solve_txt}
+            scramble={this.state.scramble}
+            solve_status={this.state.solve_status}
+            onStart={(timer_start) => this.handle_onStart_timer(timer_start)}
+            onStop={(timer_finish) => this.handle_onStop_timer(timer_finish)}
+          />
+        </div>
+
+        <div className="row">
+          <div className="col"></div>
+        </div>
       </React.Fragment>
     );
   }
@@ -37,6 +397,7 @@ class App extends React.Component {
   GiikerCube = () => {
     const this_App = this;
     var _device = null;
+
     var GiikerCube = (function () {
       var _server = null;
       var _chrct = null;
@@ -57,6 +418,7 @@ class App extends React.Component {
         return device.gatt
           .connect()
           .then(function (server) {
+            this_App.handle_solve_status("Ready for scrambling");
             _server = server;
             return server.getPrimaryService(SERVICE_UUID_DATA);
           })
@@ -72,10 +434,13 @@ class App extends React.Component {
           })
           .then(function (value) {
             var initState = parseState(value);
-            // if (initState[0] != kernel.getProp('giiSolved', mathlib.SOLVED_FACELET)) {
+            // if (initState[0] != kernel.getProp("giiSolved", SOLVED_FACELET)) {
+            // console.log("here");
+            // }
+
             // 	var rst = kernel.getProp('giiRST');
             // if (rst == 'a' || rst == 'p' && confirm(CONFIRM_GIIRST)) {
-            // 	giikerutil.markSolved();
+            // giikerutil.markSolved();
             // }
             // }
             return _chrct.addEventListener(
@@ -144,7 +509,7 @@ class App extends React.Component {
       }
 
       function parseState(value) {
-        // var timestamp = $.now();
+        var timestamp = Date.now();
 
         var valhex = toHexVal(value);
         var eo = [];
@@ -153,37 +518,87 @@ class App extends React.Component {
             eo.push(valhex[i + 28] & mask ? 1 : 0);
           }
         }
+
         // var cc = new mathlib.CubieCube();
         // var coMask = [-1, 1, -1, 1, 1, -1, 1, -1];
         // for (var i = 0; i < 8; i++) {
-        // 	cc.ca[i] = (valhex[i] - 1) | ((3 + valhex[i + 8] * coMask[i]) % 3) << 3;
+        // cc.ca[i] =
+        // (valhex[i] - 1) | ((3 + valhex[i + 8] * coMask[i]) % 3 << 3);
         // }
         // for (var i = 0; i < 12; i++) {
-        // 	cc.ea[i] = (valhex[i + 16] - 1) << 1 | eo[i];
+        // cc.ea[i] = ((valhex[i + 16] - 1) << 1) | eo[i];
         // }
         // var facelet = cc.toFaceCube(cFacelet, eFacelet);
 
         var moves = valhex.slice(32, 40);
         var prevMoves = [];
+        let new_moves = [];
+        let new_moves_time = [];
         for (var i = 0; i < moves.length; i += 2) {
+          // console.log(
+          // "BDLURF".charAt(moves[i] - 1) + " 2'".charAt((moves[i + 1] - 1) % 7)
+          // );
           prevMoves.push(
             "BDLURF".charAt(moves[i] - 1) + " 2'".charAt((moves[i + 1] - 1) % 7)
           );
         }
+        // prevMoves.reverse();
+
+        if (this_App.state.giiker_prev_moves.length == 0) {
+          this_App.setState({ giiker_prev_moves: prevMoves });
+        } else {
+          let last_moves = [...this_App.state.giiker_prev_moves];
+          // console.log("last moves 1", last_moves);
+          // console.log("prev_moves", prevMoves);
+
+          for (var i = 0; i < 4; i++) {
+            let move = prevMoves[i];
+            last_moves.unshift(move);
+            // console.log("last moves", last_moves);
+            // console.log("last_moves_slice", last_moves.slice(0, 4).join(" "));
+            // console.log("prevmoves", prevMoves.join(" "));
+
+            if (last_moves.slice(0, 4).join(" ") === prevMoves.join(" ")) {
+              // console.log(move);
+              new_moves.push(move);
+              new_moves_time.push(Date.now());
+              break;
+            }
+          }
+
+          let cube_moves = [...this_App.state.cube_moves];
+          let cube_moves_time = [...this_App.state.cube_moves_time];
+          if (cube_moves.length === 0) {
+            this_App.handle_solve_status("Scrambling");
+          }
+          if (this_App.state.solve_status == "Memo") {
+            this_App.handle_solve_status("Solving");
+          }
+          for (var i = 0; i < new_moves.length; i++) {
+            cube_moves.push(new_moves[i]);
+            cube_moves_time.push(
+              ((new_moves_time[i] - this_App.state.timeStart) / 1000).toFixed(2)
+            );
+          }
+          this_App.setState({ cube_moves: cube_moves });
+          this_App.setState({ cube_moves_time: cube_moves_time });
+          this_App.setState({ giiker_prev_moves: prevMoves });
+          this_App.handle_moves_to_show(cube_moves);
+        }
+
         // if (DEBUG) {
         // var hexstr = [];
         // for (var i = 0; i < 40; i++) {
         // hexstr.push("0123456789abcdef".charAt(valhex[i]));
         // }
-        console.log("[giiker]", "Raw Data: ", valhex.join(""));
+        // console.log("[giiker]", "Raw Data: ", valhex.join(""));
         // console.log('[giiker]', "Current State: ", facelet);
         // console.log('[giiker]', "A Valid Generator: ", scramble_333.genFacelet(facelet));
-        console.log(
-          "[giiker]",
-          "Previous Moves: ",
-          prevMoves.reverse().join(" ")
-        );
-        prevMoves.reverse();
+        // console.log(
+        // "[giiker]",
+        //  "Previous Moves: ",
+        //  prevMoves.reverse().join(" ")
+        // );
         // }
         // callback(facelet, prevMoves, timestamp, deviceName);
         // return [facelet, prevMoves];
@@ -264,7 +679,7 @@ class App extends React.Component {
         if (!key) {
           return;
         }
-        // key = JSON.parse(LZString.decompressFromEncodedURIComponent(key));
+        key = JSON.parse(LZString.decompressFromEncodedURIComponent(key));
         for (var i = 0; i < 6; i++) {
           key[i] = (key[i] + value.getUint8(5 - i)) & 0xff;
         }
@@ -350,6 +765,7 @@ class App extends React.Component {
             return _service_data.getCharacteristic(CHRCT_UUID_F6);
           })
           .then(function (chrct) {
+            this_App.handle_solve_status("Ready for scrambling");
             _chrct_f6 = chrct;
             return _service_data.getCharacteristic(CHRCT_UUID_F7);
           })
@@ -414,6 +830,7 @@ class App extends React.Component {
             prevMoves = [];
             for (var i = 0; i < 6; i++) {
               var m = value[13 + i];
+              // console.log("URFDLB".charAt(~~(m / 3)) + " 2'".charAt(m % 3));
               prevMoves.unshift(
                 "URFDLB".charAt(~~(m / 3)) + " 2'".charAt(m % 3)
               );
@@ -468,10 +885,43 @@ class App extends React.Component {
                   prevTimestamp += timestamp - _timestamp;
                 }
 
+                let moves = {
+                  0: "U",
+                  1: "U2",
+                  2: "U'",
+                  3: "R",
+                  4: "R2",
+                  5: "R'",
+                  6: "F",
+                  7: "F2",
+                  8: "F'",
+                  9: "D",
+                  10: "D2",
+                  11: "D'",
+                  12: "L",
+                  13: "L2",
+                  14: "L'",
+                  15: "B",
+                  16: "B2",
+                  17: "B'",
+                };
+                const cube_moves_new = [...this_App.state.cube_moves];
+                const cube_moves_time_new = [...this_App.state.cube_moves_time];
                 for (var i = moveDiff - 1; i >= 0; i--) {
+                  if (cube_moves_new.length === 0) {
+                    this_App.handle_solve_status("Scrambling");
+                  }
+                  if (this_App.state.solve_status == "Memo") {
+                    this_App.handle_solve_status("Solving");
+                  }
                   var m =
                     "URFDLB".indexOf(prevMoves[i][0]) * 3 +
                     " 2'".indexOf(prevMoves[i][1]);
+                  cube_moves_new.push(moves[m]);
+                  cube_moves_time_new.push(Date.now());
+                  this_App.setState({ cube_moves: cube_moves_new });
+                  this_App.setState({ cube_moves_time: cube_moves_time_new });
+                  this_App.handle_moves_to_show(cube_moves_new);
                   // mathlib.CubieCube.EdgeMult(prevCubie, mathlib.CubieCube.moveCube[m], curCubie);
                   // mathlib.CubieCube.CornMult(prevCubie, mathlib.CubieCube.moveCube[m], curCubie);
                   prevTimestamp += timeOffs[i];
@@ -626,6 +1076,7 @@ class App extends React.Component {
         return device.gatt
           .connect()
           .then(function (server) {
+            this_App.handle_solve_status("Ready for scrambling");
             _server = server;
             return server.getPrimaryService(SERVICE_UUID);
           })
@@ -699,10 +1150,20 @@ class App extends React.Component {
             var m = axis * 3 + power;
 
             const cube_moves_new = [...this_App.state.cube_moves];
-            console.log(cube_moves_new);
+            const cube_moves_time_new = [...this_App.state.cube_moves_time];
+            if (cube_moves_new.length === 0) {
+              this_App.handle_solve_status("Scrambling");
+            }
+            if (this_App.state.solve_status == "Memo") {
+              this_App.handle_solve_status("Solving");
+            }
             cube_moves_new.push("URFDLB".charAt(axis) + " 2'".charAt(power));
+            cube_moves_time_new.push(Date.now());
             this_App.setState({ cube_moves: cube_moves_new });
-            console.log(this_App.state.cube_moves.join(" "));
+            this_App.setState({ cube_moves_time: cube_moves_time_new });
+            this_App.handle_moves_to_show(cube_moves_new);
+
+            // console.log(this_App.state.cube_moves.join(" "));
             // document.getElementById("moves_print").textContent = this.state.cube_moves.join(' ')
           }
         } else if (msgType === 2) {
@@ -800,6 +1261,7 @@ class App extends React.Component {
         .then(function (device) {
           console.log(device);
           _device = device;
+          this_App.handle_solve_status("Connecting...");
           if (
             device.name.startsWith("Gi") ||
             device.name.startsWith("Mi Smart Magic Cube")

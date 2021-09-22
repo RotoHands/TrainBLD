@@ -1,35 +1,51 @@
+// based on sr-scrambler and cubing.js
 import React, { Component } from "react";
 import scramble from "rubiks-cube-scramble";
-import scrambleGenerator from "rubiks-cube-scramble";
-import ScriptTag from "react-script-tag";
 class Scrambler extends React.Component {
-  state = {
-    scramble: null,
-  };
-  handle_scramble = () => {
-    this.setState({ scramble: scrambleGenerator() });
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      scramble: this.props.scramble,
+      last_scramble: this.props.last_scramble,
+    };
+  }
+
   render() {
     return (
-      <div>
-          <button className="btn btn-primary m-2" onClick={this.handle_scramble}>
-          {" "}
-          scramble
-        </button>
-        <ScriptTag
-          src="https://cdn.cubing.net/esm/cubing/twisty"
-          type="module"
-          defer
-        >
-          {" "}
-        </ScriptTag>
-        <div>
-          <twisty-player
-            alg={this.state.scramble}
-            visualization="2D"
-          ></twisty-player>{" "}
+      <div className="row m-2">
+        <div className="col-9 mt-1">
+          <div
+            className="text-end"
+            style={{ fontFamily: "Rubik", fontSize: 28 }}
+          >
+            {this.props.scramble}
+          </div>
         </div>
-        <div className="m-2">{this.state.scramble}</div>
+        <div className="col-3">
+          <div className="btn-toolbar" role="group" aria-label="Basic example">
+            <button
+              className="btn btn-primary m-1 "
+              onClick={this.props.onClick_last_scramble}
+            >
+              {" "}
+              Last
+            </button>
+            <button
+              className="btn btn-primary m-1"
+              onClick={this.props.onClick_scramble}
+            >
+              {" "}
+              Next
+            </button>
+            <button
+              className="btn btn-primary m-1"
+              // style={{ width: "140px" }}
+              onClick={this.props.onReset}
+            >
+              Reset moves
+            </button>
+          </div>
+        </div>
       </div>
     );
   }

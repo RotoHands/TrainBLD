@@ -104,12 +104,14 @@ class Setting extends React.Component {
   };
 
   handle_save_setting = () => {
+    console.log(this.props.id);
     const setting = {
       EDGES_BUFFER: this.state.edge_buffer,
       CORNER_BUFFER: this.state.corner_buffer,
       PARSE_TO_LETTER_PAIR: this.state.parse_with_letter_pair,
       GEN_WITH_MOVE_COUNT: this.state.gen_with_move_count,
       GEN_PARSED_TO_CUBEDB: this.state.GEN_PARSED_TO_CUBEDB,
+      ID: this.props.id,
       LETTER_PAIRS_DICT: JSON.stringify(this.state.letter_pair_dict),
     };
     this.setState({ setting_save: setting });
@@ -133,120 +135,119 @@ class Setting extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="text-black" style={{fontSize:20}}>
-        <button
-          className="btn btn-primary mb-2 mt-2  text-sm-start"
-          style={{width:"180px"}}
-          onClick={() => this.setState({ open: !this.state.open })}
-          aria-controls="example-collapse-text"
-          aria-expanded={this.state.open}
-        >
-          Settings
-          <div className="primary">
-            {this.state.setting_save_statue}
-          </div>
-        </button>
-        <Collapse in={this.state.open}>
-          <div style={{fontFamily:"Rubik"}} id="example-collapse-text">
-            <div>
-              <Tabs defaultActiveKey="first">
-                <Tab eventKey="first" title="General">
-                  <SettingGeneral
-                    onChange_cubedb={this.handle_cubedb_txt}
-                    parse_with_letter_pair={this.state.parse_with_letter_pair}
-                    onChange_move_count={this.handle_move_count_change}
-                    onChange_apply_letter_pair={
-                      this.handle_apply_letter_pairs_change
-                    }
-                    onChange_corner_buffer={this.handle_corner_buffer}
-                    onChange_edge_buffer={this.handle_edge_buffer}
-                    edge_buffer={this.state.edge_buffer}
-                    corner_buffer={this.state.corner_buffer}
-                  />
-                </Tab>
-                <Tab eventKey="second" title="letter scheme">
-                  <SettingLetterScheme
-                    letter_pair_dict={this.state.letter_pair_dict}
-                    onChange_letter_pair_dict={this.handle_letter_pair_dict}
-                  />
-                </Tab>
-                <Tab eventKey="third" title="Import setting">
-                  <div className="container">
-                    <div className="row">
-                      <div className="col-sm">
-                        <button
-                          className="btn btn-primary btn-sm m-2"
-                          onClick={this.handle_import_onClick}
-                        >
-                          Import!
-                        </button>
-                        <span>
-                          Paste the setting you saved here and then click
-                          "Import!"
-                        </span>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-sm-2">
-                        <input
-                          onChange={this.handle_import_onChange}
-                          type="text"
-                          className="text m-2"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </Tab>
-                <Tab eventKey="forth" title="Save Setting">
-                  <div className="container">
-                    <div className="row">
-                      <div className="col-sm m-2">
-                        <div
-                          className="btn-toolbar"
-                          role="group"
-                          aria-label="Basic example"
-                        >
-                          <button
-                            onClick={this.handle_save_setting}
-                            className="btn btn-primary btn-sm-2 m-1"
-                          >
-                            Save Settings
-                          </button>
-                          <button
-                            className="btn btn-primary m-1"
-                            onClick={() =>
-                              navigator.clipboard.writeText(
-                                JSON.stringify(this.state.setting_save)
-                              )
-                            }
-                          >
-                            Copy!
-                          </button>
-                        </div>
-                      </div>
+        <div className="text-black" style={{ fontSize: 20 }}>
+          <button
+            className="btn btn-primary mb-2 mt-2  text-sm-start"
+            style={{ width: "180px" }}
+            onClick={() => this.setState({ open: !this.state.open })}
+            aria-controls="example-collapse-text"
+            aria-expanded={this.state.open}
+          >
+            Settings
+            <div className="primary">{this.state.setting_save_statue}</div>
+          </button>
+          <Collapse in={this.state.open}>
+            <div style={{ fontFamily: "Rubik" }} id="example-collapse-text">
+              <div>
+                <Tabs defaultActiveKey="first">
+                  <Tab eventKey="first" title="General">
+                    <SettingGeneral
+                      id={this.props.id}
+                      onChange_cubedb={this.handle_cubedb_txt}
+                      parse_with_letter_pair={this.state.parse_with_letter_pair}
+                      onChange_move_count={this.handle_move_count_change}
+                      onChange_apply_letter_pair={
+                        this.handle_apply_letter_pairs_change
+                      }
+                      onChange_corner_buffer={this.handle_corner_buffer}
+                      onChange_edge_buffer={this.handle_edge_buffer}
+                      edge_buffer={this.state.edge_buffer}
+                      corner_buffer={this.state.corner_buffer}
+                    />
+                  </Tab>
+                  <Tab eventKey="second" title="letter scheme">
+                    <SettingLetterScheme
+                      letter_pair_dict={this.state.letter_pair_dict}
+                      onChange_letter_pair_dict={this.handle_letter_pair_dict}
+                    />
+                  </Tab>
+                  <Tab eventKey="third" title="Import setting">
+                    <div className="container">
                       <div className="row">
-                        <div className="col-sm m-1">
-                          <span className="fw-bold">
-                            Click "Save Settings" ={">"} "Copy!" and paste
-                            output to a .txt file, next time paste it in the
-                            "Import Setting" section
+                        <div className="col-sm">
+                          <button
+                            className="btn btn-primary btn-sm m-2"
+                            onClick={this.handle_import_onClick}
+                          >
+                            Import!
+                          </button>
+                          <span>
+                            Paste the setting you saved here and then click
+                            "Import!"
                           </span>
                         </div>
                       </div>
                       <div className="row">
-                        <div className="col-sm m-2">
-                          <p className="text-break" styles="flexShrink: 1">
-                            {JSON.stringify(this.state.setting_save)}
-                          </p>
+                        <div className="col-sm-2">
+                          <input
+                            onChange={this.handle_import_onChange}
+                            type="text"
+                            className="text m-2"
+                          />
                         </div>
                       </div>
                     </div>
-                  </div>
-                </Tab>
-              </Tabs>
+                  </Tab>
+                  <Tab eventKey="forth" title="Save Setting">
+                    <div className="container">
+                      <div className="row">
+                        <div className="col-sm m-2">
+                          <div
+                            className="btn-toolbar"
+                            role="group"
+                            aria-label="Basic example"
+                          >
+                            <button
+                              onClick={this.handle_save_setting}
+                              className="btn btn-primary btn-sm-2 m-1"
+                            >
+                              Save Settings
+                            </button>
+                            <button
+                              className="btn btn-primary m-1"
+                              onClick={() =>
+                                navigator.clipboard.writeText(
+                                  JSON.stringify(this.state.setting_save)
+                                )
+                              }
+                            >
+                              Copy!
+                            </button>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-sm m-1">
+                            <span className="fw-bold">
+                              Click "Save Settings" ={">"} "Copy!" and paste
+                              output to a .txt file, next time paste it in the
+                              "Import Setting" section
+                            </span>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-sm m-2">
+                            <p className="text-break" styles="flexShrink: 1">
+                              {JSON.stringify(this.state.setting_save)}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Tab>
+                </Tabs>
+              </div>
             </div>
-          </div>
-        </Collapse>{" "}
+          </Collapse>{" "}
         </div>
       </React.Fragment>
     );

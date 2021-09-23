@@ -13,7 +13,6 @@ class SettingGeneral extends React.Component {
                 id="gen_with_move_count"
                 onChange={this.props.onChange_move_count}
                 defaultChecked="true"
-
               />
               <label className="form-check-label">
                 <span> generate with move count </span>
@@ -35,8 +34,7 @@ class SettingGeneral extends React.Component {
               </label>
             </div>
           </div>{" "}
-          <div className="row">
-          </div>
+          <div className="row"></div>
           <div className="row mb-2">
             <div className="col-sm-3">
               <div>

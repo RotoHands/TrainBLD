@@ -33,6 +33,7 @@ class App extends React.Component {
       parsed_solve_txt: null,
       parsed_solve_cubedb: null,
       parse_settings: {
+        ID: this.makeid(10),
         DATE_SOLVE: "9/18/2021, 12:22 AM",
         DIFF_BETWEEN_ALGS: "0.87",
         MEMO: "1.39",
@@ -192,6 +193,16 @@ class App extends React.Component {
     this.setState({ parse_settings: parse_setting_new });
     this.handle_solve_status("Memo");
   };
+   makeid = (length) => {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * 
+ charactersLength));
+   }
+   return result;
+}
   handle_onStop_timer = (timer_finish) => {
     new Promise((resolve) => setTimeout(resolve, 1))
       .then((data) => {
@@ -232,7 +243,7 @@ class App extends React.Component {
       },
       body: JSON.stringify(setting),
     };
-    fetch("https://rotohands-bld-parser.herokuapp.com/", requestOptions)
+    fetch("http://127.0.0.1:8080", requestOptions)
       .then((response) =>
         response.json().then((data) => {
           result = data;
@@ -353,7 +364,7 @@ class App extends React.Component {
             </div>
           </div>
           <div className="row ms-4">
-            <Setting export_setting={this.handle_export_setting} />
+            <Setting export_setting={this.handle_export_setting} id={this.state.parse_settings["ID"]} />
           </div>
         </div>
         <div className="row">

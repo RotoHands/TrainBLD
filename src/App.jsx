@@ -69,9 +69,17 @@ class App extends React.Component {
     document.getElementById("timer_element_2").focus();
   };
   delete_solve = (num_solve) => {
+    let solve_stats = [...this.state.solves_stats];
     if (window.confirm("Are you sure you want to delete the solve?")) {
-      localStorage.removeItem(num_solve);
-      this.initialStatsFromLocalstorage();
+      localStorage.removeItem("solve_num_" + num_solve);
+      for (var i = 0; i < solve_stats.length; i++) {
+        if (solve_stats[i]["solve_num"] === num_solve) {
+          solve_stats.splice(i, 1);
+          break;
+        }
+      }
+      this.setState({ solves_stats: solve_stats });
+      this.renderTableData(solve_stats);
     }
   };
   renderTableData = (solve_stats) => {
@@ -85,6 +93,7 @@ class App extends React.Component {
         <th key="link">link</th>
       </React.Fragment>
     );
+    let len = solve_stats.length;
     let rows = solve_stats.map((solve, index) => {
       const {
         DNF,
@@ -105,7 +114,7 @@ class App extends React.Component {
               value={solve_num}
               onClick={() => this.delete_solve(solve_num)}
             >
-              <div>{solve_num}</div>
+              <div>{len - index}</div>
             </a>
           </td>
           <td>{time_solve} </td>
@@ -138,11 +147,13 @@ class App extends React.Component {
       }
     }
     solve_stats.sort(function (a, b) {
-      return b.solve_num - a.solve_num;
+      var keyA = new Date(a.date),
+        keyB = new Date(b.date);
+      // Compare the 2 dates
+      if (keyA < keyB) return 1;
+      if (keyA > keyB) return -1;
+      return 0;
     });
-    for (var i = 0; i < solve_stats.length; i++) {
-      solve_stats[i]["solve_num"] = solve_stats.length - i;
-    }
 
     this.setState({ solves_stats: solve_stats });
     this.renderTableData(solve_stats);
@@ -153,6 +164,7 @@ class App extends React.Component {
     let times_str = solve_txt.split("\n")[0];
     let times = [...times_str.match(rgx)];
     let solve_stats = {
+      date: Date.now(),
       solve_num: localStorage.length + 1,
       time_solve: times[0],
       memo_time: times[1],
@@ -171,7 +183,7 @@ class App extends React.Component {
     new_solve_stats.push(solve_stats);
     this.setState({ solves_stats: new_solve_stats });
     localStorage.setItem(
-      (localStorage.length + 1).toString(),
+      "solve_num_" + (localStorage.length + 1).toString(),
       JSON.stringify(solve_stats)
     );
     this.initialStatsFromLocalstorage();

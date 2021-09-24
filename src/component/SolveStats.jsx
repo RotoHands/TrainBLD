@@ -9,12 +9,9 @@ class SolveStats extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
-        
-          <table id="solves">
-            <tbody>{this.props.renderTable}</tbody>
-          </table>
-      </React.Fragment>
+        <table id="solves">
+          <tbody>{this.props.renderTable}</tbody>
+        </table>
     );
   }
 }

@@ -21,3 +21,22 @@ th {
   background-color: #0d6efd;
   color: white;
 }
+table tbody { height:400px; overflow-y:scroll; display:block; }
+::-webkit-scrollbar {
+  width: 1px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #11324D; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #11324D; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #11324D; 
+}

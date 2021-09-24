@@ -62,7 +62,7 @@ class App extends React.Component {
 
   componentDidMount = () => {
     document.title = "TrainBLD";
-    this.initialStatsFromLocalstorage();
+    // this.initialStatsFromLocalstorage();
     this.handle_scramble();
   };
   componentDidUpdate = () => {
@@ -374,7 +374,7 @@ class App extends React.Component {
           result = data;
           console.log("request to parsing server");
           console.log(requestOptions);
-          this.addSolveToLocalStorage(result);
+          // this.addSolveToLocalStorage(result);
           this.setState({ parsed_solve: result });
           if ("cubedb" in result) {
             this.setState({ parsed_solve_cubedb: result["cubedb"] });

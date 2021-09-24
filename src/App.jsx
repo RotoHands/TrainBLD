@@ -141,11 +141,12 @@ class App extends React.Component {
   initialStatsFromLocalstorage = () => {
     let solve_stats = [];
 
-    for (var i = localStorage.length; i > -1; i--) {
-      if (localStorage.getItem(localStorage.key(i)) !== null) {
+    for (var i = localStorage.length - 1; i > -1; i--) {
+      if (localStorage.key(i).includes("solve_num")) {
         solve_stats.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
       }
     }
+
     solve_stats.sort(function (a, b) {
       var keyA = new Date(a.date),
         keyB = new Date(b.date);
@@ -159,13 +160,15 @@ class App extends React.Component {
     this.renderTableData(solve_stats);
   };
   addSolveToLocalStorage = (data) => {
-    var rgx = /[0-9]+\.?[0-9]*/g;
+    var rgx = /[0-9]+:?[0-9]*\.[0-9]*/g;
     let solve_txt = data["txt"];
     let times_str = solve_txt.split("\n")[0];
     let times = [...times_str.match(rgx)];
+    let new_solve_stats = [...this.state.solves_stats];
+
     let solve_stats = {
       date: Date.now(),
-      solve_num: localStorage.length + 1,
+      solve_num: new_solve_stats[0]["solve_num"] + 1,
       time_solve: times[0],
       memo_time: times[1],
       exe_time: times[2],
@@ -179,11 +182,10 @@ class App extends React.Component {
       solve_stats["DNF"] = true;
     }
 
-    let new_solve_stats = [...this.state.solves_stats];
     new_solve_stats.push(solve_stats);
     this.setState({ solves_stats: new_solve_stats });
     localStorage.setItem(
-      "solve_num_" + (localStorage.length + 1).toString(),
+      "solve_num_" + (new_solve_stats[0]["solve_num"] + 1).toString(),
       JSON.stringify(solve_stats)
     );
     this.initialStatsFromLocalstorage();
@@ -365,7 +367,8 @@ class App extends React.Component {
       },
       body: JSON.stringify(setting),
     };
-    fetch("https://rotohands-bld-parser.herokuapp.com/", requestOptions)
+    // fetch("https://rotohands-bld-parser.herokuapp.com/", requestOptions)
+    fetch("http://127.0.0.1:8080", requestOptions)
       .then((response) =>
         response.json().then((data) => {
           result = data;

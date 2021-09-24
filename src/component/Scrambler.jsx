@@ -12,33 +12,33 @@ class Scrambler extends React.Component {
 
   render() {
     return (
-      <div className="row m-2">
-        <div className="col-9 mt-1">
+      <div className="row m-1">
+        <div className="col-8 mt-1">
           <div
-            className="text-end"
-            style={{ fontFamily: "Rubik", fontSize: 28 }}
+            className="text-start"
+            style={{ fontFamily: "Rubik", fontSize: 20 }}
           >
             {this.props.scramble}
           </div>
         </div>
-        <div className="col-3">
-          <div className="btn-toolbar" role="group" aria-label="Basic example">
+        <div className="col-4">
+          <div className="btn-toolbar " role="group" aria-label="Basic example">
             <button
-              className="btn btn-primary m-1 "
+              className="btn btn-primary m-1 btn-sm "
               onClick={this.props.onClick_last_scramble}
             >
               {" "}
               Last
             </button>
             <button
-              className="btn btn-primary m-1"
+              className="btn btn-primary m-1 btn-sm"
               onClick={this.props.onClick_scramble}
             >
               {" "}
               Next
             </button>
             <button
-              className="btn btn-primary m-1"
+              className="btn btn-primary  m-1"
               // style={{ width: "140px" }}
               onClick={this.props.onReset}
             >

@@ -102,20 +102,20 @@ class Timer extends React.Component {
         onKeyUp={this.handle_key_press_up}
         onKeyDown={this.handle_key_press_down}
       >
-        <div className="">
-          <div className="row text-center">
-            <div
-              className={this.state.ready_state}
-              style={{ fontSize: 40, fontFamily: "Rubik" }}
-            >
-              {this.props.solve_status}
+          <div className="row">
+            <div className="col-8 text-center">
+              <div
+                className={this.state.ready_state}
+                style={{ fontSize: 40, fontFamily: "Rubik" }}
+              >
+                {this.props.solve_status}
+              </div>
             </div>
+            <div className="col-4 text-center"></div>
           </div>
-        </div>
         <div className="row ">
-          <div className="col-3"></div>
           <div
-            className="col-6 text-start"
+            className="col-8 text-start"
             style={{
               fontSize: 190,
               fontFamily: "digital-7",
@@ -126,7 +126,7 @@ class Timer extends React.Component {
             {this.formatTime(this.state.currentTimeSec)}.
             {this.formatTime(this.state.currentTimeMs, "ms")}
           </div>
-          <div className="col-2">
+          <div className="col-3 ms-5">
             <scramble-display
               style={{
                 width: "100%",

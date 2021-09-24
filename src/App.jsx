@@ -9,13 +9,15 @@ import Timer from "./component/Timer";
 import { Helmet } from "react-helmet";
 import logo from "./images/logo2.png";
 import LZString from "lz-string";
+import SolveStats from "./component/SolveStats";
 
 class App extends React.Component {
-  
   constructor() {
     super();
     this.GiikerCube = this.GiikerCube.bind(this);
     this.state = {
+      renderTable: null,
+      solves_stats: [],
       timer_focus: null,
       moves_to_show: null,
       giiker_prev_moves: [],
@@ -59,13 +61,98 @@ class App extends React.Component {
   }
 
   componentDidMount = () => {
-    document.title="TrainBLD";
+    document.title = "TrainBLD";
+    this.initialStatsFromLocalstorage();
     this.handle_scramble();
   };
   componentDidUpdate = () => {
     document.getElementById("timer_element_2").focus();
   };
-    extract_solve_from_cube_moves = (timer_finish) => {
+  renderTableData = (solve_stats) => {
+    let header_elem = (
+      <React.Fragment>
+        <th key="num">#</th>
+        <th key="time">time</th>
+        <th key="memo">memo</th>
+        {/* <th key="exe">exe</th> */}
+        <th key="fluidness">fluid</th>
+        <th key="link">link</th>
+      </React.Fragment>
+    );
+    let rows = solve_stats.map((solve, index) => {
+      const {
+        DNF,
+        exe_time,
+        fluidness,
+        link,
+        memo_time,
+        solve_num,
+        time_solve,
+        txt_solve,
+      } = solve; //destructuring
+      return (
+        <tr key={solve_num}>
+          <td>{solve_num}</td>
+          <td>{time_solve} </td>
+          <td>{memo_time}</td>
+          {/* <td>{exe_time}</td> */}
+          <td>{fluidness}</td>
+          <td>
+            <a href={link} target="_blank" title={txt_solve}>
+              <div>link</div>
+            </a>
+          </td>
+        </tr>
+      );
+    });
+    let new_table = (
+      <React.Fragment>
+        <tr>{header_elem}</tr>
+        {rows}
+      </React.Fragment>
+    );
+
+    this.setState({ renderTable: new_table });
+  };
+  initialStatsFromLocalstorage = () => {
+    let solve_stats = [];
+
+    for (var i = localStorage.length; i > 0; i--) {
+      solve_stats.push(JSON.parse(localStorage.getItem(i.toString())));
+    }
+    this.setState({ solves_stats: solve_stats });
+    this.renderTableData(solve_stats);
+  };
+  addSolveToLocalStorage = (data) => {
+    var rgx = /[0-9]+\.?[0-9]*/g;
+    let solve_txt = data["txt"];
+    let times_str = solve_txt.split("\n")[0];
+    let times = [...times_str.match(rgx)];
+    let solve_stats = {
+      solve_num: localStorage.length + 1,
+      time_solve: times[0],
+      memo_time: times[1],
+      exe_time: times[2],
+      txt_solve: data["txt"],
+      link: data["cubedb"],
+    };
+    if (!times_str.toLowerCase().includes("dnf")) {
+      solve_stats["fluidness"] = times[3];
+      solve_stats["DNF"] = false;
+    } else {
+      solve_stats["DNF"] = true;
+    }
+
+    let new_solve_stats = [...this.state.solves_stats];
+    new_solve_stats.push(solve_stats);
+    this.setState({ solves_stats: new_solve_stats });
+    localStorage.setItem(
+      (localStorage.length + 1).toString(),
+      JSON.stringify(solve_stats)
+    );
+    this.initialStatsFromLocalstorage();
+  };
+  extract_solve_from_cube_moves = (timer_finish) => {
     let parse_setting_new = { ...this.state.parse_settings };
     let scramble = [];
     let solve = [];
@@ -193,20 +280,19 @@ class App extends React.Component {
     this.setState({ parse_settings: parse_setting_new });
     this.handle_solve_status("Memo");
   };
-   makeid = (length) => {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  makeid = (length) => {
+    var result = "";
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * 
- charactersLength));
-   }
-   return result;
-}
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  };
   handle_onStop_timer = (timer_finish) => {
     new Promise((resolve) => setTimeout(resolve, 1))
       .then((data) => {
-    
         this.setState({ timeFinish: timer_finish });
         this.handle_solve_status("Parsing...");
         this.handle_parse_solve(timer_finish);
@@ -247,7 +333,9 @@ class App extends React.Component {
       .then((response) =>
         response.json().then((data) => {
           result = data;
+          console.log("request to parsing server");
           console.log(requestOptions);
+          this.addSolveToLocalStorage(result);
           this.setState({ parsed_solve: result });
           if ("cubedb" in result) {
             this.setState({ parsed_solve_cubedb: result["cubedb"] });
@@ -257,7 +345,7 @@ class App extends React.Component {
             console.log(result["txt"]);
             this.setState({ parsed_solve_txt: result["txt"] });
           }
-          
+
           this.handle_solve_status("Ready for scrambling");
         })
       )
@@ -283,8 +371,28 @@ class App extends React.Component {
 
   render() {
     const styleBG = {
-      borderRadius: "0px",
       background: "#A1CAE5",
+      roundedtop: "25px",
+
+      // background: "#A7C5EB",
+      // background: "#79A3B1",
+
+      // background: "#BAE8E8",
+      // background: "#BAE8E8",
+    };
+    const styleSetting = {
+      background: "#A1CAE5",
+
+      // background: "#A7C5EB",
+      // background: "#79A3B1",
+
+      // background: "#BAE8E8",
+      // background: "#BAE8E8",
+    };
+    const styleSTATS = {
+      background: "#11324D",
+      borderRadius: "0px",
+
       // background: "#A7C5EB",
       // background: "#79A3B1",
 
@@ -293,16 +401,14 @@ class App extends React.Component {
     };
     // document.body.style.overflow = "hidden";
     return (
-      
       <React.Fragment>
         <div className="application">
           <Helmet>
             <style>{"body { background-color: #11324D;color: #F6F6F6 }"}</style>
           </Helmet>
         </div>
-        
-        <div style={styleBG}>
-          <div className="row align-items-center">
+        <div className="container-fluid">
+          <div className="row align-items-center" style={styleBG}>
             <div className="col-2">
               <div className="row">
                 <img
@@ -329,7 +435,7 @@ class App extends React.Component {
                 aria-label="Basic example"
               >
                 <button
-                  className="btn btn-primary m-1 text-end"
+                  className="btn btn-primary btn-sm m-1 text-end"
                   // style={{ width: "180px" }}
                   onClick={() =>
                     window.open(
@@ -340,8 +446,8 @@ class App extends React.Component {
                   Youtube
                 </button>
                 <button
-                  className="btn btn-primary m-1 text-end"
-                  // style={{ width: "180px" }}
+                  className="btn btn-primary m-1 text-center "
+                  style={{ width: "80px" }}
                   onClick={() => window.open("https://github.com/RotoHands")}
                 >
                   Github
@@ -349,7 +455,7 @@ class App extends React.Component {
               </div>
               <button
                 className="btn btn-primary m-1 mt-2"
-                style={{ width: "167px" }}
+                style={{ width: "160px" }}
                 onClick={() =>
                   window.open(
                     "https://www.paypal.com/donate?hosted_button_id=X9X9VZEAYK3DJ"
@@ -358,43 +464,65 @@ class App extends React.Component {
               >
                 Support :)
               </button>
-              <div className=" ms-1 text-start fst-italic" style={{ fontSize: 16 }}>
+              <div
+                className=" ms-1 text-start fst-italic"
+                style={{ fontSize: 16 }}
+              >
                 By Rotem Ifrach
               </div>
             </div>
           </div>
-          <div className="row ms-4">
-            <Setting export_setting={this.handle_export_setting} id={this.state.parse_settings["ID"]} />
+          <div className="row" style={styleSetting}>
+            <Setting
+              export_setting={this.handle_export_setting}
+              id={this.state.parse_settings["ID"]}
+            />
           </div>
-        </div>
-        <div className="row">
-          <div className="col-12">
-            <Scrambler
-              onReset={this.handle_reset_cube}
-              scramble={this.state.scramble}
-              onClick_scramble={this.handle_scramble}
-              onClick_last_scramble={this.handle_last_scramble}
-            />{" "}
+          <div className="row">
+            <div className="col-2" style={styleSTATS}>
+              <div className="row">
+                <SolveStats
+                  style={styleSTATS}
+                  renderTable={this.state.renderTable}
+                  solve_stats={this.state.solves_stats}
+                  initStats={this.initialStatsFromLocalstorage}
+                  renderTableData={this.renderTableData}
+                />
+              </div>
+            </div>
+            <div className="col-1"></div>
+            <div className="col-8">
+              <div className="row">
+                <div className="col-12">
+                  <Scrambler
+                    onReset={this.handle_reset_cube}
+                    scramble={this.state.scramble}
+                    onClick_scramble={this.handle_scramble}
+                    onClick_last_scramble={this.handle_last_scramble}
+                  />{" "}
+                </div>
+              </div>
+              <div
+                className="row text-start"
+                style={{ fontFamily: "Rubik", fontSize: 22 }}
+              >
+                <div className="">{this.state.moves_to_show}</div>
+              </div>
+              <div className="row">
+                <Timer
+                  // parsed_solve_txt={this.state.parsed_solve_txt}
+                  scramble={this.state.scramble}
+                  solve_status={this.state.solve_status}
+                  onStart={(timer_start) =>
+                    this.handle_onStart_timer(timer_start)
+                  }
+                  onStop={(timer_finish) =>
+                    this.handle_onStop_timer(timer_finish)
+                  }
+                />
+              </div>
+            </div>
           </div>
-        </div>
-        <div
-          className="row text-center"
-          style={{ fontFamily: "Rubik", fontSize: 22 }}
-        >
-          <div className="">{this.state.moves_to_show}</div>
-        </div>
-        <div className="row">
-          <Timer
-            // parsed_solve_txt={this.state.parsed_solve_txt}
-            scramble={this.state.scramble}
-            solve_status={this.state.solve_status}
-            onStart={(timer_start) => this.handle_onStart_timer(timer_start)}
-            onStop={(timer_finish) => this.handle_onStop_timer(timer_finish)}
-          />
-        </div>
-
-        <div className="row">
-          <div className="col"></div>
         </div>
       </React.Fragment>
     );

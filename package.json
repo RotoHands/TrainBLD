@@ -17,6 +17,7 @@
     "react-helmet": "^6.1.0",
     "react-script-tag": "^1.1.2",
     "react-scripts": "4.0.3",
+    "react-table-scrollbar": "^0.1.11",
     "rubiks-cube-scramble": "^1.0.2",
     "scramble-display": "^0.3.1",
     "sr-scrambler": "^1.0.1",

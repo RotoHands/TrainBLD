@@ -135,9 +135,8 @@ class Setting extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="text-black" style={{ fontSize: 20 }}>
-          <button
-            className="btn btn-primary mb-2 mt-2  text-sm-start"
+         <button
+            className="btn btn-primary m-2 ms-4 mb-3 text-sm-start"
             style={{ width: "180px" }}
             onClick={() => this.setState({ open: !this.state.open })}
             aria-controls="example-collapse-text"
@@ -146,6 +145,7 @@ class Setting extends React.Component {
             Settings
             <div className="primary">{this.state.setting_save_statue}</div>
           </button>
+        <div className="text-black" style={{ fontSize: 20 }}>
           <Collapse in={this.state.open}>
             <div style={{ fontFamily: "Rubik" }} id="example-collapse-text">
               <div>

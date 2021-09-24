@@ -2,3 +2,22 @@
   font-family: "digital-7";
   src: local("digital-7"), url(./fonts/digital-7.ttf) format("truetype");
 }
+td {
+  font-size: "6px";
+  padding: 3px;
+  border: 1px solid #ddd;
+  font-family: "Rubik";
+  color: #000000;
+  text-align: center;
+
+  background-color: #a1cae5;
+}
+th {
+  font-weight: normal;
+  padding-top: 6px;
+  border: 1px solid #ddd;
+  padding-bottom: 6px;
+  text-align: center;
+  background-color: #0d6efd;
+  color: white;
+}

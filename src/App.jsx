@@ -62,7 +62,7 @@ class App extends React.Component {
 
   componentDidMount = () => {
     document.title = "TrainBLD";
-    // this.initialStatsFromLocalstorage();
+    this.initialStatsFromLocalstorage();
     this.handle_scramble();
   };
   componentDidUpdate = () => {
@@ -168,7 +168,8 @@ class App extends React.Component {
 
     let solve_stats = {
       date: Date.now(),
-      solve_num: new_solve_stats[0]["solve_num"] + 1,
+      solve_num:
+        new_solve_stats.length > 0 ? new_solve_stats[0]["solve_num"] + 1 : 0,
       time_solve: times[0],
       memo_time: times[1],
       exe_time: times[2],
@@ -184,8 +185,9 @@ class App extends React.Component {
 
     new_solve_stats.push(solve_stats);
     this.setState({ solves_stats: new_solve_stats });
+
     localStorage.setItem(
-      "solve_num_" + (new_solve_stats[0]["solve_num"] + 1).toString(),
+      ("solve_num_" + solve_stats["solve_num"]).toString(),
       JSON.stringify(solve_stats)
     );
     this.initialStatsFromLocalstorage();
@@ -368,13 +370,13 @@ class App extends React.Component {
       body: JSON.stringify(setting),
     };
     fetch("https://rotohands-bld-parser.herokuapp.com/", requestOptions)
-    // fetch("http://127.0.0.1:8080", requestOptions)
+      // fetch("http://127.0.0.1:8080", requestOptions)
       .then((response) =>
         response.json().then((data) => {
           result = data;
           console.log("request to parsing server");
           console.log(requestOptions);
-          // this.addSolveToLocalStorage(result);
+          this.addSolveToLocalStorage(result);
           this.setState({ parsed_solve: result });
           if ("cubedb" in result) {
             this.setState({ parsed_solve_cubedb: result["cubedb"] });
@@ -389,7 +391,6 @@ class App extends React.Component {
         })
       )
       .catch((data) => {
-        console.log(requestOptions);
         this.handle_solve_status("Parsing didn't succeed");
       });
   };

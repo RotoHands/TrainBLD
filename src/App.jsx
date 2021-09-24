@@ -15,7 +15,7 @@ class App extends React.Component {
     super();
     this.GiikerCube = this.GiikerCube.bind(this);
     this.state = {
-      local_storage_setting:null,
+      local_storage_setting: null,
       renderTable: null,
       solves_stats: [],
       timer_focus: null,
@@ -34,29 +34,32 @@ class App extends React.Component {
       parsed_solve: null,
       parsed_solve_txt: null,
       parsed_solve_cubedb: null,
-      parse_settings: localStorage.getItem('setting') ===null ? {
-        ID: this.makeid(10),
-        DATE_SOLVE: "9/18/2021, 12:22 AM",
-        DIFF_BETWEEN_ALGS: "0.87",
-        MEMO: "1.39",
-        TIME_SOLVE: "30.48",
-        NAME_OF_SOLVE: "example_smart_cube",
-        GEN_PARSED_TO_CUBEDB: true,
-        GEN_PARSED_TO_TXT: true,
-        SMART_CUBE: true,
-        COMMS_UNPARSED: false,
-        EDGES_BUFFER: "UF",
-        CORNER_BUFFER: "UFR",
-        PARSE_TO_LETTER_PAIR: true,
-        GEN_WITH_MOVE_COUNT: true,
-        LETTER_PAIRS_DICT:
-          '{"UBL":"A","UBR":"B","UFR":"C","UFL":"D","LBU":"E","LFU":"F","LFD":"G","LDB":"H","FUL":"I","FUR":"J","FRD":"K","FDL":"L","RFU":"M","RBU":"N","RBD":"O","RFD":"P","BUR":"Q","BUL":"R","BLD":"S","BRD":"T","DFL":"U","DFR":"V","DBR":"W","DBL":"X","UB":"A","UR":"B","UF":"C","UL":"D","LU":"E","LF":"F","LD":"G","LB":"H","FU":"I","FR":"J","FD":"K","FL":"L","RU":"M","RB":"N","RD":"O","RF":"P","BU":"Q","BL":"R","BD":"S","BR":"T","DF":"U","DR":"V","DB":"W","DL":"X"}',
-        SCRAMBLE:
-          "F' R' B' D L' B' B' D' D' L' U B' R R F' R R B D' D' B U U L L U U L L B' R' U'",
-        SOLVE:
-          "R F' L' F R' L D' L D L' U' U' L' R B R B' R' L U R' U R' R' U D' F U' F' U' D R U R R' F' L F L' R U' L' U L R' R' U' R U' D B' B' U D' R U R R F' R' U D' F F D U' R' F R' D D U R U' R' D D R U R' U' R R U R' D' R' D R U U R' D' R U D U R U U' U' R' D R R U R' R' U' R R D' R' R' U R R U' R' R' R D' R' D R U R' D' R U' D R'",
-        SOLVE_TIME_MOVES: [],
-      } : JSON.parse(localStorage.getItem('setting')),
+      parse_settings:
+        localStorage.getItem("setting") === null
+          ? {
+              ID: this.makeid(10),
+              DATE_SOLVE: "9/18/2021, 12:22 AM",
+              DIFF_BETWEEN_ALGS: "0.87",
+              MEMO: "1.39",
+              TIME_SOLVE: "30.48",
+              NAME_OF_SOLVE: "example_smart_cube",
+              GEN_PARSED_TO_CUBEDB: true,
+              GEN_PARSED_TO_TXT: true,
+              SMART_CUBE: true,
+              COMMS_UNPARSED: false,
+              EDGES_BUFFER: "UF",
+              CORNER_BUFFER: "UFR",
+              PARSE_TO_LETTER_PAIR: true,
+              GEN_WITH_MOVE_COUNT: true,
+              LETTER_PAIRS_DICT:
+                '{"UBL":"A","UBR":"B","UFR":"C","UFL":"D","LBU":"E","LFU":"F","LFD":"G","LDB":"H","FUL":"I","FUR":"J","FRD":"K","FDL":"L","RFU":"M","RBU":"N","RBD":"O","RFD":"P","BUR":"Q","BUL":"R","BLD":"S","BRD":"T","DFL":"U","DFR":"V","DBR":"W","DBL":"X","UB":"A","UR":"B","UF":"C","UL":"D","LU":"E","LF":"F","LD":"G","LB":"H","FU":"I","FR":"J","FD":"K","FL":"L","RU":"M","RB":"N","RD":"O","RF":"P","BU":"Q","BL":"R","BD":"S","BR":"T","DF":"U","DR":"V","DB":"W","DL":"X"}',
+              SCRAMBLE:
+                "F' R' B' D L' B' B' D' D' L' U B' R R F' R R B D' D' B U U L L U U L L B' R' U'",
+              SOLVE:
+                "R F' L' F R' L D' L D L' U' U' L' R B R B' R' L U R' U R' R' U D' F U' F' U' D R U R R' F' L F L' R U' L' U L R' R' U' R U' D B' B' U D' R U R R F' R' U D' F F D U' R' F R' D D U R U' R' D D R U R' U' R R U R' D' R' D R U U R' D' R U D U R U U' U' R' D R R U R' R' U' R R D' R' R' U R R U' R' R' R D' R' D R U R' D' R U' D R'",
+              SOLVE_TIME_MOVES: [],
+            }
+          : JSON.parse(localStorage.getItem("setting")),
     };
   }
 
@@ -409,7 +412,21 @@ class App extends React.Component {
   handle_last_scramble = () => {
     this.setState({ scramble: this.state.last_scramble });
   };
-
+  handle_reset_stats = () => {
+    if (window.confirm("Are you sure you want to reset stata?")) {
+      let i = 0;
+      while (i < localStorage.length) {
+        if (localStorage.key(i).includes("solve_num")) {
+          localStorage.removeItem(localStorage.key(i));
+          console.log(localStorage.key(i));
+          i=0
+        } else {
+          i++;
+        }
+      }
+      this.initialStatsFromLocalstorage();
+    }
+  };
   render() {
     const styleBG = {
       background: "#A1CAE5",
@@ -522,6 +539,15 @@ class App extends React.Component {
           </div>
           <div className="row">
             <div className="col-2" style={styleSTATS}>
+              <div className="row">
+                <button
+                  onClick={this.handle_reset_stats}
+                  className="btn btn-primary"
+                  style={{ width: 140 }}
+                >
+                  Reset stats
+                </button>
+              </div>
               <div className="row">
                 <SolveStats
                   style={styleSTATS}

@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import scrambleGenerator from "rubiks-cube-scramble";
+import React from "react";
 import * as SRScrambler from "sr-scrambler";
 import ConnectCube from "./component/ConnectCube";
 import Setting from "./component/Settings";
@@ -16,6 +15,7 @@ class App extends React.Component {
     super();
     this.GiikerCube = this.GiikerCube.bind(this);
     this.state = {
+      local_storage_setting:null,
       renderTable: null,
       solves_stats: [],
       timer_focus: null,
@@ -34,7 +34,7 @@ class App extends React.Component {
       parsed_solve: null,
       parsed_solve_txt: null,
       parsed_solve_cubedb: null,
-      parse_settings: {
+      parse_settings: localStorage.getItem('setting') ===null ? {
         ID: this.makeid(10),
         DATE_SOLVE: "9/18/2021, 12:22 AM",
         DIFF_BETWEEN_ALGS: "0.87",
@@ -56,7 +56,7 @@ class App extends React.Component {
         SOLVE:
           "R F' L' F R' L D' L D L' U' U' L' R B R B' R' L U R' U R' R' U D' F U' F' U' D R U R R' F' L F L' R U' L' U L R' R' U' R U' D B' B' U D' R U R R F' R' U D' F F D U' R' F R' D D U R U' R' D D R U R' U' R R U R' D' R' D R U U R' D' R U D U R U U' U' R' D R R U R' R' U' R R D' R' R' U R R U' R' R' R D' R' D R U R' D' R U' D R'",
         SOLVE_TIME_MOVES: [],
-      },
+      } : JSON.parse(localStorage.getItem('setting')),
     };
   }
 
@@ -109,7 +109,7 @@ class App extends React.Component {
         <tr key={solve_num}>
           <td>
             <a
-              href="#"
+              href=""
               title="delete solve"
               value={solve_num}
               onClick={() => this.delete_solve(solve_num)}
@@ -254,50 +254,50 @@ class App extends React.Component {
   };
 
   handle_solve_status = (next_status) => {
-    if (next_status == "Parsing didn't succeed") {
+    if (next_status === "Parsing didn't succeed") {
       this.setState({ solve_status: next_status });
     }
-    if (this.state.solve_status == "Parsing didn't succeed") {
+    if (this.state.solve_status === "Parsing didn't succeed") {
       new Promise((r) => setTimeout(r, 2000)).then(() => {
         this.setState({ solve_status: "Ready for scrambling" });
       });
     }
     if (
-      this.state.solve_status == "Connect Cube" &&
-      next_status == "Connecting..."
+      this.state.solve_status === "Connect Cube" &&
+      next_status === "Connecting..."
     ) {
       this.setState({ solve_status: next_status });
     }
     if (
-      this.state.solve_status == "Connecting..." &&
-      next_status == "Ready for scrambling"
+      this.state.solve_status === "Connecting..." &&
+      next_status === "Ready for scrambling"
     ) {
       this.setState({ solve_status: next_status });
     }
     if (
-      this.state.solve_status == "Ready for scrambling" &&
-      next_status == "Scrambling"
+      this.state.solve_status === "Ready for scrambling" &&
+      next_status === "Scrambling"
     ) {
       this.setState({ solve_status: next_status });
     }
     if (
-      this.state.solve_status == "Scrambling" &&
-      next_status == "Ready for scrambling"
+      this.state.solve_status === "Scrambling" &&
+      next_status === "Ready for scrambling"
     ) {
       this.setState({ solve_status: next_status });
     }
-    if (this.state.solve_status == "Scrambling" && next_status == "Memo") {
+    if (this.state.solve_status === "Scrambling" && next_status === "Memo") {
       this.setState({ solve_status: next_status });
     }
-    if (this.state.solve_status == "Memo" && next_status == "Solving") {
+    if (this.state.solve_status === "Memo" && next_status === "Solving") {
       this.setState({ solve_status: next_status });
     }
-    if (this.state.solve_status == "Solving" && next_status == "Parsing...") {
+    if (this.state.solve_status === "Solving" && next_status === "Parsing...") {
       this.setState({ solve_status: next_status });
     }
     if (
-      this.state.solve_status == "Parsing..." &&
-      next_status == "Ready for scrambling"
+      this.state.solve_status === "Parsing..." &&
+      next_status === "Ready for scrambling"
     ) {
       this.setState({ solve_status: next_status });
     }
@@ -352,6 +352,7 @@ class App extends React.Component {
       }
       this.setState({ parse_settings: new_settings });
     }
+    localStorage.setItem("setting", JSON.stringify(new_settings));
   };
   handle_reset_cube = () => {
     this.setState({ cube_moves: [] });
@@ -454,7 +455,7 @@ class App extends React.Component {
                 <img
                   src={logo}
                   className="rounded mx-auto"
-                  alt="Responsive image"
+                  alt=""
                   style={{ width: "60%" }}
                 />
               </div>
@@ -514,6 +515,7 @@ class App extends React.Component {
           </div>
           <div className="row" style={styleSetting}>
             <Setting
+              cur_setting={this.state.parse_settings}
               export_setting={this.handle_export_setting}
               id={this.state.parse_settings["ID"]}
             />
@@ -607,7 +609,7 @@ class App extends React.Component {
             return _chrct.readValue();
           })
           .then(function (value) {
-            var initState = parseState(value);
+            // var initState = parseState(value);
             // if (initState[0] != kernel.getProp("giiSolved", SOLVED_FACELET)) {
             // console.log("here");
             // }
@@ -629,7 +631,7 @@ class App extends React.Component {
         parseState(value);
       }
 
-      var cFacelet = [
+      /* var cFacelet = [
         [26, 15, 29],
         [20, 8, 9],
         [18, 38, 6],
@@ -654,13 +656,13 @@ class App extends React.Component {
         [46, 1],
         [50, 39],
       ];
-
+      */
       function toHexVal(value) {
         var raw = [];
         for (var i = 0; i < 20; i++) {
           raw.push(value.getUint8(i));
         }
-        if (raw[18] == 0xa7) {
+        if (raw[18] === 0xa7) {
           // decrypt
           var key = [
             176, 81, 104, 224, 86, 137, 237, 119, 38, 26, 193, 161, 210, 126,
@@ -669,13 +671,13 @@ class App extends React.Component {
           ];
           var k1 = (raw[19] >> 4) & 0xf;
           var k2 = raw[19] & 0xf;
-          for (var i = 0; i < 18; i++) {
+          for (i = 0; i < 18; i++) {
             raw[i] += key[i + k1] + key[i + k2];
           }
           raw = raw.slice(0, 18);
         }
         var valhex = [];
-        for (var i = 0; i < raw.length; i++) {
+        for (i = 0; i < raw.length; i++) {
           valhex.push((raw[i] >> 4) & 0xf);
           valhex.push(raw[i] & 0xf);
         }
@@ -683,12 +685,12 @@ class App extends React.Component {
       }
 
       function parseState(value) {
-        var timestamp = Date.now();
+        // var timestamp = Date.now();
 
         var valhex = toHexVal(value);
         var eo = [];
         for (var i = 0; i < 3; i++) {
-          for (var mask = 8; mask != 0; mask >>= 1) {
+          for (var mask = 8; mask !== 0; mask >>= 1) {
             eo.push(valhex[i + 28] & mask ? 1 : 0);
           }
         }
@@ -708,7 +710,7 @@ class App extends React.Component {
         var prevMoves = [];
         let new_moves = [];
         let new_moves_time = [];
-        for (var i = 0; i < moves.length; i += 2) {
+        for (i = 0; i < moves.length; i += 2) {
           // console.log(
           // "BDLURF".charAt(moves[i] - 1) + " 2'".charAt((moves[i + 1] - 1) % 7)
           // );
@@ -718,14 +720,14 @@ class App extends React.Component {
         }
         // prevMoves.reverse();
 
-        if (this_App.state.giiker_prev_moves.length == 0) {
+        if (this_App.state.giiker_prev_moves.length === 0) {
           this_App.setState({ giiker_prev_moves: prevMoves });
         } else {
           let last_moves = [...this_App.state.giiker_prev_moves];
           // console.log("last moves 1", last_moves);
           // console.log("prev_moves", prevMoves);
 
-          for (var i = 0; i < 4; i++) {
+          for (i = 0; i < 4; i++) {
             let move = prevMoves[i];
             last_moves.unshift(move);
             // console.log("last moves", last_moves);
@@ -745,10 +747,10 @@ class App extends React.Component {
           if (cube_moves.length === 0) {
             this_App.handle_solve_status("Scrambling");
           }
-          if (this_App.state.solve_status == "Memo") {
+          if (this_App.state.solve_status === "Memo") {
             this_App.handle_solve_status("Solving");
           }
-          for (var i = 0; i < new_moves.length; i++) {
+          for (i = 0; i < new_moves.length; i++) {
             cube_moves.push(new_moves[i]);
             cube_moves_time.push(
               ((new_moves_time[i] - this_App.state.timeStart) / 1000).toFixed(2)
@@ -836,7 +838,7 @@ class App extends React.Component {
       var CHRCT_UUID_HARDWARE = "00002a23" + UUID_SUFFIX;
       var SERVICE_UUID_DATA = "0000fff0" + UUID_SUFFIX;
       var CHRCT_UUID_F2 = "0000fff2" + UUID_SUFFIX; // cube state, (54 - 6) facelets, 3 bit per facelet
-      var CHRCT_UUID_F3 = "0000fff3" + UUID_SUFFIX; // prev moves
+      // var CHRCT_UUID_F3 = "0000fff3" + UUID_SUFFIX; // prev moves
       var CHRCT_UUID_F5 = "0000fff5" + UUID_SUFFIX; // gyro state, move counter, pre moves
       var CHRCT_UUID_F6 = "0000fff6" + UUID_SUFFIX; // move counter, time offsets between premoves
       var CHRCT_UUID_F7 = "0000fff7" + UUID_SUFFIX;
@@ -894,7 +896,7 @@ class App extends React.Component {
               value.getUint8(2);
             // DEBUG && console.log('[gancube] version', JSON.stringify(version));
             decoder = null;
-            if (version > 0x010007 && (version & 0xfffe00) == 0x010000) {
+            if (version > 0x010007 && (version & 0xfffe00) === 0x010000) {
               return _service_meta
                 .getCharacteristic(CHRCT_UUID_HARDWARE)
                 .then(function (chrct) {
@@ -975,7 +977,7 @@ class App extends React.Component {
               value[(i + 2) ^ 1];
             for (var j = 21; j >= 0; j -= 3) {
               state.push("URFDLB".charAt((face >> j) & 0x7));
-              if (j == 12) {
+              if (j === 12) {
                 state.push("URFDLB".charAt(i / 3));
               }
             }
@@ -998,7 +1000,7 @@ class App extends React.Component {
             value = decode(value);
             // timestamp = $.now();
             moveCnt = value[12];
-            if (moveCnt == prevMoveCnt) {
+            if (moveCnt === prevMoveCnt) {
               return;
             }
             prevMoves = [];

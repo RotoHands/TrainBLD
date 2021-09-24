@@ -13,70 +13,89 @@ import Collapse from "react-bootstrap/Collapse";
 class Setting extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      open: false,
-      setting_save_statue: "",
-      import_setting: {},
-      setting_save: {},
-      parse_with_letter_pair: true,
-      gen_with_move_count: true,
-      edge_buffer: "UF",
-      corner_buffer: "UFR",
-      GEN_PARSED_TO_CUBEDB: true,
-      letter_pair_dict: {
-        UBL: "A",
-        UBR: "B",
-        UFR: "C",
-        UFL: "D",
-        LBU: "E",
-        LFU: "F",
-        LFD: "G",
-        LDB: "H",
-        FUL: "I",
-        FUR: "J",
-        FRD: "K",
-        FDL: "L",
-        RFU: "M",
-        RBU: "N",
-        RBD: "O",
-        RFD: "P",
-        BUR: "Q",
-        BUL: "R",
-        BLD: "S",
-        BRD: "T",
-        DFL: "U",
-        DFR: "V",
-        DBR: "W",
-        DBL: "X",
-        UB: "A",
-        UR: "B",
-        UF: "C",
-        UL: "D",
-        LU: "E",
-        LF: "F",
-        LD: "G",
-        LB: "H",
-        FU: "I",
-        FR: "J",
-        FD: "K",
-        FL: "L",
-        RU: "M",
-        RB: "N",
-        RD: "O",
-        RF: "P",
-        BU: "Q",
-        BL: "R",
-        BD: "S",
-        BR: "T",
-        DF: "U",
-        DR: "V",
-        DB: "W",
-        DL: "X",
-      },
-    };
+    this.state =
+      localStorage.getItem("setting") === null
+        ? {
+            open: false,
+            setting_save_statue: "",
+            import_setting: {},
+            setting_save: {},
+            parse_with_letter_pair: true,
+            gen_with_move_count: true,
+            edge_buffer: "UF",
+            corner_buffer: "UFR",
+            GEN_PARSED_TO_CUBEDB: true,
+            letter_pair_dict: {
+              UBL: "A",
+              UBR: "B",
+              UFR: "C",
+              UFL: "D",
+              LBU: "E",
+              LFU: "F",
+              LFD: "G",
+              LDB: "H",
+              FUL: "I",
+              FUR: "J",
+              FRD: "K",
+              FDL: "L",
+              RFU: "M",
+              RBU: "N",
+              RBD: "O",
+              RFD: "P",
+              BUR: "Q",
+              BUL: "R",
+              BLD: "S",
+              BRD: "T",
+              DFL: "U",
+              DFR: "V",
+              DBR: "W",
+              DBL: "X",
+              UB: "A",
+              UR: "B",
+              UF: "C",
+              UL: "D",
+              LU: "E",
+              LF: "F",
+              LD: "G",
+              LB: "H",
+              FU: "I",
+              FR: "J",
+              FD: "K",
+              FL: "L",
+              RU: "M",
+              RB: "N",
+              RD: "O",
+              RF: "P",
+              BU: "Q",
+              BL: "R",
+              BD: "S",
+              BR: "T",
+              DF: "U",
+              DR: "V",
+              DB: "W",
+              DL: "X",
+            },
+          } : {
+            open: false,
+            setting_save_statue: "",
+            import_setting: {},
+            setting_save: {},
+            parse_with_letter_pair:
+              this.props.cur_setting["PARSE_TO_LETTER_PAIR"],
+            gen_with_move_count: this.props.cur_setting["GEN_WITH_MOVE_COUNT"],
+            edge_buffer: this.props.cur_setting["EDGES_BUFFER"],
+            corner_buffer: this.props.cur_setting["CORNER_BUFFER"],
+            GEN_PARSED_TO_CUBEDB: true,
+            letter_pair_dict : JSON.parse(this.props.cur_setting["LETTER_PAIRS_DICT"]),
+          };
   }
   componentDidMount() {
-    this.handle_save_setting();
+    if (localStorage.getItem("setting") !== null) {
+      JSON.parse(localStorage.getItem("setting"));
+      this.props.export_setting(JSON.parse(localStorage.getItem("setting")));
+    } else {
+      this.handle_save_setting();
+    }
   }
 
   handle_move_count_change = (event) => {
@@ -104,7 +123,6 @@ class Setting extends React.Component {
   };
 
   handle_save_setting = () => {
-    console.log(this.props.id);
     const setting = {
       EDGES_BUFFER: this.state.edge_buffer,
       CORNER_BUFFER: this.state.corner_buffer,
@@ -135,16 +153,16 @@ class Setting extends React.Component {
   render() {
     return (
       <React.Fragment>
-         <button
-            className="btn btn-primary m-2 ms-4 mb-3 text-sm-start"
-            style={{ width: "180px" }}
-            onClick={() => this.setState({ open: !this.state.open })}
-            aria-controls="example-collapse-text"
-            aria-expanded={this.state.open}
-          >
-            Settings
-            <div className="primary">{this.state.setting_save_statue}</div>
-          </button>
+        <button
+          className="btn btn-primary m-2 ms-4 mb-3 text-sm-start"
+          style={{ width: "180px" }}
+          onClick={() => this.setState({ open: !this.state.open })}
+          aria-controls="example-collapse-text"
+          aria-expanded={this.state.open}
+        >
+          Settings
+          <div className="primary">{this.state.setting_save_statue}</div>
+        </button>
         <div className="text-black" style={{ fontSize: 20 }}>
           <Collapse in={this.state.open}>
             <div style={{ fontFamily: "Rubik" }} id="example-collapse-text">
@@ -152,6 +170,7 @@ class Setting extends React.Component {
                 <Tabs defaultActiveKey="first">
                   <Tab eventKey="first" title="General">
                     <SettingGeneral
+                      handle_save_setting={this.handle_save_setting}
                       id={this.props.id}
                       onChange_cubedb={this.handle_cubedb_txt}
                       parse_with_letter_pair={this.state.parse_with_letter_pair}
@@ -163,6 +182,7 @@ class Setting extends React.Component {
                       onChange_edge_buffer={this.handle_edge_buffer}
                       edge_buffer={this.state.edge_buffer}
                       corner_buffer={this.state.corner_buffer}
+                      cur_setting={this.props.cur_setting}
                     />
                   </Tab>
                   <Tab eventKey="second" title="letter scheme">
@@ -170,79 +190,6 @@ class Setting extends React.Component {
                       letter_pair_dict={this.state.letter_pair_dict}
                       onChange_letter_pair_dict={this.handle_letter_pair_dict}
                     />
-                  </Tab>
-                  <Tab eventKey="third" title="Import setting">
-                    <div className="container">
-                      <div className="row">
-                        <div className="col-sm">
-                          <button
-                            className="btn btn-primary btn-sm m-2"
-                            onClick={this.handle_import_onClick}
-                          >
-                            Import!
-                          </button>
-                          <span>
-                            Paste the setting you saved here and then click
-                            "Import!"
-                          </span>
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col-sm-2">
-                          <input
-                            onChange={this.handle_import_onChange}
-                            type="text"
-                            className="text m-2"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </Tab>
-                  <Tab eventKey="forth" title="Save Setting">
-                    <div className="container">
-                      <div className="row">
-                        <div className="col-sm m-2">
-                          <div
-                            className="btn-toolbar"
-                            role="group"
-                            aria-label="Basic example"
-                          >
-                            <button
-                              onClick={this.handle_save_setting}
-                              className="btn btn-primary btn-sm-2 m-1"
-                            >
-                              Save Settings
-                            </button>
-                            <button
-                              className="btn btn-primary m-1"
-                              onClick={() =>
-                                navigator.clipboard.writeText(
-                                  JSON.stringify(this.state.setting_save)
-                                )
-                              }
-                            >
-                              Copy!
-                            </button>
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="col-sm m-1">
-                            <span className="fw-bold">
-                              Click "Save Settings" ={">"} "Copy!" and paste
-                              output to a .txt file, next time paste it in the
-                              "Import Setting" section
-                            </span>
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="col-sm m-2">
-                            <p className="text-break" styles="flexShrink: 1">
-                              {JSON.stringify(this.state.setting_save)}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </Tab>
                 </Tabs>
               </div>

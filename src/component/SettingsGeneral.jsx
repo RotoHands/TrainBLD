@@ -1,9 +1,37 @@
 import React, { Component } from "react";
 class SettingGeneral extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state ={
+      cur_setting : this.props.cur_setting
+
+    }
+    
+  }
+  componentDidMount = () =>{
+
+  }
   render() {
+    
     return (
       <React.Fragment>
         <div className="container">
+          <div className="row">
+            <button
+              onClick={this.props.handle_save_setting}
+              className="btn btn-primary btn-sm-2 mt-2 me-1"
+              style={{width:140}}
+            >
+              Save Settings
+            </button>
+            <button
+              onClick={this.props.handle_save_setting}
+              className="btn btn-primary btn-sm-2 mt-2 me-1"
+              style={{width:140}}
+            >
+              Reset Settings
+            </button>
+          </div>
           <div className="row">
             <div className="form-check">
               <input
@@ -12,7 +40,7 @@ class SettingGeneral extends React.Component {
                 value=""
                 id="gen_with_move_count"
                 onChange={this.props.onChange_move_count}
-                defaultChecked="true"
+                defaultChecked={this.props.cur_setting["GEN_WITH_MOVE_COUNT"] ? "true" : ""} 
               />
               <label className="form-check-label">
                 <span> generate with move count </span>
@@ -27,7 +55,7 @@ class SettingGeneral extends React.Component {
                 value=""
                 id="apply_letter_pairs"
                 onChange={this.props.onChange_apply_letter_pair}
-                defaultChecked="true"
+                defaultChecked={this.props.cur_setting["PARSE_TO_LETTER_PAIR"] ? "true" : ""}
               />
               <label className="form-check-label">
                 <span className="">apply letter pairs </span>
@@ -43,6 +71,7 @@ class SettingGeneral extends React.Component {
                   id="edge_buffer"
                   className="form-select ml-2"
                   aria-label="Default select example"
+                  defaultValue={this.props.cur_setting["EDGES_BUFFER"]}
                   onChange={this.props.onChange_edge_buffer}
                 >
                   <option value="UF">UF</option>
@@ -80,6 +109,8 @@ class SettingGeneral extends React.Component {
                   className="form-select"
                   aria-label="Default select example"
                   onChange={this.props.onChange_corner_buffer}
+                  defaultValue={this.props.cur_setting["CORNER_BUFFER"]}
+
                 >
                   <option value="UFR">UFR</option>
                   <option value="UBL">UBL</option>

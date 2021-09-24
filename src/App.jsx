@@ -68,6 +68,12 @@ class App extends React.Component {
   componentDidUpdate = () => {
     document.getElementById("timer_element_2").focus();
   };
+  delete_solve = (num_solve) => {
+    if (window.confirm("Are you sure you want to delete the solve?")) {
+      localStorage.removeItem(num_solve);
+      this.initialStatsFromLocalstorage();
+    }
+  };
   renderTableData = (solve_stats) => {
     let header_elem = (
       <React.Fragment>
@@ -92,7 +98,16 @@ class App extends React.Component {
       } = solve; //destructuring
       return (
         <tr key={solve_num}>
-          <td>{solve_num}</td>
+          <td>
+            <a
+              href="#"
+              title="delete solve"
+              value={solve_num}
+              onClick={() => this.delete_solve(solve_num)}
+            >
+              <div>{solve_num}</div>
+            </a>
+          </td>
           <td>{time_solve} </td>
           <td>{memo_time}</td>
           {/* <td>{exe_time}</td> */}
@@ -117,9 +132,18 @@ class App extends React.Component {
   initialStatsFromLocalstorage = () => {
     let solve_stats = [];
 
-    for (var i = localStorage.length; i > 0; i--) {
-      solve_stats.push(JSON.parse(localStorage.getItem(i.toString())));
+    for (var i = localStorage.length; i > -1; i--) {
+      if (localStorage.getItem(localStorage.key(i)) !== null) {
+        solve_stats.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
+      }
     }
+    solve_stats.sort(function (a, b) {
+      return b.solve_num - a.solve_num;
+    });
+    for (var i = 0; i < solve_stats.length; i++) {
+      solve_stats[i]["solve_num"] = solve_stats.length - i;
+    }
+
     this.setState({ solves_stats: solve_stats });
     this.renderTableData(solve_stats);
   };

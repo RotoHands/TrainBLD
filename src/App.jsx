@@ -117,7 +117,7 @@ class App extends React.Component {
               <div>{len - index}</div>
             </a>
           </td>
-          <td>{time_solve} </td>
+          <td>{DNF ? "DNF(" + time_solve + ")" : time_solve} </td>
           <td>{memo_time}</td>
           {/* <td>{exe_time}</td> */}
           <td>{fluidness}</td>

@@ -13,7 +13,11 @@ import Collapse from "react-bootstrap/Collapse";
 class Setting extends React.Component {
   constructor(props) {
     super(props);
-    this.state =
+    this.state = this.constructor_func(props);
+  }
+
+  constructor_func = (props) => {
+    let state =
       localStorage.getItem("setting") === null
         ? {
             open: false,
@@ -25,70 +29,24 @@ class Setting extends React.Component {
             edge_buffer: "UF",
             corner_buffer: "UFR",
             GEN_PARSED_TO_CUBEDB: true,
-            letter_pair_dict: {
-              UBL: "A",
-              UBR: "B",
-              UFR: "C",
-              UFL: "D",
-              LBU: "E",
-              LFU: "F",
-              LFD: "G",
-              LDB: "H",
-              FUL: "I",
-              FUR: "J",
-              FRD: "K",
-              FDL: "L",
-              RFU: "M",
-              RBU: "N",
-              RBD: "O",
-              RFD: "P",
-              BUR: "Q",
-              BUL: "R",
-              BLD: "S",
-              BRD: "T",
-              DFL: "U",
-              DFR: "V",
-              DBR: "W",
-              DBL: "X",
-              UB: "A",
-              UR: "B",
-              UF: "C",
-              UL: "D",
-              LU: "E",
-              LF: "F",
-              LD: "G",
-              LB: "H",
-              FU: "I",
-              FR: "J",
-              FD: "K",
-              FL: "L",
-              RU: "M",
-              RB: "N",
-              RD: "O",
-              RF: "P",
-              BU: "Q",
-              BL: "R",
-              BD: "S",
-              BR: "T",
-              DF: "U",
-              DR: "V",
-              DB: "W",
-              DL: "X",
-            },
-          } : {
+            letter_pair_dict: this.get_letter_pair_dict(),
+          }
+        : {
             open: false,
             setting_save_statue: "",
             import_setting: {},
             setting_save: {},
-            parse_with_letter_pair:
-              this.props.cur_setting["PARSE_TO_LETTER_PAIR"],
-            gen_with_move_count: this.props.cur_setting["GEN_WITH_MOVE_COUNT"],
-            edge_buffer: this.props.cur_setting["EDGES_BUFFER"],
-            corner_buffer: this.props.cur_setting["CORNER_BUFFER"],
+            parse_with_letter_pair: props.cur_setting["PARSE_TO_LETTER_PAIR"],
+            gen_with_move_count: props.cur_setting["GEN_WITH_MOVE_COUNT"],
+            edge_buffer: props.cur_setting["EDGES_BUFFER"],
+            corner_buffer: props.cur_setting["CORNER_BUFFER"],
             GEN_PARSED_TO_CUBEDB: true,
-            letter_pair_dict : JSON.parse(this.props.cur_setting["LETTER_PAIRS_DICT"]),
+            letter_pair_dict: JSON.parse(
+              props.cur_setting["LETTER_PAIRS_DICT"]
+            ),
           };
-  }
+    return state;
+  };
   componentDidMount() {
     if (localStorage.getItem("setting") !== null) {
       JSON.parse(localStorage.getItem("setting"));
@@ -97,7 +55,6 @@ class Setting extends React.Component {
       this.handle_save_setting();
     }
   }
-
   handle_move_count_change = (event) => {
     this.setState({ gen_with_move_count: event.target.checked });
     this.setState({ setting_save_statue: " - Changes unsaved" });
@@ -149,7 +106,78 @@ class Setting extends React.Component {
     this.setState({ GEN_PARSED_TO_CUBEDB: event.target.checked });
     this.setState({ setting_save_statue: " - Changes unsaved" });
   };
-
+  handle_reset_setting = () => {
+    if (window.confirm("Are you sure you want to reset settings?")) {
+      console.log("here");
+      localStorage.removeItem("setting");
+      const setting = {
+        EDGES_BUFFER: "UF",
+        CORNER_BUFFER: "UFR",
+        PARSE_TO_LETTER_PAIR: true,
+        GEN_WITH_MOVE_COUNT: true,
+        GEN_PARSED_TO_CUBEDB: true,
+        ID: this.props.id,
+        LETTER_PAIRS_DICT: JSON.stringify(this.get_letter_pair_dict()),
+      };
+      this.setState({ setting_save: setting });
+      this.props.export_setting(setting);
+      this.setState({ setting_save_statue: "" });
+      window.location.reload();
+    }
+  };
+  get_letter_pair_dict = () => {
+    let letter_pair_dict = {
+      UBL: "A",
+      UBR: "B",
+      UFR: "C",
+      UFL: "D",
+      LBU: "E",
+      LFU: "F",
+      LFD: "G",
+      LDB: "H",
+      FUL: "I",
+      FUR: "J",
+      FRD: "K",
+      FDL: "L",
+      RFU: "M",
+      RBU: "N",
+      RBD: "O",
+      RFD: "P",
+      BUR: "Q",
+      BUL: "R",
+      BLD: "S",
+      BRD: "T",
+      DFL: "U",
+      DFR: "V",
+      DBR: "W",
+      DBL: "X",
+      UB: "A",
+      UR: "B",
+      UF: "C",
+      UL: "D",
+      LU: "E",
+      LF: "F",
+      LD: "G",
+      LB: "H",
+      FU: "I",
+      FR: "J",
+      FD: "K",
+      FL: "L",
+      RU: "M",
+      RB: "N",
+      RD: "O",
+      RF: "P",
+      BU: "Q",
+      BL: "R",
+      BD: "S",
+      BR: "T",
+      DF: "U",
+      DR: "V",
+      DB: "W",
+      DL: "X",
+    };
+    return letter_pair_dict;
+  };
   render() {
     return (
       <React.Fragment>
@@ -170,6 +198,7 @@ class Setting extends React.Component {
                 <Tabs defaultActiveKey="first">
                   <Tab eventKey="first" title="General">
                     <SettingGeneral
+                      handle_reset_setting={this.handle_reset_setting}
                       handle_save_setting={this.handle_save_setting}
                       id={this.props.id}
                       onChange_cubedb={this.handle_cubedb_txt}

@@ -25,7 +25,7 @@ class SettingGeneral extends React.Component {
               Save Settings
             </button>
             <button
-              onClick={this.props.handle_save_setting}
+              onClick={this.props.handle_reset_setting}
               className="btn btn-primary btn-sm-2 mt-2 me-1"
               style={{width:140}}
             >

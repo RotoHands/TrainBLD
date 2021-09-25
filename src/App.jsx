@@ -138,9 +138,15 @@ class App extends React.Component {
       let mo3, ao5, ao12, succcess, aoAll, memo, exe, fluid;
       let solve_stats = JSON.parse(localStorage.getItem("solves"));
       let len = solve_stats.length;
-      mo3 = this.calc_mo3(solve_stats);
-      ao5 = this.calc_average(solve_stats.slice(len - 5, len));
-      ao12 = this.calc_average(solve_stats.slice(len - 12, len));
+      mo3 = solve_stats.length >= 3 ? this.calc_mo3(solve_stats) : "";
+      ao5 =
+        solve_stats.length >= 5
+          ? this.calc_average(solve_stats.slice(len - 5, len))
+          : "";
+      ao12 =
+        solve_stats.length >= 12
+          ? this.calc_average(solve_stats.slice(len - 12, len))
+          : "";
       aoAll = [...solve_stats]
         .filter(function ({ DNF, time_solve }) {
           if (DNF === false) {
@@ -149,11 +155,9 @@ class App extends React.Component {
         })
         .map(({ time_solve }) => parseFloat(time_solve));
       aoAll = parseFloat((aoAll.reduce(sum) / aoAll.length).toFixed(2));
-      console.log(aoAll)
-      succcess = `${[...solve_stats]
-        .map(({ DNF }) => DNF)
-        .filter((x) => x === false)
-        .length}/${[...solve_stats].length}`;
+      succcess = `${
+        [...solve_stats].map(({ DNF }) => DNF).filter((x) => x === false).length
+      }/${[...solve_stats].length}`;
       memo = [...solve_stats]
         .filter(function ({ DNF, memo_time }) {
           if (DNF === false) {
@@ -195,6 +199,7 @@ class App extends React.Component {
   };
   delete_solve = (num_solve) => {
     let solve_stats = [...this.state.solves_stats];
+    num_solve = solve_stats.length - num_solve - 1;
     if (window.confirm("Are you sure you want to delete the solve?")) {
       solve_stats.splice(num_solve, 1);
       localStorage.setItem("solves", JSON.stringify(solve_stats));

@@ -21,7 +21,7 @@ th {
   background-color: #0d6efd;
   color: white;
 }
-table tbody { height:400px; overflow-y:scroll; display:block; }
+table tbody { height:390px; overflow-y:scroll; display:block; }
 ::-webkit-scrollbar {
   width: 1px;
 }

@@ -9,13 +9,14 @@ import { Helmet } from "react-helmet";
 import logo from "./images/logo2.png";
 import LZString from "lz-string";
 import SolveStats from "./component/SolveStats";
-import BaseTable, { Column } from 'react-base-table'
-import 'react-base-table/styles.css'
+import BaseTable, { Column } from "react-base-table";
+import "react-base-table/styles.css";
 class App extends React.Component {
   constructor() {
     super();
     this.GiikerCube = this.GiikerCube.bind(this);
     this.state = {
+      averages: {},
       local_storage_setting: null,
       renderTable: null,
       solves_stats: [],
@@ -67,10 +68,18 @@ class App extends React.Component {
   componentDidMount = () => {
     document.title = "TrainBLD";
     this.initialStatsFromLocalstorage();
+    this.initialAverages();
     this.handle_scramble();
   };
   componentDidUpdate = () => {
     document.getElementById("timer_element_2").focus();
+  };
+  initialAverages = () => {
+    if (localStorage.getItem("averages") === null) {
+      localStorage.setItem("averages", JSON.stringify({}));
+    } else {
+      this.setState({ averages: JSON.parse(localStorage.getItem("averages")) });
+    }
   };
   delete_solve = (num_solve) => {
     let solve_stats = [...this.state.solves_stats];
@@ -420,7 +429,7 @@ class App extends React.Component {
         if (localStorage.key(i).includes("solve_num")) {
           localStorage.removeItem(localStorage.key(i));
           console.log(localStorage.key(i));
-          i=0
+          i = 0;
         } else {
           i++;
         }
@@ -466,7 +475,7 @@ class App extends React.Component {
             <style>{"body { background-color: #11324D;color: #F6F6F6 }"}</style>
           </Helmet>
         </div>
-        <div className="container-fluid">
+        <div className="container border border-primary rounded-3">
           <div className="row align-items-center" style={styleBG}>
             <div className="col-2">
               <div className="row">
@@ -560,7 +569,7 @@ class App extends React.Component {
               </div>
             </div>
             <div className="col-1"></div>
-            <div className="col-8">
+            <div className="col-9">
               <div className="row">
                 <div className="col-12">
                   <Scrambler

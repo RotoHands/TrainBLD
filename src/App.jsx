@@ -16,6 +16,7 @@ class App extends React.Component {
     super();
     this.GiikerCube = this.GiikerCube.bind(this);
     this.state = {
+      url_stats: "",
       averages: {},
       local_storage_setting: null,
       renderTable: null,
@@ -120,9 +121,13 @@ class App extends React.Component {
 
   initialAveragesNoSolves = () => {
     let averages = {
+      best: { time: 10000, solve: {} },
       mo3: "",
       ao5: "",
       ao12: "",
+      bmo3: { time: 10000, solves: {}, num: 0 },
+      bao5: { time: 10000, solves: {}, num: 0 },
+      bao12: { time: 10000, solves: {}, num: 0 },
       aoAll: "",
       memo: "",
       exe: "",
@@ -313,17 +318,110 @@ class App extends React.Component {
 
     this.setState({ renderTable: new_table });
   };
+  generateCsvURL = (solve_stats, averages) => {
+    let copy_solve_stats = [...solve_stats];
+    copy_solve_stats = [...copy_solve_stats].map(function (x) {
+      let obj;
+      obj = { ...x };
+      obj["date"] = new Date(x["date"]);
+      return obj;
+    });
+    let items = copy_solve_stats;
+    const replacer = (key, value) => (value === null ? "" : value); // specify how you want to handle null values here
+    let header = Object.keys(items[0]);
+    const csv_solves = [
+      header.join(","), // header row first
+      ...items.map((row) =>
+        header
+          .map((fieldName) => JSON.stringify(row[fieldName], replacer))
+          .join(",")
+      ),
+    ].join("\r\n");
+    items = averages;
+    header = Object.keys(items);
+    console.log(items);
+    items = Object.values(items);
+    const csv_averages = [header.join(","), [...items].join(",")].join("\r\n");
+    console.log(csv_averages);
+    const all = csv_averages + "\r\n\r\n" + csv_solves;
+    var data = new Blob([all], { type: "text/csv" });
+    let url_csv = window.URL.createObjectURL(data);
+    return url_csv;
+  };
+  calc_best_average = () => {
+    let solve_stats = JSON.parse(localStorage.getItem("solves"));
+    let cur_averages = JSON.parse(localStorage.getItem("averages"));
+    if (cur_averages["mo3"] != "" && cur_averages["mo3"] != "DNF") {
+      if (cur_averages["mo3"] < cur_averages["bmo3"]["time"]) {
+        cur_averages["bmo3"]["time"] = cur_averages["mo3"];
+        cur_averages["bmo3"]["num"] = solve_stats.length - 2;
+
+        cur_averages["bmo3"]["solves"] = solve_stats.slice(
+          solve_stats.length - 3,
+          solve_stats.length
+        );
+      }
+    }
+
+    if (cur_averages["ao5"] != "" && cur_averages["ao5"] != "DNF") {
+      if (cur_averages["ao5"] < cur_averages["bao5"]["time"]) {
+        cur_averages["bao5"]["time"] = cur_averages["ao5"];
+        cur_averages["bao5"]["num"] = solve_stats.length - 4;
+        cur_averages["bao5"]["solves"] = solve_stats.slice(
+          solve_stats.length - 5,
+          solve_stats.length
+        );
+      }
+    }
+    if (cur_averages["ao12"] != "" && cur_averages["ao12"] != "DNF") {
+      if (cur_averages["ao12"] < cur_averages["bao12"]["time"]) {
+        cur_averages["bao12"]["time"] = cur_averages["ao12"];
+        cur_averages["bao12"]["num"] = solve_stats.length - 11;
+
+        cur_averages["bao12"]["solves"] = solve_stats.slice(
+          solve_stats.length - 12,
+          solve_stats.length
+        );
+      }
+    }
+    if (solve_stats.length > 0) {
+      if (
+        solve_stats[solve_stats.length - 1] != "" &&
+        solve_stats[solve_stats.length - 1] != "DNF"
+      ) {
+        if (
+          solve_stats[solve_stats.length - 1]["time_solve"] <
+          cur_averages["best"]["time"]
+        ) {
+          cur_averages["best"]["time"] =
+            solve_stats[solve_stats.length - 1]["time_solve"];
+            cur_averages["best"]["num"] = solve_stats.length;
+
+          cur_averages["best"]["solve"] = solve_stats[solve_stats.length - 1];
+        }
+      }
+    }
+    localStorage.setItem("averages", JSON.stringify(cur_averages));
+  };
   initialStatsFromLocalstorage = () => {
     let solve_stats = [];
     if (localStorage.getItem("solves") === null) {
       localStorage.setItem("solves", JSON.stringify([]));
     } else {
       solve_stats = JSON.parse(localStorage.getItem("solves"));
+      let url_csv = this.generateCsvURL(
+        solve_stats,
+        JSON.parse(localStorage.getItem("averages"))
+      );
+      console.log("here");
+      this.setState({ url_stats: url_csv }, () => {
+        console.log("rerender");
+      });
     }
-
     this.setState({ solves_stats: solve_stats });
     this.renderTableData(solve_stats);
     this.initialAverages();
+    this.calc_best_average();
   };
   addSolveToLocalStorage = (data) => {
     var rgx = /[0-9]+:?[0-9]*\.[0-9]*/g;
@@ -531,8 +629,8 @@ class App extends React.Component {
       },
       body: JSON.stringify(setting),
     };
-    fetch("https://rotohands-bld-parser.herokuapp.com/", requestOptions)
-      // fetch("http://127.0.0.1:8080", requestOptions)
+    // fetch("https://rotohands-bld-parser.herokuapp.com/", requestOptions)
+      fetch("http://127.0.0.1:8080", requestOptions)
       .then((response) =>
         response.json().then((data) => {
           result = data;
@@ -689,7 +787,7 @@ class App extends React.Component {
             />
           </div>
           <div className="row">
-            <div className="col-2" style={styleSTATS}>
+            <div className="col-3" style={styleSTATS}>
               <div className="row">
                 <button
                   onClick={this.handle_reset_stats}
@@ -698,6 +796,13 @@ class App extends React.Component {
                 >
                   Reset stats
                 </button>
+                <a
+                  href={this.state.url_stats}
+                  download="solves.csv"
+                  id="export_solves"
+                >
+                  Export
+                </a>
               </div>
 
               <div className="row">
@@ -740,7 +845,6 @@ class App extends React.Component {
                 />
               </div>
             </div>
-            <div className="col-1"></div>
             <div className="col-9">
               <div className="row">
                 <div className="col-12">

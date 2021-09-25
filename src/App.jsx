@@ -151,14 +151,18 @@ class App extends React.Component {
         solve_stats.length >= 12
           ? this.calc_average(solve_stats.slice(len - 12, len))
           : "";
-      aoAll = [...solve_stats]
-        .filter(function ({ DNF, time_solve }) {
-          if (DNF === false) {
-            return parseFloat(time_solve);
-          }
-        })
-        .map(({ time_solve }) => parseFloat(time_solve));
-      if (solve_stats.length > 0) {
+
+      if (
+        [...solve_stats].map(({ DNF }) => DNF).filter((x) => x === false)
+          .length > 0
+      ) {
+        aoAll = [...solve_stats]
+          .filter(function ({ DNF, time_solve }) {
+            if (DNF === false) {
+              return parseFloat(time_solve);
+            }
+          })
+          .map(({ time_solve }) => parseFloat(time_solve));
         aoAll = parseFloat((aoAll.reduce(sum) / aoAll.length).toFixed(2));
         succcess = `${
           [...solve_stats].map(({ DNF }) => DNF).filter((x) => x === false)
@@ -206,10 +210,43 @@ class App extends React.Component {
       }
     }
   };
+  plus_two_last_solve = () => {
+    let solve_stats = [...this.state.solves_stats];
+    let num_solve = solve_stats.length - 1;
+    solve_stats[num_solve]["time_solve"] = (
+      parseFloat(solve_stats[num_solve]["time_solve"]) + 2
+    ).toFixed(2);
+    solve_stats[num_solve]["exe_time"] = (
+      parseFloat(solve_stats[num_solve]["exe_time"]) + 2
+    ).toFixed(2);
+    localStorage.setItem("solves", JSON.stringify(solve_stats));
+
+    this.initialStatsFromLocalstorage();
+  };
+
   delete_solve = (num_solve) => {
     let solve_stats = [...this.state.solves_stats];
     num_solve = solve_stats.length - num_solve - 1;
     if (window.confirm("Are you sure you want to delete the solve?")) {
+      solve_stats.splice(num_solve, 1);
+      localStorage.setItem("solves", JSON.stringify(solve_stats));
+    }
+    this.initialStatsFromLocalstorage();
+  };
+  dnf_last_solve = () => {
+    let solve_stats = [...this.state.solves_stats];
+    let num_solve = solve_stats.length - 1;
+
+    solve_stats[num_solve]["DNF"] = !solve_stats[num_solve]["DNF"];
+    localStorage.setItem("solves", JSON.stringify(solve_stats));
+
+    this.initialStatsFromLocalstorage();
+  };
+
+  delete_last_solve = () => {
+    let solve_stats = [...this.state.solves_stats];
+    let num_solve = solve_stats.length - 1;
+    if (window.confirm("Are you sure you want to delete last solve?")) {
       solve_stats.splice(num_solve, 1);
       localStorage.setItem("solves", JSON.stringify(solve_stats));
     }
@@ -255,8 +292,8 @@ class App extends React.Component {
           <td>{memo_time}</td>
           {/* <td>{exe_time}</td> */}
           <td>
-            {fluidness}
-            {fluidness ? "%" : ""}
+            {!DNF ? fluidness : ""}
+            {fluidness && !DNF ? "%" : ""}
           </td>
           <td>
             <a href={link} target="_blank" title={txt_solve}>
@@ -661,6 +698,37 @@ class App extends React.Component {
                 >
                   Reset stats
                 </button>
+              </div>
+
+              <div className="row">
+                <div className="col-2">
+                  <a
+                    href="#"
+                    title="+2 last solve"
+                    onClick={() => this.plus_two_last_solve()}
+                  >
+                    +2
+                  </a>
+                </div>
+                <div className="col-3">
+                  <a
+                    href="#"
+                    title="DNF last solve"
+                    onClick={() => this.dnf_last_solve()}
+                  >
+                    DNF
+                  </a>
+                </div>
+                <div className="col-3">
+                  <a
+                    href="#"
+                    title="delete last solve"
+                    value={this.state.solves_stats.length}
+                    onClick={() => this.delete_last_solve()}
+                  >
+                    Delete
+                  </a>
+                </div>
               </div>
               <div className="row">
                 <SolveStats

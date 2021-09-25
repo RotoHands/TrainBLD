@@ -128,7 +128,7 @@ class App extends React.Component {
           <td>{DNF ? "DNF(" + time_solve + ")" : time_solve} </td>
           <td>{memo_time}</td>
           {/* <td>{exe_time}</td> */}
-          <td>{fluidness}</td>
+          <td>{fluidness}{fluidness ? "%" : "" }</td>
           <td>
             <a href={link} target="_blank" title={txt_solve}>
               <div>link</div>
@@ -137,6 +137,7 @@ class App extends React.Component {
         </tr>
       );
     });
+    solve_stats.reverse();
     let new_table = (
       <React.Fragment>
         <tr>{header_elem}</tr>
@@ -374,7 +375,7 @@ class App extends React.Component {
           this.setState({ parsed_solve: result });
           if ("cubedb" in result) {
             this.setState({ parsed_solve_cubedb: result["cubedb"] });
-            window.open(result["cubedb"]);
+            // window.open(result["cubedb"]);
           }
           if ("txt" in result) {
             console.log(result["txt"]);

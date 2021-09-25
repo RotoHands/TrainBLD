@@ -84,16 +84,10 @@ class App extends React.Component {
   delete_solve = (num_solve) => {
     let solve_stats = [...this.state.solves_stats];
     if (window.confirm("Are you sure you want to delete the solve?")) {
-      localStorage.removeItem("solve_num_" + num_solve);
-      for (var i = 0; i < solve_stats.length; i++) {
-        if (solve_stats[i]["solve_num"] === num_solve) {
-          solve_stats.splice(i, 1);
-          break;
-        }
-      }
-      this.setState({ solves_stats: solve_stats });
-      this.renderTableData(solve_stats);
+      solve_stats.splice(num_solve, 1);
+      localStorage.setItem("solves", JSON.stringify(solve_stats));
     }
+    this.initialStatsFromLocalstorage();
   };
   renderTableData = (solve_stats) => {
     let header_elem = (
@@ -107,6 +101,7 @@ class App extends React.Component {
       </React.Fragment>
     );
     let len = solve_stats.length;
+    solve_stats.reverse();
     let rows = solve_stats.map((solve, index) => {
       const {
         DNF,
@@ -114,18 +109,18 @@ class App extends React.Component {
         fluidness,
         link,
         memo_time,
-        solve_num,
+        date,
         time_solve,
         txt_solve,
       } = solve; //destructuring
       return (
-        <tr key={solve_num}>
+        <tr key={date}>
           <td>
             <a
-              href=""
+              href="#"
               title="delete solve"
-              value={solve_num}
-              onClick={() => this.delete_solve(solve_num)}
+              value={index}
+              onClick={() => this.delete_solve(index)}
             >
               <div>{len - index}</div>
             </a>
@@ -153,21 +148,11 @@ class App extends React.Component {
   };
   initialStatsFromLocalstorage = () => {
     let solve_stats = [];
-
-    for (var i = localStorage.length - 1; i > -1; i--) {
-      if (localStorage.key(i).includes("solve_num")) {
-        solve_stats.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
-      }
+    if (localStorage.getItem("solves") === null) {
+      localStorage.setItem("solves", JSON.stringify([]));
+    } else {
+      solve_stats = JSON.parse(localStorage.getItem("solves"));
     }
-
-    solve_stats.sort(function (a, b) {
-      var keyA = new Date(a.date),
-        keyB = new Date(b.date);
-      // Compare the 2 dates
-      if (keyA < keyB) return 1;
-      if (keyA > keyB) return -1;
-      return 0;
-    });
 
     this.setState({ solves_stats: solve_stats });
     this.renderTableData(solve_stats);
@@ -181,8 +166,6 @@ class App extends React.Component {
 
     let solve_stats = {
       date: Date.now(),
-      solve_num:
-        new_solve_stats.length > 0 ? new_solve_stats[0]["solve_num"] + 1 : 0,
       time_solve: times[0],
       memo_time: times[1],
       exe_time: times[2],
@@ -199,10 +182,7 @@ class App extends React.Component {
     new_solve_stats.push(solve_stats);
     this.setState({ solves_stats: new_solve_stats });
 
-    localStorage.setItem(
-      ("solve_num_" + solve_stats["solve_num"]).toString(),
-      JSON.stringify(solve_stats)
-    );
+    localStorage.setItem("solves", JSON.stringify(new_solve_stats));
     this.initialStatsFromLocalstorage();
   };
   extract_solve_from_cube_moves = (timer_finish) => {
@@ -424,15 +404,8 @@ class App extends React.Component {
   };
   handle_reset_stats = () => {
     if (window.confirm("Are you sure you want to reset stata?")) {
-      let i = 0;
-      while (i < localStorage.length) {
-        if (localStorage.key(i).includes("solve_num")) {
-          localStorage.removeItem(localStorage.key(i));
-          console.log(localStorage.key(i));
-          i = 0;
-        } else {
-          i++;
-        }
+      if (localStorage.getItem("solves") !== null) {
+        localStorage.removeItem("solves");
       }
       this.initialStatsFromLocalstorage();
     }

@@ -106,38 +106,91 @@ class App extends React.Component {
     let mo3 = 0;
     let len = arr.length;
     let mo3_arr = arr.slice(len - 3, len);
-    console.log(mo3_arr);
     for (var i = 0; i < 3; i++) {
       if (mo3_arr[i]["DNF"] === true) {
         mo3 = "DNF";
-        break;
+        return mo3;
       } else {
         mo3 += parseFloat(mo3_arr[i]["time_solve"]);
       }
     }
-    mo3 = (mo3 / 3).toFixed(2);
+    mo3 = parseFloat((mo3 / 3).toFixed(2));
     return mo3;
   };
   initialAverages = () => {
+    const sum = (previousValue, currentValue) => previousValue + currentValue;
+
     if (localStorage.getItem("averages") === null) {
       let averages = {
         mo3: "",
         ao5: "",
         ao12: "",
-        all: "",
+        aoAll: "",
         memo: "",
         exe: "",
         fluid: "",
-        succcess: "",
+        success: "",
       };
       localStorage.setItem("averages", JSON.stringify(averages));
+      this.setState({ averages: averages });
     } else {
-      let mo3, ao5, ao12, all, memo, exe, fluid;
+      let averages = JSON.parse(localStorage.getItem("averages"));
+      let mo3, ao5, ao12, succcess, aoAll, memo, exe, fluid;
       let solve_stats = JSON.parse(localStorage.getItem("solves"));
       let len = solve_stats.length;
+      mo3 = this.calc_mo3(solve_stats);
+      ao5 = this.calc_average(solve_stats.slice(len - 5, len));
+      ao12 = this.calc_average(solve_stats.slice(len - 12, len));
+      aoAll = [...solve_stats]
+        .filter(function ({ DNF, time_solve }) {
+          if (DNF === false) {
+            return parseFloat(time_solve);
+          }
+        })
+        .map(({ time_solve }) => parseFloat(time_solve));
+      aoAll = parseFloat((aoAll.reduce(sum) / aoAll.length).toFixed(2));
+      console.log(aoAll)
+      succcess = `${[...solve_stats]
+        .map(({ DNF }) => DNF)
+        .filter((x) => x === false)
+        .length}/${[...solve_stats].length}`;
+      memo = [...solve_stats]
+        .filter(function ({ DNF, memo_time }) {
+          if (DNF === false) {
+            return parseFloat(memo_time);
+          }
+        })
+        .map(({ memo_time }) => parseFloat(memo_time));
+      memo = parseFloat((memo.reduce(sum) / memo.length).toFixed(2));
 
-      for (var i = 0; i < solve_stats.length; i++) {}
-      this.setState({ averages: JSON.parse(localStorage.getItem("averages")) });
+      exe = [...solve_stats]
+        .filter(function ({ DNF, exe_time }) {
+          if (DNF === false) {
+            return parseFloat(exe_time);
+          }
+        })
+        .map(({ exe_time }) => parseFloat(exe_time));
+      exe = parseFloat((exe.reduce(sum) / exe.length).toFixed(2));
+
+      fluid = [...solve_stats]
+        .filter(function ({ DNF, fluidness }) {
+          if (DNF === false) {
+            return parseFloat(fluidness);
+          }
+        })
+        .map(({ fluidness }) => parseFloat(fluidness));
+      fluid = parseFloat((fluid.reduce(sum) / fluid.length).toFixed(2));
+
+      averages["mo3"] = mo3;
+      averages["ao5"] = ao5;
+      averages["ao12"] = ao12;
+      averages["aoAll"] = aoAll;
+      averages["memo"] = memo;
+      averages["exe"] = exe;
+      averages["fluid"] = fluid;
+      averages["success"] = succcess;
+      localStorage.setItem("averages", JSON.stringify(averages));
+      this.setState({ averages: averages });
     }
   };
   delete_solve = (num_solve) => {

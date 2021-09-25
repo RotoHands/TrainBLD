@@ -68,16 +68,75 @@ class App extends React.Component {
   componentDidMount = () => {
     document.title = "TrainBLD";
     this.initialStatsFromLocalstorage();
-    this.initialAverages();
     this.handle_scramble();
   };
   componentDidUpdate = () => {
     document.getElementById("timer_element_2").focus();
   };
+
+  calc_average = (arr) => {
+    let average;
+    let dnf_arr = arr.map(({ DNF }) => DNF);
+    let times_arr = arr
+      .map(({ time_solve }) => time_solve)
+      .map((x) => parseFloat(x));
+
+    const sum = (previousValue, currentValue) => previousValue + currentValue;
+
+    if (dnf_arr.filter((x) => x === true).length >= 2) {
+      average = "DNF";
+      return average;
+    }
+    if (dnf_arr.filter((x) => x === true).length === 1) {
+      times_arr.splice(dnf_arr.indexOf(true), 1);
+      times_arr.splice(times_arr.indexOf(Math.min(...times_arr)), 1);
+      average = parseFloat(
+        (times_arr.reduce(sum) / times_arr.length).toFixed(2)
+      );
+    } else {
+      times_arr.splice(times_arr.indexOf(Math.min(...times_arr)), 1);
+      times_arr.splice(times_arr.indexOf(Math.max(...times_arr)), 1);
+      average = parseFloat(
+        (times_arr.reduce(sum) / times_arr.length).toFixed(2)
+      );
+    }
+    return average;
+  };
+  calc_mo3 = (arr) => {
+    let mo3 = 0;
+    let len = arr.length;
+    let mo3_arr = arr.slice(len - 3, len);
+    console.log(mo3_arr);
+    for (var i = 0; i < 3; i++) {
+      if (mo3_arr[i]["DNF"] === true) {
+        mo3 = "DNF";
+        break;
+      } else {
+        mo3 += parseFloat(mo3_arr[i]["time_solve"]);
+      }
+    }
+    mo3 = (mo3 / 3).toFixed(2);
+    return mo3;
+  };
   initialAverages = () => {
     if (localStorage.getItem("averages") === null) {
-      localStorage.setItem("averages", JSON.stringify({}));
+      let averages = {
+        mo3: "",
+        ao5: "",
+        ao12: "",
+        all: "",
+        memo: "",
+        exe: "",
+        fluid: "",
+        succcess: "",
+      };
+      localStorage.setItem("averages", JSON.stringify(averages));
     } else {
+      let mo3, ao5, ao12, all, memo, exe, fluid;
+      let solve_stats = JSON.parse(localStorage.getItem("solves"));
+      let len = solve_stats.length;
+
+      for (var i = 0; i < solve_stats.length; i++) {}
       this.setState({ averages: JSON.parse(localStorage.getItem("averages")) });
     }
   };
@@ -128,7 +187,10 @@ class App extends React.Component {
           <td>{DNF ? "DNF(" + time_solve + ")" : time_solve} </td>
           <td>{memo_time}</td>
           {/* <td>{exe_time}</td> */}
-          <td>{fluidness}{fluidness ? "%" : "" }</td>
+          <td>
+            {fluidness}
+            {fluidness ? "%" : ""}
+          </td>
           <td>
             <a href={link} target="_blank" title={txt_solve}>
               <div>link</div>
@@ -157,6 +219,7 @@ class App extends React.Component {
 
     this.setState({ solves_stats: solve_stats });
     this.renderTableData(solve_stats);
+    this.initialAverages();
   };
   addSolveToLocalStorage = (data) => {
     var rgx = /[0-9]+:?[0-9]*\.[0-9]*/g;

@@ -7,6 +7,7 @@ import Scrambler from "./component/Scrambler";
 import Timer from "./component/Timer";
 import { Helmet } from "react-helmet";
 import logo from "./images/logo2.png";
+
 import LZString from "lz-string";
 import SolveStats from "./component/SolveStats";
 import "react-base-table/styles.css";
@@ -741,7 +742,7 @@ class App extends React.Component {
         })
       )
       .catch((data) => {
-        console.log(requestOptions['body']);
+        console.log(requestOptions["body"]);
         this.handle_solve_status("Parsing didn't succeed");
       });
   };

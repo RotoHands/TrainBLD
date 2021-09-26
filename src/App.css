@@ -2,17 +2,22 @@
   font-family: "digital-7";
   src: local("digital-7"), url(./fonts/digital-7.ttf) format("truetype");
 }
+@font-face {
+  font-family: "Rubik";
+  src: local("Rubik-Regular"), url(./fonts/Rubik-Regular.ttf) format("truetype");
+}
+
 body {
   background-color: #11324d;
   background-color: #1a1aca48;
   background-color: #11324d;
   color: #f6f6f6;
 }
-#upper_page, td{
+#upper_page,
+td {
   background-color: #a1cae5;
   background-color: #a1cae5;
 }
-
 
 td {
   font-size: 16px;
@@ -21,7 +26,6 @@ td {
   font-family: "Rubik";
   color: #000000;
   text-align: center;
-
 }
 th {
   font-family: "Rubik";

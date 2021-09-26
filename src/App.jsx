@@ -741,6 +741,7 @@ class App extends React.Component {
         })
       )
       .catch((data) => {
+        console.log(requestOptions);
         this.handle_solve_status("Parsing didn't succeed");
       });
   };
@@ -781,9 +782,7 @@ class App extends React.Component {
     return (
       <React.Fragment>
         <div className="application">
-          <Helmet id="background_page">
-            
-          </Helmet>
+          <Helmet id="background_page"></Helmet>
         </div>
         <div id="container_2" className="container">
           <div className="row align-items-center" id="upper_page">

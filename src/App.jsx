@@ -682,9 +682,10 @@ class App extends React.Component {
     return result;
   };
   handle_onStop_timer = (timer_finish) => {
-    new Promise((resolve) => setTimeout(resolve, 1))
+    new Promise((resolve) => setTimeout(resolve, 400))
       .then((data) => {
         if (this.state.gan === true) {
+          console.log("here gan");
           timer_finish =
             this.state.cube_moves_time[this.state.cube_moves_time.length - 1] +
             1;

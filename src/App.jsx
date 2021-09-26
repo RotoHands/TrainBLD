@@ -374,7 +374,6 @@ class App extends React.Component {
       }
       return x;
     });
-    console.log(items);
 
     const csv_averages = [header.join(","), [...items].join(",")].join("\r\n");
 
@@ -769,7 +768,7 @@ class App extends React.Component {
   };
   render() {
     const styleleft = {
-      width: "246px",
+      width: "245px",
 
       // background: "#A7C5EB",
       // background: "#79A3B1",

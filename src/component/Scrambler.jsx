@@ -16,7 +16,7 @@ class Scrambler extends React.Component {
         <div className="col-8 mt-1">
           <div
             className="text-start"
-            style={{ fontFamily: "Rubik", fontSize: 20 }}
+            style={{ fontFamily: "Rubik", fontSize: 20 , height:"40px"}}
           >
             {this.props.scramble}
           </div>

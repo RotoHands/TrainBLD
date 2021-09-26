@@ -501,11 +501,13 @@ class App extends React.Component {
       localStorage.setItem("solves", JSON.stringify([]));
     } else {
       solve_stats = JSON.parse(localStorage.getItem("solves"));
-      let url_csv = this.generateCsvURL(
-        solve_stats,
-        JSON.parse(localStorage.getItem("averages"))
-      );
-      this.setState({ url_stats: url_csv }, () => {});
+      if (solve_stats.length > 0) {
+        let url_csv = this.generateCsvURL(
+          solve_stats,
+          JSON.parse(localStorage.getItem("averages"))
+        );
+        this.setState({ url_stats: url_csv }, () => {});
+      }
     }
     this.setState({ solves_stats: solve_stats });
     this.renderTableData(solve_stats);
@@ -719,7 +721,7 @@ class App extends React.Component {
       body: JSON.stringify(setting),
     };
     fetch("https://rotohands-bld-parser.herokuapp.com/", requestOptions)
-    // fetch("http://127.0.0.1:8080", requestOptions)
+      // fetch("http://127.0.0.1:8080", requestOptions)
       .then((response) =>
         response.json().then((data) => {
           result = data;

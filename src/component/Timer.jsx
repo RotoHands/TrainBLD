@@ -135,9 +135,7 @@ class Timer extends React.Component {
               scramble={this.props.scramble}
             ></scramble-display>
           </div>
-          <div className="col-1"></div>
         </div>
-        <div className="row"></div>
       </div>
     );
   }

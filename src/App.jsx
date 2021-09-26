@@ -17,7 +17,21 @@ class App extends React.Component {
     this.GiikerCube = this.GiikerCube.bind(this);
     this.state = {
       url_stats: "",
-      averages: {},
+      averages: {
+        best: { time: 10000, solve: {} },
+        current: "",
+        mo3: "",
+        ao5: "",
+        ao12: "",
+        bmo3: { time: 10000, solves: {}, num: 0 },
+        bao5: { time: 10000, solves: {}, num: 0 },
+        bao12: { time: 10000, solves: {}, num: 0 },
+        aoAll: "",
+        memo: "",
+        exe: "",
+        fluid: "",
+        success: "",
+      },
       local_storage_setting: null,
       renderTable: null,
       solves_stats: [],
@@ -144,7 +158,7 @@ class App extends React.Component {
       this.initialAveragesNoSolves();
     } else {
       let averages = JSON.parse(localStorage.getItem("averages"));
-      let mo3, ao5, ao12, succcess, aoAll, memo, exe, fluid;
+      let mo3, ao5, ao12, succcess, aoAll, current, memo, exe, fluid;
       let solve_stats = JSON.parse(localStorage.getItem("solves"));
       let len = solve_stats.length;
       mo3 = solve_stats.length >= 3 ? this.calc_mo3(solve_stats) : "";
@@ -156,6 +170,14 @@ class App extends React.Component {
         solve_stats.length >= 12
           ? this.calc_average(solve_stats.slice(len - 12, len))
           : "";
+      if (solve_stats.length > 0) {
+        let time = solve_stats[solve_stats.length - 1]["time_solve"];
+        if (solve_stats[solve_stats.length - 1]["DNF"] === true) {
+          current = "DNF(" + time + ")";
+        } else {
+          current = time;
+        }
+      }
 
       if (
         [...solve_stats].map(({ DNF }) => DNF).filter((x) => x === false)
@@ -199,7 +221,7 @@ class App extends React.Component {
           })
           .map(({ fluidness }) => parseFloat(fluidness));
         fluid = parseFloat((fluid.reduce(sum) / fluid.length).toFixed(2));
-
+        averages["current"] = current;
         averages["mo3"] = mo3;
         averages["ao5"] = ao5;
         averages["ao12"] = ao12;
@@ -208,6 +230,7 @@ class App extends React.Component {
         averages["exe"] = exe;
         averages["fluid"] = fluid;
         averages["success"] = succcess;
+
         localStorage.setItem("averages", JSON.stringify(averages));
         this.setState({ averages: averages });
       } else {
@@ -227,6 +250,7 @@ class App extends React.Component {
     localStorage.setItem("solves", JSON.stringify(solve_stats));
 
     this.initialStatsFromLocalstorage();
+    this.calc_best_average_after_delete();
   };
 
   delete_solve = (num_solve) => {
@@ -237,6 +261,7 @@ class App extends React.Component {
       localStorage.setItem("solves", JSON.stringify(solve_stats));
     }
     this.initialStatsFromLocalstorage();
+    this.calc_best_average_after_delete();
   };
   dnf_last_solve = () => {
     let solve_stats = [...this.state.solves_stats];
@@ -246,6 +271,7 @@ class App extends React.Component {
     localStorage.setItem("solves", JSON.stringify(solve_stats));
 
     this.initialStatsFromLocalstorage();
+    this.calc_best_average_after_delete();
   };
 
   delete_last_solve = () => {
@@ -256,6 +282,7 @@ class App extends React.Component {
       localStorage.setItem("solves", JSON.stringify(solve_stats));
     }
     this.initialStatsFromLocalstorage();
+    this.calc_best_average_after_delete();
   };
   renderTableData = (solve_stats) => {
     let header_elem = (
@@ -339,10 +366,10 @@ class App extends React.Component {
     ].join("\r\n");
     items = averages;
     header = Object.keys(items);
-    console.log(items);
+
     items = Object.values(items);
     const csv_averages = [header.join(","), [...items].join(",")].join("\r\n");
-    console.log(csv_averages);
+
     const all = csv_averages + "\r\n\r\n" + csv_solves;
     var data = new Blob([all], { type: "text/csv" });
     let url_csv = window.URL.createObjectURL(data);
@@ -395,14 +422,78 @@ class App extends React.Component {
         ) {
           cur_averages["best"]["time"] =
             solve_stats[solve_stats.length - 1]["time_solve"];
-            cur_averages["best"]["num"] = solve_stats.length;
+          cur_averages["best"]["num"] = solve_stats.length;
 
           cur_averages["best"]["solve"] = solve_stats[solve_stats.length - 1];
         }
       }
     }
     localStorage.setItem("averages", JSON.stringify(cur_averages));
+    this.setState({ averages: cur_averages });
   };
+
+  calc_best_average_after_delete = () => {
+    let solve_stats = JSON.parse(localStorage.getItem("solves"));
+    let cur_averages = JSON.parse(localStorage.getItem("averages"));
+    let cur = { best: 10000, mo3: 10000, ao5: 10000, ao12: 10000 };
+    let best = {
+      best: { time: 10000, num: 0, solve: {} },
+      mo3: { time: 10000, num: 0, solves: {} },
+      ao5: { time: 10000, num: 0, solves: {} },
+      ao12: { time: 10000, num: 0, solves: {} },
+    };
+
+    let len = solve_stats.length;
+    for (var i = 0; i < solve_stats.length; i++) {
+      if (i + 1 <= len) {
+        cur["best"] = solve_stats[i]["time_solve"];
+        if (cur["best"] < best["best"]["time"]) {
+          best["best"]["time"] = parseFloat(cur["best"]);
+          best["best"]["num"] = i;
+          best["best"]["solve"] = solve_stats[i];
+        }
+      }
+
+      if (i + 3 <= len) {
+        cur["mo3"] = this.calc_mo3(solve_stats.slice(i, i + 3));
+        if (cur["mo3"] < best["mo3"]["time"]) {
+          best["mo3"]["time"] = cur["mo3"];
+          best["mo3"]["num"] = i;
+          best["mo3"]["solves"] = solve_stats.slice(i, i + 3);
+        }
+      }
+      
+      if (i + 5 <= len) {
+        cur["ao5"] = this.calc_average(solve_stats.slice(i, i + 5));
+        if (cur["ao5"] < best["ao5"]["time"]) {
+          best["ao5"]["time"] = cur["ao5"];
+          best["ao5"]["num"] = i;
+          best["ao5"]["solves"] = solve_stats.slice(i, i + 5);
+        }
+      }
+
+      if (i + 12 <= len) {
+        cur["ao12"] = this.calc_average(solve_stats.slice(i, i + 12));
+        if (cur["ao12"] < best["ao12"]["time"]) {
+          best["ao12"]["time"] = cur["ao12"];
+          best["ao12"]["num"] = i;
+          best["ao12"]["solves"] = solve_stats.slice(i, i + 12);
+        }
+      }
+      
+    }
+    
+  
+    console.log(best);
+    console.log(cur_averages);
+    cur_averages["best"] = best["best"];
+    cur_averages["bmo3"] = best["mo3"];
+    cur_averages["bao5"] = best["ao5"];
+    cur_averages["bao12"] = best["ao12"];
+    localStorage.setItem("averages", JSON.stringify(cur_averages));
+    this.setState({ averages: cur_averages });
+  };
+
   initialStatsFromLocalstorage = () => {
     let solve_stats = [];
     if (localStorage.getItem("solves") === null) {
@@ -413,10 +504,7 @@ class App extends React.Component {
         solve_stats,
         JSON.parse(localStorage.getItem("averages"))
       );
-      console.log("here");
-      this.setState({ url_stats: url_csv }, () => {
-        console.log("rerender");
-      });
+      this.setState({ url_stats: url_csv }, () => {});
     }
     this.setState({ solves_stats: solve_stats });
     this.renderTableData(solve_stats);
@@ -630,7 +718,7 @@ class App extends React.Component {
       body: JSON.stringify(setting),
     };
     // fetch("https://rotohands-bld-parser.herokuapp.com/", requestOptions)
-      fetch("http://127.0.0.1:8080", requestOptions)
+    fetch("http://127.0.0.1:8080", requestOptions)
       .then((response) =>
         response.json().then((data) => {
           result = data;
@@ -787,52 +875,121 @@ class App extends React.Component {
             />
           </div>
           <div className="row">
-            <div className="col-3" style={styleSTATS}>
+            <div className="col-3">
               <div className="row">
-                <button
-                  onClick={this.handle_reset_stats}
-                  className="btn btn-primary"
-                  style={{ width: 140 }}
+                <div
+                  className="col-sm-auto"
+                  style={{ backgroundColor: "#a1cae5" }}
                 >
-                  Reset stats
-                </button>
-                <a
-                  href={this.state.url_stats}
-                  download="solves.csv"
-                  id="export_solves"
-                >
-                  Export
-                </a>
-              </div>
-
-              <div className="row">
-                <div className="col-2">
                   <a
+                    style={{ textDecoration: "none" }}
+                    title="delete all stats"
+                    onClick={this.handle_reset_stats}
+                    href="#"
+                  >
+                    Reset /
+                  </a>
+                  <a
+                    style={{ textDecoration: "none" }}
+                    href={this.state.url_stats}
+                    download="solves.csv"
+                    id="export_solves"
+                  >
+                    {" "}
+                    Export {"  "}
+                  </a>
+
+                  <a
+                    style={{ textDecoration: "none" }}
                     href="#"
                     title="+2 last solve"
                     onClick={() => this.plus_two_last_solve()}
                   >
-                    +2
+                    {" "}
+                    +2 /
                   </a>
-                </div>
-                <div className="col-3">
                   <a
+                    style={{ textDecoration: "none" }}
                     href="#"
                     title="DNF last solve"
                     onClick={() => this.dnf_last_solve()}
                   >
-                    DNF
+                    {" "}
+                    DNF /
                   </a>
-                </div>
-                <div className="col-3">
                   <a
+                    style={{ textDecoration: "none" }}
                     href="#"
                     title="delete last solve"
                     value={this.state.solves_stats.length}
                     onClick={() => this.delete_last_solve()}
                   >
+                    {" "}
                     Delete
                   </a>
+                </div>
+              </div>
+              <div className="col-12">
+                <div className="row">
+                  <table id="best_averages_table">
+                    <tbody id="best_averages">
+                      <th>#</th>
+                      <th>current</th>
+                      <th>best</th>
+                      <tr>
+                        <td>bo1</td>
+                        <td>
+                          {this.state.averages["current"] != ""
+                            ? this.state.averages["current"]
+                            : ""}
+                        </td>
+                        <td>
+                          {this.state.averages["best"]["time"] != 10000
+                            ? this.state.averages["best"]["time"]
+                            : ""}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>mo3</td>
+                        <td>
+                          {this.state.averages["mo3"] != ""
+                            ? this.state.averages["mo3"]
+                            : ""}
+                        </td>
+                        <td>
+                          {this.state.averages["bmo3"]["time"] != 10000
+                            ? this.state.averages["bmo3"]["time"]
+                            : ""}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>ao5</td>
+                        <td>
+                          {this.state.averages["ao5"] != ""
+                            ? this.state.averages["ao5"]
+                            : ""}
+                        </td>
+                        <td>
+                          {this.state.averages["bao5"]["time"] != 10000
+                            ? this.state.averages["bao5"]["time"]
+                            : ""}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>ao12</td>
+                        <td>
+                          {this.state.averages["ao12"] != ""
+                            ? this.state.averages["ao12"]
+                            : ""}
+                        </td>
+                        <td>
+                          {this.state.averages["bao12"]["time"] != 10000
+                            ? this.state.averages["bao12"]["time"]
+                            : ""}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
               <div className="row">

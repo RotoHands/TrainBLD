@@ -21,22 +21,42 @@ th {
   background-color: #0d6efd;
   color: white;
 }
-table tbody { height:390px; overflow-y:scroll; display:block; }
+#solve_stats_table {
+  
+}
+#solve_stats_body {
+  width: 253px;
+  height: 260px;
+  overflow-y: scroll;
+  display: block;
+}
+
+#best_averages {
+  width: 253px;
+  height: 162px;
+  display:inline-table;
+}
+#best_averages_table {
+  height: 100px;
+
+  table-layout: fixed;
+}
+
 ::-webkit-scrollbar {
   width: 1px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #11324D; 
+  background: #11324d;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #11324D; 
+  background: #11324d;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #11324D; 
+  background: #11324d;
 }

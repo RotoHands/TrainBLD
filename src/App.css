@@ -2,39 +2,49 @@
   font-family: "digital-7";
   src: local("digital-7"), url(./fonts/digital-7.ttf) format("truetype");
 }
+body {
+  background-color: #11324d;
+  background-color: #1a1aca48;
+  background-color: #11324d;
+  color: #f6f6f6;
+}
+#upper_page, td{
+  background-color: #a1cae5;
+  background-color: #a1cae5;
+}
+
+
 td {
-  font-size: "6px";
+  font-size: 16px;
   padding: 3px;
-  border: 1px solid #ddd;
+  border: 1px solid #094ad42d;
   font-family: "Rubik";
   color: #000000;
   text-align: center;
 
-  background-color: #a1cae5;
 }
 th {
+  font-family: "Rubik";
+  font-size: 14px;
   font-weight: normal;
-  padding-top: 6px;
-  border: 1px solid #ddd;
+  padding-top: 3px;
+  border: 1px solid #0949d460;
   padding-bottom: 6px;
   text-align: center;
   background-color: #0d6efd;
   color: white;
 }
-#solve_stats_table {
-  
-}
 #solve_stats_body {
   width: 253px;
-  height: 260px;
+  height: 230px;
   overflow-y: scroll;
   display: block;
 }
 
 #best_averages {
-  width: 253px;
+  width: 245px;
   height: 162px;
-  display:inline-table;
+  display: inline-table;
 }
 #best_averages_table {
   height: 100px;

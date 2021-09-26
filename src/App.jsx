@@ -366,8 +366,16 @@ class App extends React.Component {
     ].join("\r\n");
     items = averages;
     header = Object.keys(items);
-
     items = Object.values(items);
+    items = [...items].map(function (x) {
+      if (typeof x === "object") {
+        let obj = x["time"];
+        return obj;
+      }
+      return x;
+    });
+    console.log(items);
+
     const csv_averages = [header.join(","), [...items].join(",")].join("\r\n");
 
     const all = csv_averages + "\r\n\r\n" + csv_solves;
@@ -462,7 +470,7 @@ class App extends React.Component {
           best["mo3"]["solves"] = solve_stats.slice(i, i + 3);
         }
       }
-      
+
       if (i + 5 <= len) {
         cur["ao5"] = this.calc_average(solve_stats.slice(i, i + 5));
         if (cur["ao5"] < best["ao5"]["time"]) {
@@ -480,12 +488,7 @@ class App extends React.Component {
           best["ao12"]["solves"] = solve_stats.slice(i, i + 12);
         }
       }
-      
     }
-    
-  
-    console.log(best);
-    console.log(cur_averages);
     cur_averages["best"] = best["best"];
     cur_averages["bmo3"] = best["mo3"];
     cur_averages["bao5"] = best["ao5"];
@@ -757,7 +760,7 @@ class App extends React.Component {
     this.setState({ scramble: this.state.last_scramble });
   };
   handle_reset_stats = () => {
-    if (window.confirm("Are you sure you want to reset stata?")) {
+    if (window.confirm("Are you sure you want to reset stats?")) {
       if (localStorage.getItem("solves") !== null) {
         localStorage.removeItem("solves");
       }
@@ -765,9 +768,8 @@ class App extends React.Component {
     }
   };
   render() {
-    const styleBG = {
-      background: "#A1CAE5",
-      roundedtop: "25px",
+    const styleleft = {
+      width: "246px",
 
       // background: "#A7C5EB",
       // background: "#79A3B1",
@@ -775,35 +777,15 @@ class App extends React.Component {
       // background: "#BAE8E8",
       // background: "#BAE8E8",
     };
-    const styleSetting = {
-      background: "#A1CAE5",
 
-      // background: "#A7C5EB",
-      // background: "#79A3B1",
-
-      // background: "#BAE8E8",
-      // background: "#BAE8E8",
-    };
-    const styleSTATS = {
-      background: "#11324D",
-      borderRadius: "0px",
-
-      // background: "#A7C5EB",
-      // background: "#79A3B1",
-
-      // background: "#BAE8E8",
-      // background: "#BAE8E8",
-    };
     // document.body.style.overflow = "hidden";
     return (
       <React.Fragment>
         <div className="application">
-          <Helmet>
-            <style>{"body { background-color: #11324D;color: #F6F6F6 }"}</style>
-          </Helmet>
+          <Helmet id="background_page"></Helmet>
         </div>
-        <div className="container border border-primary rounded-3">
-          <div className="row align-items-center" style={styleBG}>
+        <div id="container_2" className="container">
+          <div className="row align-items-center" id="upper_page">
             <div className="col-2">
               <div className="row">
                 <img
@@ -867,7 +849,7 @@ class App extends React.Component {
               </div>
             </div>
           </div>
-          <div className="row" style={styleSetting}>
+          <div className="row" id="upper_page">
             <Setting
               cur_setting={this.state.parse_settings}
               export_setting={this.handle_export_setting}
@@ -877,65 +859,75 @@ class App extends React.Component {
           <div className="row">
             <div className="col-3">
               <div className="row">
-                <div
-                  className="col-sm-auto"
-                  style={{ backgroundColor: "#a1cae5" }}
-                >
-                  <a
-                    style={{ textDecoration: "none" }}
-                    title="delete all stats"
-                    onClick={this.handle_reset_stats}
-                    href="#"
+                <div className="col-auto" id="upper_page" style={styleleft}>
+                  <div
+                    className="row"
+                    style={{ textDecoration: "none", fontSize: "17px" }}
                   >
-                    Reset /
-                  </a>
-                  <a
-                    style={{ textDecoration: "none" }}
-                    href={this.state.url_stats}
-                    download="solves.csv"
-                    id="export_solves"
-                  >
-                    {" "}
-                    Export {"  "}
-                  </a>
-
-                  <a
-                    style={{ textDecoration: "none" }}
-                    href="#"
-                    title="+2 last solve"
-                    onClick={() => this.plus_two_last_solve()}
-                  >
-                    {" "}
-                    +2 /
-                  </a>
-                  <a
-                    style={{ textDecoration: "none" }}
-                    href="#"
-                    title="DNF last solve"
-                    onClick={() => this.dnf_last_solve()}
-                  >
-                    {" "}
-                    DNF /
-                  </a>
-                  <a
-                    style={{ textDecoration: "none" }}
-                    href="#"
-                    title="delete last solve"
-                    value={this.state.solves_stats.length}
-                    onClick={() => this.delete_last_solve()}
-                  >
-                    {" "}
-                    Delete
-                  </a>
+                    <div className="col-sm-5">
+                      <a
+                        style={{ textDecoration: "none" }}
+                        title="delete all stats"
+                        onClick={this.handle_reset_stats}
+                        href="#"
+                      >
+                        Reset/
+                      </a>
+                      <a
+                        style={{ textDecoration: "none" }}
+                        href={this.state.url_stats}
+                        download="solves.csv"
+                        id="export_solves"
+                      >
+                        Export {""}
+                      </a>
+                    </div>
+                    <div className="col-7">
+                      <a
+                        style={{ textDecoration: "none" }}
+                        href="#"
+                        title="+2 last solve"
+                        onClick={() => this.plus_two_last_solve()}
+                      >
+                        {"  "}
+                        +2/
+                      </a>
+                      <a
+                        style={{ textDecoration: "none" }}
+                        href="#"
+                        title="DNF last solve"
+                        onClick={() => this.dnf_last_solve()}
+                      >
+                        DNF/
+                      </a>
+                      <a
+                        style={{ textDecoration: "none" }}
+                        href="#"
+                        title="delete last solve"
+                        value={this.state.solves_stats.length}
+                        onClick={() => this.delete_last_solve()}
+                      >
+                        {""}
+                        Delete
+                      </a>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-auto" style={styleleft}>
+                      {" "}
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="col-12">
                 <div className="row">
                   <table id="best_averages_table">
                     <tbody id="best_averages">
-                      <th>#</th>
-                      <th>current</th>
-                      <th>best</th>
+                      <tr>
+                        <th>#</th>
+                        <th>current</th>
+                        <th>best</th>
+                      </tr>
                       <tr>
                         <td>bo1</td>
                         <td>
@@ -988,13 +980,26 @@ class App extends React.Component {
                             : ""}
                         </td>
                       </tr>
+                      <tr>
+                        <td colSpan="3" style={{ whiteSpace: "pre-wrap" }}>
+                          {this.state.averages["aoAll"] +
+                            "(" +
+                            this.state.averages["memo"] +
+                            ", " +
+                            this.state.averages["exe"] +
+                            ") " +
+                            this.state.averages["fluid"] +
+                            "%\t" +
+                            this.state.averages["success"]}
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
               <div className="row">
                 <SolveStats
-                  style={styleSTATS}
+                  id="upper_page"
                   renderTable={this.state.renderTable}
                   solve_stats={this.state.solves_stats}
                   initStats={this.initialStatsFromLocalstorage}

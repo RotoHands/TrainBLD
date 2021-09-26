@@ -80,7 +80,6 @@ class App extends React.Component {
   }
 
   componentDidMount = () => {
-    document.title = "TrainBLD";
     this.initialStatsFromLocalstorage();
     this.handle_scramble();
   };
@@ -782,7 +781,22 @@ class App extends React.Component {
     return (
       <React.Fragment>
         <div className="application">
-          <Helmet id="background_page"></Helmet>
+          <Helmet id="background_page">
+            <title>TrainBLD</title>
+            <meta
+              name="description"
+              content="TrainBLD is a timer that analyzes your Rubik's cube blindfolded solves and help you improve much faster."
+            />
+            <meta charSet="utf-8" />
+            <meta author="Rotem Ifrach" />
+            <meta property="og:image" content="./images/logo2.png" />
+            <meta
+              property="og:description"
+              content="TrainBLD is a timer that analyzes your Rubik's cube blindfolded solves and help you improve much faster."
+            />
+            <meta property="og:title" content="TrainBLD Timer" />
+            <link rel="icon" href="logo2.ico" type="image/x-icon"></link>
+          </Helmet>
         </div>
         <div id="container_2" className="container">
           <div className="row align-items-center" id="upper_page">

@@ -16,6 +16,7 @@ class App extends React.Component {
     super();
     this.GiikerCube = this.GiikerCube.bind(this);
     this.state = {
+      gan: false,
       url_stats: "",
       averages: {
         best: { time: 10000, solve: {} },
@@ -683,6 +684,11 @@ class App extends React.Component {
   handle_onStop_timer = (timer_finish) => {
     new Promise((resolve) => setTimeout(resolve, 1))
       .then((data) => {
+        if (this.state.gan === true) {
+          timer_finish =
+            this.state.cube_moves_time[this.state.cube_moves_time.length - 1] +
+            1;
+        }
         this.setState({ timeFinish: timer_finish });
         this.handle_solve_status("Parsing...");
         this.handle_parse_solve(timer_finish);
@@ -1227,9 +1233,7 @@ class App extends React.Component {
           }
           for (i = 0; i < new_moves.length; i++) {
             cube_moves.push(new_moves[i]);
-            cube_moves_time.push(
-              ((new_moves_time[i] - this_App.state.timeStart) / 1000).toFixed(2)
-            );
+            cube_moves_time.push(Date.now());
           }
           this_App.setState({ cube_moves: cube_moves });
           this_App.setState({ cube_moves_time: cube_moves_time });
@@ -1417,6 +1421,7 @@ class App extends React.Component {
           })
           .then(function (chrct) {
             this_App.handle_solve_status("Ready for scrambling");
+            this_App.setState({ gan: true });
             _chrct_f6 = chrct;
             return _service_data.getCharacteristic(CHRCT_UUID_F7);
           })

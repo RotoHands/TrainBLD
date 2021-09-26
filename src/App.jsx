@@ -741,7 +741,7 @@ class App extends React.Component {
         })
       )
       .catch((data) => {
-        console.log(requestOptions);
+        console.log(requestOptions['body']);
         this.handle_solve_status("Parsing didn't succeed");
       });
   };

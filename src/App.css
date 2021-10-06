@@ -39,14 +39,14 @@ th {
   color: white;
 }
 #solve_stats_body {
-  width: 253px;
+  width: 280px;
   height: 230px;
   overflow-y: scroll;
   display: block;
 }
 
 #best_averages {
-  width: 245px;
+  width: 260px;
   height: 162px;
   display: inline-table;
 }

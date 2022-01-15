@@ -20,39 +20,36 @@ td {
 }
 
 td {
-  font-size: 16px;
-  padding: 3px;
-  border: 1px solid #094ad42d;
+  font-size: 2vmin ;
+  padding: 0.1em;
+  border: 0.1vw solid #094ad42d;
   font-family: "Rubik";
   color: #000000;
   text-align: center;
 }
 th {
   font-family: "Rubik";
-  font-size: 14px;
+  font-size: 2vmin;
   font-weight: normal;
-  padding-top: 3px;
-  border: 1px solid #0949d460;
+  padding-top: 0.43em;
+  border: 0.1vw solid #0949d460;
   padding-bottom: 6px;
   text-align: center;
   background-color: #0d6efd;
   color: white;
 }
 #solve_stats_body {
-  width: 280px;
-  height: 230px;
+  width: 32vmin;
+  height: 35vmin;
   overflow-y: scroll;
   display: block;
 }
 
 #best_averages {
-  width: 260px;
-  height: 162px;
+  width: 32vmin;
   display: inline-table;
 }
 #best_averages_table {
-  height: 100px;
-
   table-layout: fixed;
 }
 
@@ -75,86 +72,96 @@ th {
   background: #11324d;
 }
 
-.grid-container {
+.logo img {
+  width: 5vw;
+}
+
+.container_2 {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(12, 1fr);
-  
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
   justify-items: stretch;
   align-items: stretch;
-}
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 
-.logo{
+  grid-template-rows: repeat(1fr, 11);
+  grid-auto-rows: minmax(10px, auto);
+  grid-auto-columns: minmax(10px, auto);
 
+  gap: 0px 0px;
+  grid-template-areas:
+    "logo logo logo upper_page_new upper_page_new upper_page_new upper_page_new upper_page_new upper_page_new upper_page_new upper_page_new" "logo logo logo trainbld_header trainbld_header trainbld_header trainbld_header trainbld_header social social social"
+    "connect_cube connect_cube connect_cube trainbld_header trainbld_header trainbld_header trainbld_header trainbld_header rotem_ifrach rotem_ifrach rotem_ifrach"
+    "setting setting setting setting setting setting setting setting setting setting setting"
+    "stats_bar stats_bar stats_bar scrambler scrambler scrambler scrambler scrambler scrambler scrambler scrambler"
+    "stats stats stats timer timer timer timer timer timer timer timer"
+    "stats stats stats timer timer timer timer timer timer timer timer"
+    "stats stats stats timer timer timer timer timer timer timer timer"
+    "solve_stats solve_stats solve_stats timer timer timer timer timer timer timer timer"
+    "solve_stats solve_stats solve_stats timer timer timer timer timer timer timer timer"
+    "solve_stats solve_stats solve_stats timer timer timer timer timer timer timer timer"
+    "solve_stats solve_stats solve_stats timer timer timer timer timer timer timer timer";
 }
-.connect_cube{
+.upper_page_new {
+  background-color: #a1cae5;
+  grid-area: upper_page_new;
+}
+.logo {
+  background-color: #a1cae5;
 
+  grid-area: logo;
 }
-.trainbld_header{
+.connect_cube {
+  background-color: #a1cae5;
 
+  grid-area: connect_cube;
 }
-.btn_group_social{
+.setting {
+  background-color: #a1cae5;
 
+  grid-area: setting;
 }
-.youtube{
+.social {
+  background-color: #a1cae5;
 
+  grid-area: social;
 }
-.github{
+.rotem_ifrach {
+  background-color: #a1cae5;
 
+  grid-area: rotem_ifrach;
 }
-.support{
+.trainbld_header {
+  background-color: #a1cae5;
 
+  text-align: center;
+  font-style: italic;
+  margin-top: 1;
+  font-size: 5vw;
+  grid-area: trainbld_header;
 }
-.rotem_ifrach{
-
+.stats_bar {
+  width: 3vmin;
+  background-color: #a1cae5;
+  grid-area: stats_bar;
 }
-.upper_page{
-
+.scrambler {
+  grid-area: scrambler;
 }
-.setting{
-
+.stats {
+  grid-area: stats;
 }
-.stats_bar{
-
+.solve_stats {
+  grid-area: solve_stats;
 }
-.reset_stats{
-
-}
-.export_stats{
-
-}
-.plus_2{
-
-}
-.dnf_last_solve{
-
-}
-.delete_last_solve{
-
-}
-.stats{
-
-}
-.solve_stats{
-
-}
-.scrambler{
-
-}
-.moves_scramble{
-
-}
-.timer{
-  
+.timer {
+  grid-area: timer;
 }
 #timer_on_screen {
   font-size: 11vw;
   font-family: "digital-7";
   src: "./digital-7.ttf";
-}
-
-#trainbld_header {
-  font-size: 8vw;
 }
 #rotem_ifrach {
   font-size: 16px;

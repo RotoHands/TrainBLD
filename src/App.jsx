@@ -786,27 +786,26 @@ class App extends React.Component {
           <Helmet id="background_page"></Helmet>
         </div>
         {/* <div id="container_2" className="container"> */}
-        <div id="container_new" class="grid-container">
-          <img
-            src={logo}
-            class="logo"
-            className="rounded mx-auto"
-            alt=""
-            style={{ width: "60%" }}
-          />
-          <ConnectCube onConnect={this.GiikerCube} class="connect_cube" />
-          <div class="trainbld_header" className="text-center fst-italic mt-1">
-            TrainBLD
+        <div id="container_new" class="container container_2">
+          <div class="upper_page_new"></div>
+          <div class="logo">
+            <img
+              src={logo}
+              // className="rounded mx-auto"
+              alt=""
+            />
           </div>
+          <div class="connect_cube">
+            <ConnectCube onConnect={this.GiikerCube} />
+          </div>
+          <div class="grid-item trainbld_header">TrainBLD</div>
           <div
-            class="btn_group_social"
-            className="btn-toolbar"
+            className="social btn-toolbar"
             role="group"
             aria-label="Basic example"
           >
             <button
-              class="youtube"
-              className="btn btn-primary btn-sm m-1 text-end"
+              className="youtube btn btn-primary btn-sm m-1 text-end"
               // style={{ width: "180px" }}
               onClick={() =>
                 window.open(
@@ -817,16 +816,14 @@ class App extends React.Component {
               Youtube
             </button>
             <button
-              class="github"
-              className="btn btn-primary m-1 text-center "
+              className="github btn btn-primary m-1 text-center "
               style={{ width: "80px" }}
               onClick={() => window.open("https://github.com/RotoHands")}
             >
               Github
             </button>
             <button
-              class="support"
-              className="btn btn-primary m-1"
+              className="support btn btn-primary m-1"
               onClick={() =>
                 window.open(
                   "https://www.paypal.com/donate?hosted_button_id=X9X9VZEAYK3DJ"
@@ -836,12 +833,11 @@ class App extends React.Component {
               Support :)
             </button>
           </div>
-          <div class="rotem_ifrach" className=" ms-1 text-start fst-italic">
+          <div className="rotem_ifrach text-start fst-italic">
             By Rotem Ifrach
           </div>
-          <div class="upper_page">
+          <div class="setting">
             <Setting
-              class="setting"
               cur_setting={this.state.parse_settings}
               export_setting={this.handle_export_setting}
               id={this.state.parse_settings["ID"]}
@@ -851,25 +847,24 @@ class App extends React.Component {
             class="stats_bar"
             style={{ textDecoration: "none", fontSize: "17px" }}
           >
-            <div class="reset_stats">
-              <a
-                style={{ textDecoration: "none" }}
-                title="delete all stats"
-                onClick={this.handle_reset_stats}
-                href="#"
-              >
-                Reset/
-              </a>
-              <a
-                class="export_stats"
-                style={{ textDecoration: "none" }}
-                href={this.state.url_stats}
-                download="solves.csv"
-                id="export_solves"
-              >
-                Export {""}
-              </a>
-            </div>
+            <a
+              style={{ textDecoration: "none" }}
+              title="delete all stats"
+              onClick={this.handle_reset_stats}
+              href="#"
+            >
+              Reset/
+            </a>
+            <a
+              class="export_stats"
+              style={{ textDecoration: "none" }}
+              href={this.state.url_stats}
+              download="solves.csv"
+              id="export_solves"
+            >
+              Export {""}
+            </a>
+
             <a
               class="plus_2"
               style={{ textDecoration: "none" }}
@@ -977,9 +972,8 @@ class App extends React.Component {
               </tbody>
             </table>
           </div>
-          <div className="row">
+          <div class="solve_stats">
             <SolveStats
-              class="solve_stats"
               id="upper_page"
               renderTable={this.state.renderTable}
               solve_stats={this.state.solves_stats}
@@ -987,13 +981,14 @@ class App extends React.Component {
               renderTableData={this.renderTableData}
             />
           </div>
-          <Scrambler
-            class="scrambler"
-            onReset={this.handle_reset_cube}
-            scramble={this.state.scramble}
-            onClick_scramble={this.handle_scramble}
-            onClick_last_scramble={this.handle_last_scramble}
-          />{" "}
+          <div class="scrambler">
+            <Scrambler
+              onReset={this.handle_reset_cube}
+              scramble={this.state.scramble}
+              onClick_scramble={this.handle_scramble}
+              onClick_last_scramble={this.handle_last_scramble}
+            />{" "}
+          </div>
           <div
             class="moves_scramble"
             className=""
@@ -1001,14 +996,15 @@ class App extends React.Component {
           >
             {this.state.moves_to_show}
           </div>
-          <Timer
-            // parsed_solve_txt={this.state.parsed_solve_txt}
-            class="timer"
-            scramble={this.state.scramble}
-            solve_status={this.state.solve_status}
-            onStart={(timer_start) => this.handle_onStart_timer(timer_start)}
-            onStop={(timer_finish) => this.handle_onStop_timer(timer_finish)}
-          />
+          <div class="timer">
+            <Timer
+              // parsed_solve_txt={this.state.parsed_solve_txt}
+              scramble={this.state.scramble}
+              solve_status={this.state.solve_status}
+              onStart={(timer_start) => this.handle_onStart_timer(timer_start)}
+              onStop={(timer_finish) => this.handle_onStop_timer(timer_finish)}
+            />
+          </div>
         </div>
       </React.Fragment>
     );

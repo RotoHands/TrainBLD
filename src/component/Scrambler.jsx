@@ -15,8 +15,8 @@ class Scrambler extends React.Component {
       <div className="row m-1">
         <div className="col-8 mt-1">
           <div
-            className="text-start"
-            style={{ fontFamily: "Rubik", fontSize: 20 , height:"40px"}}
+            className="text-center"
+            style={{ fontFamily: "Rubik", fontSize: "1.5vw", height: "2.5em" }}
           >
             {this.props.scramble}
           </div>
@@ -24,6 +24,7 @@ class Scrambler extends React.Component {
         <div className="col-4">
           <div className="btn-toolbar " role="group" aria-label="Basic example">
             <button
+              style={{ fontSize: "1.1vw" }}
               className="btn btn-primary m-1 btn-sm "
               onClick={this.props.onClick_last_scramble}
             >
@@ -31,6 +32,7 @@ class Scrambler extends React.Component {
               Last
             </button>
             <button
+              style={{ fontSize: "1.1vw" }}
               className="btn btn-primary m-1 btn-sm"
               onClick={this.props.onClick_scramble}
             >
@@ -38,6 +40,7 @@ class Scrambler extends React.Component {
               Next
             </button>
             <button
+              style={{ fontSize: "1.1vw" }}
               className="btn btn-primary  m-1"
               // style={{ width: "140px" }}
               onClick={this.props.onReset}

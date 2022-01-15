@@ -20,7 +20,7 @@ td {
 }
 
 td {
-  font-size: 2vmin ;
+  font-size: 2.19vmin;
   padding: 0.1em;
   border: 0.1vw solid #094ad42d;
   font-family: "Rubik";
@@ -29,7 +29,7 @@ td {
 }
 th {
   font-family: "Rubik";
-  font-size: 2vmin;
+  font-size: 2.2vmin;
   font-weight: normal;
   padding-top: 0.43em;
   border: 0.1vw solid #0949d460;
@@ -39,14 +39,14 @@ th {
   color: white;
 }
 #solve_stats_body {
-  width: 32vmin;
+  width: 35vmin;
   height: 35vmin;
   overflow-y: scroll;
   display: block;
 }
 
 #best_averages {
-  width: 32vmin;
+  width: 35vmin;
   display: inline-table;
 }
 #best_averages_table {
@@ -109,10 +109,15 @@ th {
 }
 .logo {
   background-color: #a1cae5;
-
+  align-self: center;
   grid-area: logo;
+  padding-left: 70px;
+}
+.backgroung-help {
+  background-color: #a1cae5;
 }
 .connect_cube {
+  
   background-color: #a1cae5;
 
   grid-area: connect_cube;
@@ -124,10 +129,10 @@ th {
 }
 .social {
   background-color: #a1cae5;
-
   grid-area: social;
 }
 .rotem_ifrach {
+  font-size: 1.3vw;
   background-color: #a1cae5;
 
   grid-area: rotem_ifrach;
@@ -138,11 +143,13 @@ th {
   text-align: center;
   font-style: italic;
   margin-top: 1;
-  font-size: 5vw;
+  font-size: 4vw;
   grid-area: trainbld_header;
 }
 .stats_bar {
-  width: 3vmin;
+  padding-left: 7px;
+  padding-top: 15px;
+  width: 35vmin;
   background-color: #a1cae5;
   grid-area: stats_bar;
 }
@@ -159,16 +166,13 @@ th {
   grid-area: timer;
 }
 #timer_on_screen {
-  font-size: 11vw;
+  font-size: 10vw;
+  text-align: start;
+  
   font-family: "digital-7";
   src: "./digital-7.ttf";
 }
-#rotem_ifrach {
-  font-size: 16px;
-}
-#support {
-  width: 160px;
-}
+
 /*
 @media (max-width: 500px) {
   #support {

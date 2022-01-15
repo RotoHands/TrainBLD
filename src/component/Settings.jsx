@@ -187,11 +187,13 @@ class Setting extends React.Component {
           onClick={() => this.setState({ open: !this.state.open })}
           aria-controls="example-collapse-text"
           aria-expanded={this.state.open}
+          style={{ width: "13em" , fontSize:"1vw"}}
+
         >
           Settings
           <div className="primary">{this.state.setting_save_statue}</div>
         </button>
-        <div className="text-black" style={{ fontSize: 20 }}>
+        <div className="text-black" style={{paddingLeft:"1vw", fontSize: "1.5vw" }}>
           <Collapse in={this.state.open}>
             <div style={{ fontFamily: "Rubik" }} id="example-collapse-text">
               <div>

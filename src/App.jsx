@@ -787,6 +787,8 @@ class App extends React.Component {
         </div>
         {/* <div id="container_2" className="container"> */}
         <div id="container_new" class="container container_2">
+          <div class="background-help"></div>
+
           <div class="upper_page_new"></div>
           <div class="logo">
             <img
@@ -805,8 +807,8 @@ class App extends React.Component {
             aria-label="Basic example"
           >
             <button
-              className="youtube btn btn-primary btn-sm m-1 text-end"
-              // style={{ width: "180px" }}
+              className="youtube btn btn-primary btn-sm m-1 text-center"
+              style={{ width: "5em", fontSize: "1vw" }}
               onClick={() =>
                 window.open(
                   "https://www.youtube.com/channel/UCVGKCZFamCuYXiln9w3Cnxw"
@@ -817,13 +819,14 @@ class App extends React.Component {
             </button>
             <button
               className="github btn btn-primary m-1 text-center "
-              style={{ width: "80px" }}
+              style={{ width: "5em", fontSize: "1vw" }}
               onClick={() => window.open("https://github.com/RotoHands")}
             >
               Github
             </button>
             <button
               className="support btn btn-primary m-1"
+              style={{ width: "7em", fontSize: "1vw" }}
               onClick={() =>
                 window.open(
                   "https://www.paypal.com/donate?hosted_button_id=X9X9VZEAYK3DJ"
@@ -848,7 +851,7 @@ class App extends React.Component {
             style={{ textDecoration: "none", fontSize: "17px" }}
           >
             <a
-              style={{ textDecoration: "none" }}
+              style={{ textDecoration: "none", fontSize: "1.3vw" }}
               title="delete all stats"
               onClick={this.handle_reset_stats}
               href="#"
@@ -857,7 +860,7 @@ class App extends React.Component {
             </a>
             <a
               class="export_stats"
-              style={{ textDecoration: "none" }}
+              style={{ textDecoration: "none", fontSize: "1.3vw" }}
               href={this.state.url_stats}
               download="solves.csv"
               id="export_solves"
@@ -867,7 +870,7 @@ class App extends React.Component {
 
             <a
               class="plus_2"
-              style={{ textDecoration: "none" }}
+              style={{ textDecoration: "none", fontSize: "1.3vw" }}
               href="#"
               title="+2 last solve"
               onClick={() => this.plus_two_last_solve()}
@@ -877,7 +880,7 @@ class App extends React.Component {
             </a>
             <a
               class="dnf_last_solve"
-              style={{ textDecoration: "none" }}
+              style={{ textDecoration: "none", fontSize: "1.3vw" }}
               href="#"
               title="DNF last solve"
               onClick={() => this.dnf_last_solve()}
@@ -886,7 +889,7 @@ class App extends React.Component {
             </a>
             <a
               class="delete_last_solve"
-              style={{ textDecoration: "none" }}
+              style={{ textDecoration: "none", fontSize: "1.3vw" }}
               href="#"
               title="delete last solve"
               value={this.state.solves_stats.length}
@@ -988,13 +991,13 @@ class App extends React.Component {
               onClick_scramble={this.handle_scramble}
               onClick_last_scramble={this.handle_last_scramble}
             />{" "}
-          </div>
-          <div
-            class="moves_scramble"
-            className=""
-            style={{ fontFamily: "Rubik", fontSize: 22 }}
-          >
-            {this.state.moves_to_show}
+            <div
+              class="moves_scramble"
+              className=""
+              style={{ fontFamily: "Rubik", fontSize: "1.3vw" }}
+            >
+              {this.state.moves_to_show}
+            </div>
           </div>
           <div class="timer">
             <Timer

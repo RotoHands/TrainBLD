@@ -173,23 +173,8 @@ th {
   src: "./digital-7.ttf";
 }
 
-/*
 @media (max-width: 500px) {
-  #support {
-    width: 15vw;
-    font-size: 0.6em;
-    text-align: start;
-  }
-  #timer_on_screen {
-    font-size: 20vw;
-  }
-  #trainbld_header {
-    column-count: auto;
-    font-size: 10vw;
-  }
-  #rotem_ifrach {
-    column-count: auto;
-    font-size: 3vw;
-  }
+
 }
- */
+
+

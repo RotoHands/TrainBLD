@@ -39,14 +39,14 @@ th {
   color: white;
 }
 #solve_stats_body {
-  width: 35vmin;
+  width: 37vmin;
   height: 35vmin;
   overflow-y: scroll;
   display: block;
 }
 
 #best_averages {
-  width: 35vmin;
+  width: 37vmin;
   display: inline-table;
 }
 #best_averages_table {
@@ -149,7 +149,7 @@ th {
 .stats_bar {
   padding-left: 7px;
   padding-top: 15px;
-  width: 35vmin;
+  width: 37vmin;
   background-color: #a1cae5;
   grid-area: stats_bar;
 }

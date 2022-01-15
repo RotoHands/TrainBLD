@@ -74,3 +74,111 @@ th {
 ::-webkit-scrollbar-thumb:hover {
   background: #11324d;
 }
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  
+  justify-items: stretch;
+  align-items: stretch;
+}
+
+.logo{
+
+}
+.connect_cube{
+
+}
+.trainbld_header{
+
+}
+.btn_group_social{
+
+}
+.youtube{
+
+}
+.github{
+
+}
+.support{
+
+}
+.rotem_ifrach{
+
+}
+.upper_page{
+
+}
+.setting{
+
+}
+.stats_bar{
+
+}
+.reset_stats{
+
+}
+.export_stats{
+
+}
+.plus_2{
+
+}
+.dnf_last_solve{
+
+}
+.delete_last_solve{
+
+}
+.stats{
+
+}
+.solve_stats{
+
+}
+.scrambler{
+
+}
+.moves_scramble{
+
+}
+.timer{
+  
+}
+#timer_on_screen {
+  font-size: 11vw;
+  font-family: "digital-7";
+  src: "./digital-7.ttf";
+}
+
+#trainbld_header {
+  font-size: 8vw;
+}
+#rotem_ifrach {
+  font-size: 16px;
+}
+#support {
+  width: 160px;
+}
+/*
+@media (max-width: 500px) {
+  #support {
+    width: 15vw;
+    font-size: 0.6em;
+    text-align: start;
+  }
+  #timer_on_screen {
+    font-size: 20vw;
+  }
+  #trainbld_header {
+    column-count: auto;
+    font-size: 10vw;
+  }
+  #rotem_ifrach {
+    column-count: auto;
+    font-size: 3vw;
+  }
+}
+ */

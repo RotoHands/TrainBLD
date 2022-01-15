@@ -776,22 +776,6 @@ class App extends React.Component {
       this.initialStatsFromLocalstorage();
     }
   };
-  mobile_check = function () {
-    let check = false;
-    (function (a) {
-      if (
-        /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(
-          a
-        ) ||
-        /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(
-          a.substr(0, 4)
-        )
-      )
-        check = true;
-    })(navigator.userAgent || navigator.vendor || window.opera);
-    return check;
-  };
-
   desktop_layout = () => {
     const styleleft = {
       width: "245px",
@@ -801,536 +785,236 @@ class App extends React.Component {
         <div className="application">
           <Helmet id="background_page"></Helmet>
         </div>
-        <div id="container_2" className="container">
-          <div className="row align-items-center" id="upper_page">
-            <div className="col-2">
-              <div className="row">
-                <img
-                  src={logo}
-                  className="rounded mx-auto"
-                  alt=""
-                  style={{ width: "60%" }}
-                />
-              </div>
-              <div className="row">
-                <ConnectCube onConnect={this.GiikerCube} />
-              </div>
-            </div>
-            <div
-              className="col-8 text-center fst-italic mt-1"
-              style={{ fontSize: 80 }}
-            >
-              TrainBLD
-            </div>
-            <div className="col-2">
-              <div
-                className="btn-toolbar"
-                role="group"
-                aria-label="Basic example"
-              >
-                <button
-                  className="btn btn-primary btn-sm m-1 text-end"
-                  // style={{ width: "180px" }}
-                  onClick={() =>
-                    window.open(
-                      "https://www.youtube.com/channel/UCVGKCZFamCuYXiln9w3Cnxw"
-                    )
-                  }
-                >
-                  Youtube
-                </button>
-                <button
-                  className="btn btn-primary m-1 text-center "
-                  style={{ width: "80px" }}
-                  onClick={() => window.open("https://github.com/RotoHands")}
-                >
-                  Github
-                </button>
-              </div>
-              <button
-                className="btn btn-primary m-1 mt-2"
-                style={{ width: "160px" }}
-                onClick={() =>
-                  window.open(
-                    "https://www.paypal.com/donate?hosted_button_id=X9X9VZEAYK3DJ"
-                  )
-                }
-              >
-                Support :)
-              </button>
-              <div
-                className=" ms-1 text-start fst-italic"
-                style={{ fontSize: 16 }}
-              >
-                By Rotem Ifrach
-              </div>
-            </div>
+        {/* <div id="container_2" className="container"> */}
+        <div id="container_new" class="grid-container">
+          <img
+            src={logo}
+            class="logo"
+            className="rounded mx-auto"
+            alt=""
+            style={{ width: "60%" }}
+          />
+          <ConnectCube onConnect={this.GiikerCube} class="connect_cube" />
+          <div class="trainbld_header" className="text-center fst-italic mt-1">
+            TrainBLD
           </div>
-          <div className="row" id="upper_page">
+          <div
+            class="btn_group_social"
+            className="btn-toolbar"
+            role="group"
+            aria-label="Basic example"
+          >
+            <button
+              class="youtube"
+              className="btn btn-primary btn-sm m-1 text-end"
+              // style={{ width: "180px" }}
+              onClick={() =>
+                window.open(
+                  "https://www.youtube.com/channel/UCVGKCZFamCuYXiln9w3Cnxw"
+                )
+              }
+            >
+              Youtube
+            </button>
+            <button
+              class="github"
+              className="btn btn-primary m-1 text-center "
+              style={{ width: "80px" }}
+              onClick={() => window.open("https://github.com/RotoHands")}
+            >
+              Github
+            </button>
+            <button
+              class="support"
+              className="btn btn-primary m-1"
+              onClick={() =>
+                window.open(
+                  "https://www.paypal.com/donate?hosted_button_id=X9X9VZEAYK3DJ"
+                )
+              }
+            >
+              Support :)
+            </button>
+          </div>
+          <div class="rotem_ifrach" className=" ms-1 text-start fst-italic">
+            By Rotem Ifrach
+          </div>
+          <div class="upper_page">
             <Setting
+              class="setting"
               cur_setting={this.state.parse_settings}
               export_setting={this.handle_export_setting}
               id={this.state.parse_settings["ID"]}
             />
           </div>
-          <div className="row">
-            <div className="col-3">
-              <div className="row">
-                <div className="col-" id="upper_page" style={styleleft}>
-                  <div
-                    className="row"
-                    style={{ textDecoration: "none", fontSize: "17px" }}
-                  >
-                    <div className="col-sm-5">
-                      <a
-                        style={{ textDecoration: "none" }}
-                        title="delete all stats"
-                        onClick={this.handle_reset_stats}
-                        href="#"
-                      >
-                        Reset/
-                      </a>
-                      <a
-                        style={{ textDecoration: "none" }}
-                        href={this.state.url_stats}
-                        download="solves.csv"
-                        id="export_solves"
-                      >
-                        Export {""}
-                      </a>
-                    </div>
-                    <div className="col-7">
-                      <a
-                        style={{ textDecoration: "none" }}
-                        href="#"
-                        title="+2 last solve"
-                        onClick={() => this.plus_two_last_solve()}
-                      >
-                        {"  "}
-                        +2/
-                      </a>
-                      <a
-                        style={{ textDecoration: "none" }}
-                        href="#"
-                        title="DNF last solve"
-                        onClick={() => this.dnf_last_solve()}
-                      >
-                        DNF/
-                      </a>
-                      <a
-                        style={{ textDecoration: "none" }}
-                        href="#"
-                        title="delete last solve"
-                        value={this.state.solves_stats.length}
-                        onClick={() => this.delete_last_solve()}
-                      >
-                        {""}
-                        Delete
-                      </a>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-auto" style={styleleft}>
-                      {" "}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-12">
-                <div className="row">
-                  <table id="best_averages_table">
-                    <tbody id="best_averages">
-                      <tr>
-                        <th>#</th>
-                        <th>current</th>
-                        <th>best</th>
-                      </tr>
-                      <tr>
-                        <td>bo1</td>
-                        <td>
-                          {this.state.averages["current"] != ""
-                            ? this.state.averages["current"]
-                            : ""}
-                        </td>
-                        <td>
-                          {this.state.averages["best"]["time"] != 10000
-                            ? this.state.averages["best"]["time"]
-                            : ""}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>mo3</td>
-                        <td>
-                          {this.state.averages["mo3"] != ""
-                            ? this.state.averages["mo3"]
-                            : ""}
-                        </td>
-                        <td>
-                          {this.state.averages["bmo3"]["time"] != 10000
-                            ? this.state.averages["bmo3"]["time"]
-                            : ""}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>ao5</td>
-                        <td>
-                          {this.state.averages["ao5"] != ""
-                            ? this.state.averages["ao5"]
-                            : ""}
-                        </td>
-                        <td>
-                          {this.state.averages["bao5"]["time"] != 10000
-                            ? this.state.averages["bao5"]["time"]
-                            : ""}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>ao12</td>
-                        <td>
-                          {this.state.averages["ao12"] != ""
-                            ? this.state.averages["ao12"]
-                            : ""}
-                        </td>
-                        <td>
-                          {this.state.averages["bao12"]["time"] != 10000
-                            ? this.state.averages["bao12"]["time"]
-                            : ""}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colSpan="3" style={{ whiteSpace: "pre-wrap" }}>
-                          {this.state.averages["aoAll"] +
-                            "(" +
-                            this.state.averages["memo"] +
-                            ", " +
-                            this.state.averages["exe"] +
-                            ") " +
-                            this.state.averages["fluid"] +
-                            "%\t" +
-                            this.state.averages["success"]}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div className="row">
-                <SolveStats
-                  id="upper_page"
-                  renderTable={this.state.renderTable}
-                  solve_stats={this.state.solves_stats}
-                  initStats={this.initialStatsFromLocalstorage}
-                  renderTableData={this.renderTableData}
-                />
-              </div>
-            </div>
-            <div className="col-9">
-              <div className="row">
-                <div className="col-12">
-                  <Scrambler
-                    onReset={this.handle_reset_cube}
-                    scramble={this.state.scramble}
-                    onClick_scramble={this.handle_scramble}
-                    onClick_last_scramble={this.handle_last_scramble}
-                  />{" "}
-                </div>
-              </div>
-              <div
-                className="row text-start"
-                style={{ fontFamily: "Rubik", fontSize: 22 }}
+          <div
+            class="stats_bar"
+            style={{ textDecoration: "none", fontSize: "17px" }}
+          >
+            <div class="reset_stats">
+              <a
+                style={{ textDecoration: "none" }}
+                title="delete all stats"
+                onClick={this.handle_reset_stats}
+                href="#"
               >
-                <div className="">{this.state.moves_to_show}</div>
-              </div>
-              <div className="row">
-                <Timer
-                  // parsed_solve_txt={this.state.parsed_solve_txt}
-                  scramble={this.state.scramble}
-                  solve_status={this.state.solve_status}
-                  onStart={(timer_start) =>
-                    this.handle_onStart_timer(timer_start)
-                  }
-                  onStop={(timer_finish) =>
-                    this.handle_onStop_timer(timer_finish)
-                  }
-                />
-              </div>
+                Reset/
+              </a>
+              <a
+                class="export_stats"
+                style={{ textDecoration: "none" }}
+                href={this.state.url_stats}
+                download="solves.csv"
+                id="export_solves"
+              >
+                Export {""}
+              </a>
             </div>
-          </div>
-        </div>
-      </React.Fragment>
-    );
-  };
-
-  test_mobile_layout = () => {
-    const styleleft = {
-      width: "245px",
-    };
-    return (
-      <React.Fragment>
-        <div className="application">
-          <Helmet id="background_page"></Helmet>
-        </div>
-        <div id="container_2" className="container">
-          <div className="row align-items-center" id="upper_page">
-            <div className="col-2">
-              <div className="row">
-                <img
-                  src={logo}
-                  className="rounded mx-auto"
-                  alt=""
-                  style={{ width: "60%" }}
-                />
-              </div>
-              <div className="row">
-                <ConnectCube onConnect={this.GiikerCube} />
-              </div>
-            </div>
-            <div
-              className="col-8 text-center fst-italic mt-1"
-              style={{ fontSize: 80 }}
+            <a
+              class="plus_2"
+              style={{ textDecoration: "none" }}
+              href="#"
+              title="+2 last solve"
+              onClick={() => this.plus_two_last_solve()}
             >
-              TrainBLD
-            </div>
-            <div className="col-2">
-              <div
-                className="btn-toolbar"
-                role="group"
-                aria-label="Basic example"
-              >
-                <button
-                  className="btn btn-primary btn-sm m-1 text-end"
-                  // style={{ width: "180px" }}
-                  onClick={() =>
-                    window.open(
-                      "https://www.youtube.com/channel/UCVGKCZFamCuYXiln9w3Cnxw"
-                    )
-                  }
-                >
-                  Youtube
-                </button>
-                <button
-                  className="btn btn-primary m-1 text-center "
-                  style={{ width: "80px" }}
-                  onClick={() => window.open("https://github.com/RotoHands")}
-                >
-                  Github
-                </button>
-              </div>
-              <button
-                className="btn btn-primary m-1 mt-2"
-                style={{ width: "160px" }}
-                onClick={() =>
-                  window.open(
-                    "https://www.paypal.com/donate?hosted_button_id=X9X9VZEAYK3DJ"
-                  )
-                }
-              >
-                Support :)
-              </button>
-              <div
-                className=" ms-1 text-start fst-italic"
-                style={{ fontSize: 16 }}
-              >
-                By Rotem Ifrach
-              </div>
-            </div>
+              {"  "}
+              +2/
+            </a>
+            <a
+              class="dnf_last_solve"
+              style={{ textDecoration: "none" }}
+              href="#"
+              title="DNF last solve"
+              onClick={() => this.dnf_last_solve()}
+            >
+              DNF/
+            </a>
+            <a
+              class="delete_last_solve"
+              style={{ textDecoration: "none" }}
+              href="#"
+              title="delete last solve"
+              value={this.state.solves_stats.length}
+              onClick={() => this.delete_last_solve()}
+            >
+              {""}
+              Delete
+            </a>
           </div>
-          <div className="row" id="upper_page">
-            <Setting
-              cur_setting={this.state.parse_settings}
-              export_setting={this.handle_export_setting}
-              id={this.state.parse_settings["ID"]}
+          <div class="stats">
+            <table id="best_averages_table">
+              <tbody id="best_averages">
+                <tr>
+                  <th>#</th>
+                  <th>current</th>
+                  <th>best</th>
+                </tr>
+                <tr>
+                  <td>bo1</td>
+                  <td>
+                    {this.state.averages["current"] != ""
+                      ? this.state.averages["current"]
+                      : ""}
+                  </td>
+                  <td>
+                    {this.state.averages["best"]["time"] != 10000
+                      ? this.state.averages["best"]["time"]
+                      : ""}
+                  </td>
+                </tr>
+                <tr>
+                  <td>mo3</td>
+                  <td>
+                    {this.state.averages["mo3"] != ""
+                      ? this.state.averages["mo3"]
+                      : ""}
+                  </td>
+                  <td>
+                    {this.state.averages["bmo3"]["time"] != 10000
+                      ? this.state.averages["bmo3"]["time"]
+                      : ""}
+                  </td>
+                </tr>
+                <tr>
+                  <td>ao5</td>
+                  <td>
+                    {this.state.averages["ao5"] != ""
+                      ? this.state.averages["ao5"]
+                      : ""}
+                  </td>
+                  <td>
+                    {this.state.averages["bao5"]["time"] != 10000
+                      ? this.state.averages["bao5"]["time"]
+                      : ""}
+                  </td>
+                </tr>
+                <tr>
+                  <td>ao12</td>
+                  <td>
+                    {this.state.averages["ao12"] != ""
+                      ? this.state.averages["ao12"]
+                      : ""}
+                  </td>
+                  <td>
+                    {this.state.averages["bao12"]["time"] != 10000
+                      ? this.state.averages["bao12"]["time"]
+                      : ""}
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan="3" style={{ whiteSpace: "pre-wrap" }}>
+                    {this.state.averages["aoAll"] +
+                      "(" +
+                      this.state.averages["memo"] +
+                      ", " +
+                      this.state.averages["exe"] +
+                      ") " +
+                      this.state.averages["fluid"] +
+                      "%\t" +
+                      this.state.averages["success"]}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="row">
+            <SolveStats
+              class="solve_stats"
+              id="upper_page"
+              renderTable={this.state.renderTable}
+              solve_stats={this.state.solves_stats}
+              initStats={this.initialStatsFromLocalstorage}
+              renderTableData={this.renderTableData}
             />
           </div>
-          <div className="row">
-            <div className="col-3">
-              <div className="row">
-                <div className="col-auto" id="upper_page" style={styleleft}>
-                  <div
-                    className="row"
-                    style={{ textDecoration: "none", fontSize: "17px" }}
-                  >
-                    <div className="col-sm-5">
-                      <a
-                        style={{ textDecoration: "none" }}
-                        title="delete all stats"
-                        onClick={this.handle_reset_stats}
-                        href="#"
-                      >
-                        Reset/
-                      </a>
-                      <a
-                        style={{ textDecoration: "none" }}
-                        href={this.state.url_stats}
-                        download="solves.csv"
-                        id="export_solves"
-                      >
-                        Export {""}
-                      </a>
-                    </div>
-                    <div className="col-7">
-                      <a
-                        style={{ textDecoration: "none" }}
-                        href="#"
-                        title="+2 last solve"
-                        onClick={() => this.plus_two_last_solve()}
-                      >
-                        {"  "}
-                        +2/
-                      </a>
-                      <a
-                        style={{ textDecoration: "none" }}
-                        href="#"
-                        title="DNF last solve"
-                        onClick={() => this.dnf_last_solve()}
-                      >
-                        DNF/
-                      </a>
-                      <a
-                        style={{ textDecoration: "none" }}
-                        href="#"
-                        title="delete last solve"
-                        value={this.state.solves_stats.length}
-                        onClick={() => this.delete_last_solve()}
-                      >
-                        {""}
-                        Delete
-                      </a>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-auto" style={styleleft}>
-                      {" "}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-12">
-                <div className="row">
-                  <table id="best_averages_table">
-                    <tbody id="best_averages">
-                      <tr>
-                        <th>#</th>
-                        <th>current</th>
-                        <th>best</th>
-                      </tr>
-                      <tr>
-                        <td>bo1</td>
-                        <td>
-                          {this.state.averages["current"] != ""
-                            ? this.state.averages["current"]
-                            : ""}
-                        </td>
-                        <td>
-                          {this.state.averages["best"]["time"] != 10000
-                            ? this.state.averages["best"]["time"]
-                            : ""}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>mo3</td>
-                        <td>
-                          {this.state.averages["mo3"] != ""
-                            ? this.state.averages["mo3"]
-                            : ""}
-                        </td>
-                        <td>
-                          {this.state.averages["bmo3"]["time"] != 10000
-                            ? this.state.averages["bmo3"]["time"]
-                            : ""}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>ao5</td>
-                        <td>
-                          {this.state.averages["ao5"] != ""
-                            ? this.state.averages["ao5"]
-                            : ""}
-                        </td>
-                        <td>
-                          {this.state.averages["bao5"]["time"] != 10000
-                            ? this.state.averages["bao5"]["time"]
-                            : ""}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>ao12</td>
-                        <td>
-                          {this.state.averages["ao12"] != ""
-                            ? this.state.averages["ao12"]
-                            : ""}
-                        </td>
-                        <td>
-                          {this.state.averages["bao12"]["time"] != 10000
-                            ? this.state.averages["bao12"]["time"]
-                            : ""}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colSpan="3" style={{ whiteSpace: "pre-wrap" }}>
-                          {this.state.averages["aoAll"] +
-                            "(" +
-                            this.state.averages["memo"] +
-                            ", " +
-                            this.state.averages["exe"] +
-                            ") " +
-                            this.state.averages["fluid"] +
-                            "%\t" +
-                            this.state.averages["success"]}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div className="row">
-                <SolveStats
-                  id="upper_page"
-                  renderTable={this.state.renderTable}
-                  solve_stats={this.state.solves_stats}
-                  initStats={this.initialStatsFromLocalstorage}
-                  renderTableData={this.renderTableData}
-                />
-              </div>
-            </div>
-            <div className="col-9">
-              <div className="row">
-                <div className="col-12">
-                  <Scrambler
-                    onReset={this.handle_reset_cube}
-                    scramble={this.state.scramble}
-                    onClick_scramble={this.handle_scramble}
-                    onClick_last_scramble={this.handle_last_scramble}
-                  />{" "}
-                </div>
-              </div>
-              <div
-                className="row text-start"
-                style={{ fontFamily: "Rubik", fontSize: 22 }}
-              >
-                <div className="">{this.state.moves_to_show}</div>
-              </div>
-              <div className="row">
-                <Timer
-                  // parsed_solve_txt={this.state.parsed_solve_txt}
-                  scramble={this.state.scramble}
-                  solve_status={this.state.solve_status}
-                  onStart={(timer_start) =>
-                    this.handle_onStart_timer(timer_start)
-                  }
-                  onStop={(timer_finish) =>
-                    this.handle_onStop_timer(timer_finish)
-                  }
-                />
-              </div>
-            </div>
+          <Scrambler
+            class="scrambler"
+            onReset={this.handle_reset_cube}
+            scramble={this.state.scramble}
+            onClick_scramble={this.handle_scramble}
+            onClick_last_scramble={this.handle_last_scramble}
+          />{" "}
+          <div
+            class="moves_scramble"
+            className=""
+            style={{ fontFamily: "Rubik", fontSize: 22 }}
+          >
+            {this.state.moves_to_show}
           </div>
+          <Timer
+            // parsed_solve_txt={this.state.parsed_solve_txt}
+            class="timer"
+            scramble={this.state.scramble}
+            solve_status={this.state.solve_status}
+            onStart={(timer_start) => this.handle_onStart_timer(timer_start)}
+            onStop={(timer_finish) => this.handle_onStop_timer(timer_finish)}
+          />
         </div>
       </React.Fragment>
     );
   };
   render() {
-    return <React.Fragment>{this.test_mobile_layout()}</React.Fragment>;
+    return <React.Fragment>{this.desktop_layout()}</React.Fragment>;
   }
 
   GiikerCube = () => {
@@ -2176,6 +1860,9 @@ class App extends React.Component {
             },
             {
               namePrefix: "GAN",
+            },
+            {
+              namePrefix: "MHC",
             },
             {
               namePrefix: "GoCube",

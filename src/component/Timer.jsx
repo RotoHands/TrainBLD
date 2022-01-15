@@ -105,6 +105,7 @@ class Timer extends React.Component {
           <div className="row">
             <div className="col-8 text-center">
               <div
+                id="solve_status"
                 className={this.state.ready_state}
                 style={{ fontSize: 40, fontFamily: "Rubik" }}
               >
@@ -115,12 +116,9 @@ class Timer extends React.Component {
           </div>
         <div className="row ">
           <div
-            className="col-8 text-start"
-            style={{
-              fontSize: 190,
-              fontFamily: "digital-7",
-              src: "./digital-7.ttf",
-            }}
+            id="timer_on_screen"
+            className="col-8 text-center"
+          
           >
             {this.formatTime(this.state.currentTimeMin)}:
             {this.formatTime(this.state.currentTimeSec)}.

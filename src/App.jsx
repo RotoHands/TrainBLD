@@ -807,8 +807,8 @@ class App extends React.Component {
             aria-label="Basic example"
           >
             <button
+              id="youtube"
               className="youtube btn btn-primary btn-sm m-1 text-center"
-              style={{ width: "5em", fontSize: "1vw" }}
               onClick={() =>
                 window.open(
                   "https://www.youtube.com/channel/UCVGKCZFamCuYXiln9w3Cnxw"

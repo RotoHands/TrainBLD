@@ -117,7 +117,6 @@ th {
   background-color: #a1cae5;
 }
 .connect_cube {
-  
   background-color: #a1cae5;
 
   grid-area: connect_cube;
@@ -168,13 +167,107 @@ th {
 #timer_on_screen {
   font-size: 10vw;
   text-align: start;
-  
+
   font-family: "digital-7";
   src: "./digital-7.ttf";
 }
 
 @media (max-width: 500px) {
+  .container_2 {
+    display: grid;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    justify-items: stretch;
+    align-items: stretch;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(14, 1fr);
+    grid-auto-rows: minmax(10px, auto);
+    grid-auto-columns: minmax(10px, auto);
 
+    gap: 0px 0px;
+    grid-template-areas:
+      "logo logo trainbld_header trainbld_header trainbld_header social social social social rotem_ifrach"
+      "connect_cube connect_cube connect_cube connect_cube connect_cube connect_cube connect_cube connect_cube connect_cube connect_cube"
+      "setting setting setting setting setting setting setting setting setting setting"
+      "scrambler scrambler scrambler scrambler scrambler scrambler scrambler scrambler scrambler scrambler"
+      ". . timer timer timer timer timer timer . ."
+      ". . timer timer timer timer timer timer . ."
+      "solve_stats solve_stats solve_stats solve_stats solve_stats stats stats stats stats stats"
+      "solve_stats solve_stats solve_stats solve_stats solve_stats stats stats stats stats stats"
+      ". . . . . stats_bar stats_bar stats_bar stats_bar .";
+  }
+
+  #youtube {
+    width: "5em";
+    font-size: "1vw";
+  }
+  .upper_page_new {
+    background-color: #a1cae5;
+    grid-area: upper_page_new;
+  }
+  .logo {
+    background-color: #a1cae5;
+    align-self: center;
+    grid-area: logo;
+    padding-left: 70px;
+  }
+  .backgroung-help {
+    background-color: #a1cae5;
+  }
+  .connect_cube {
+    background-color: #a1cae5;
+
+    grid-area: connect_cube;
+  }
+  .setting {
+    background-color: #a1cae5;
+
+    grid-area: setting;
+  }
+  .social {
+    background-color: #a1cae5;
+    grid-area: social;
+  }
+  .rotem_ifrach {
+    font-size: 1.3vw;
+    background-color: #a1cae5;
+
+    grid-area: rotem_ifrach;
+  }
+  .trainbld_header {
+    background-color: #a1cae5;
+
+    text-align: center;
+    font-style: italic;
+    margin-top: 1;
+    font-size: 4vw;
+    grid-area: trainbld_header;
+  }
+  .stats_bar {
+    padding-left: 7px;
+    padding-top: 15px;
+    width: 37vmin;
+    background-color: #a1cae5;
+    grid-area: stats_bar;
+  }
+  .scrambler {
+    grid-area: scrambler;
+  }
+  .stats {
+    grid-area: stats;
+  }
+  .solve_stats {
+    grid-area: solve_stats;
+  }
+  .timer {
+    grid-area: timer;
+  }
+  #timer_on_screen {
+    font-size: 10vw;
+    text-align: start;
+
+    font-family: "digital-7";
+    src: "./digital-7.ttf";
+  }
 }
-
-

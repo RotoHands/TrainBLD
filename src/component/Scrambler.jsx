@@ -15,34 +15,29 @@ class Scrambler extends React.Component {
       <div className="row m-1">
         <div className="col-8 mt-1">
           <div
-            className="text-center"
-            style={{ fontFamily: "Rubik", fontSize: "1.5vw", height: "2.5em" }}
+            className="text-center scramble_seq"
           >
             {this.props.scramble}
           </div>
         </div>
         <div className="col-4">
-          <div className="btn-toolbar " role="group" aria-label="Basic example">
+          <div className="btn-toolbar last_btn" role="group" aria-label="Basic example">
             <button
-              style={{ fontSize: "1.1vw" }}
-              className="btn btn-primary m-1 btn-sm "
+              className="btn btn-primary m-1 btn-sm last_btn"
               onClick={this.props.onClick_last_scramble}
             >
               {" "}
               Last
             </button>
             <button
-              style={{ fontSize: "1.1vw" }}
-              className="btn btn-primary m-1 btn-sm"
+              className="btn btn-primary m-1 btn-sm next_btn"
               onClick={this.props.onClick_scramble}
             >
               {" "}
               Next
             </button>
             <button
-              style={{ fontSize: "1.1vw" }}
-              className="btn btn-primary  m-1"
-              // style={{ width: "140px" }}
+              className="btn btn-primary  m-1 reset_moves"
               onClick={this.props.onReset}
             >
               Reset moves

@@ -9,8 +9,8 @@ class SolveStats extends React.Component {
 
   render() {
     return (
-      <table id="solve_stats_table">
-        <tbody id="solve_stats_body">{this.props.renderTable}</tbody>
+      <table class="solve_stats_body">
+        <tbody >{this.props.renderTable}</tbody>
       </table>
     );
   }

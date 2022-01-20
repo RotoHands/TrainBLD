@@ -807,8 +807,7 @@ class App extends React.Component {
             aria-label="Basic example"
           >
             <button
-              id="youtube"
-              className="youtube btn btn-primary btn-sm m-1 text-center"
+              class="youtube btn btn-primary btn-sm m-1 text-center"
               onClick={() =>
                 window.open(
                   "https://www.youtube.com/channel/UCVGKCZFamCuYXiln9w3Cnxw"
@@ -819,14 +818,12 @@ class App extends React.Component {
             </button>
             <button
               className="github btn btn-primary m-1 text-center "
-              style={{ width: "5em", fontSize: "1vw" }}
               onClick={() => window.open("https://github.com/RotoHands")}
             >
               Github
             </button>
             <button
               className="support btn btn-primary m-1"
-              style={{ width: "7em", fontSize: "1vw" }}
               onClick={() =>
                 window.open(
                   "https://www.paypal.com/donate?hosted_button_id=X9X9VZEAYK3DJ"
@@ -846,12 +843,9 @@ class App extends React.Component {
               id={this.state.parse_settings["ID"]}
             />
           </div>
-          <div
-            class="stats_bar"
-            style={{ textDecoration: "none", fontSize: "17px" }}
-          >
+          <div class="stats_bar">
             <a
-              style={{ textDecoration: "none", fontSize: "1.3vw" }}
+              className="stats_bar_reset"
               title="delete all stats"
               onClick={this.handle_reset_stats}
               href="#"
@@ -859,8 +853,7 @@ class App extends React.Component {
               Reset/
             </a>
             <a
-              class="export_stats"
-              style={{ textDecoration: "none", fontSize: "1.3vw" }}
+              class="stats_bar_export_stats"
               href={this.state.url_stats}
               download="solves.csv"
               id="export_solves"
@@ -869,8 +862,7 @@ class App extends React.Component {
             </a>
 
             <a
-              class="plus_2"
-              style={{ textDecoration: "none", fontSize: "1.3vw" }}
+              class="stats_bar_plus_2"
               href="#"
               title="+2 last solve"
               onClick={() => this.plus_two_last_solve()}
@@ -879,8 +871,7 @@ class App extends React.Component {
               +2/
             </a>
             <a
-              class="dnf_last_solve"
-              style={{ textDecoration: "none", fontSize: "1.3vw" }}
+              class="stats_bar_dnf_last_solve"
               href="#"
               title="DNF last solve"
               onClick={() => this.dnf_last_solve()}
@@ -888,8 +879,7 @@ class App extends React.Component {
               DNF/
             </a>
             <a
-              class="delete_last_solve"
-              style={{ textDecoration: "none", fontSize: "1.3vw" }}
+              class="stats_bar_delete_last_solve"
               href="#"
               title="delete last solve"
               value={this.state.solves_stats.length}
@@ -900,8 +890,8 @@ class App extends React.Component {
             </a>
           </div>
           <div class="stats">
-            <table id="best_averages_table">
-              <tbody id="best_averages">
+            <table class="best_averages">
+              <tbody>
                 <tr>
                   <th>#</th>
                   <th>current</th>

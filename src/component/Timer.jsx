@@ -103,33 +103,22 @@ class Timer extends React.Component {
         onKeyDown={this.handle_key_press_down}
       >
         <div className="row">
-          <div className="col-8 text-center">
-            <div
-              id="solve_status"
-              className={this.state.ready_state}
-              style={{ fontSize: "2vw", fontFamily: "Rubik" }}
-            >
+          <div className="col-8 text-center solve_status">
+            <div className={this.state.ready_state}>
               {this.props.solve_status}
             </div>
           </div>
           <div className="col-4 text-center"></div>
         </div>
         <div className="row ">
-          <div
-            id="timer_on_screen"
-            className="col-8 text-start"
-            style={{ paddingLeft: "5vw" }}
-          >
+          <div className="col-8 text-start timer_on_screen">
             {this.formatTime(this.state.currentTimeMin)}:
             {this.formatTime(this.state.currentTimeSec)}.
             {this.formatTime(this.state.currentTimeMs, "ms")}
           </div>
           <div className="col-3 ms-5">
             <scramble-display
-              style={{
-                width: "15vw",
-                height: "15vw",
-              }}
+              class="scramble_image"
               scramble={this.props.scramble}
             ></scramble-display>
           </div>

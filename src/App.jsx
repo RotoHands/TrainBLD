@@ -785,13 +785,10 @@ class App extends React.Component {
         <div className="application">
           <Helmet id="background_page"></Helmet>
         </div>
-        {/* <div id="container_2" className="container"> */}
         <div id="container_new" class="container container_2">
-          <div class="background-help"></div>
-
-          <div class="upper_page_new"></div>
           <div class="logo">
             <img
+              class="logo_img"
               src={logo}
               // className="rounded mx-auto"
               alt=""
@@ -833,7 +830,7 @@ class App extends React.Component {
               Support :)
             </button>
           </div>
-          <div className="rotem_ifrach text-start fst-italic">
+          <div className="rotem_ifrach">
             By Rotem Ifrach
           </div>
           <div class="setting">

@@ -32,7 +32,7 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #11324d;
 }
-@media (min-width: 1000px) {
+@media (min-width: 501px) {
   .container_2 {
     display: grid;
     grid-column-gap: 0px;
@@ -40,15 +40,15 @@ body {
     justify-items: stretch;
     align-items: stretch;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(50, 11);
 
     grid-template-rows: repeat(1fr, 11);
-    grid-auto-rows: minmax(10px, auto);
+    grid-auto-rows: auto;
     grid-auto-columns: minmax(10px, auto);
 
     gap: 0px 0px;
     grid-template-areas:
-      "logo logo logo upper_page_new upper_page_new upper_page_new upper_page_new upper_page_new upper_page_new upper_page_new upper_page_new" "logo logo logo trainbld_header trainbld_header trainbld_header trainbld_header trainbld_header social social social"
+      "logo logo logo trainbld_header trainbld_header trainbld_header trainbld_header trainbld_header social social social"
       "connect_cube connect_cube connect_cube trainbld_header trainbld_header trainbld_header trainbld_header trainbld_header rotem_ifrach rotem_ifrach rotem_ifrach"
       "setting setting setting setting setting setting setting setting setting setting setting"
       "stats_bar stats_bar stats_bar scrambler scrambler scrambler scrambler scrambler scrambler scrambler scrambler"
@@ -63,39 +63,34 @@ body {
   td {
     background-color: #a1cae5;
 
-    font-size: 2.19vmin;
+    font-size: 1em;
     padding: 0.1em;
-    border: 0.1vw solid #094ad42d;
+    border: 0.1em solid #094ad42d;
     font-family: "Rubik";
     color: #000000;
     text-align: center;
   }
   th {
     font-family: "Rubik";
-    font-size: 2.2vmin;
+    font-size: 1em;
     font-weight: normal;
     padding-top: 0.43em;
-    border: 0.1vw solid #0949d460;
-    padding-bottom: 6px;
+    border: 0.1em solid #0949d460;
+    padding-bottom: 0.1em;
     text-align: center;
     background-color: #0d6efd;
     color: white;
   }
-  .logo img {
-    width: 5vw;
-  }
-  .upper_page_new {
-    background-color: #a1cae5;
-    grid-area: upper_page_new;
-  }
-  .logo img {
-    width: 3vw;
-  }
   .logo {
     background-color: #a1cae5;
-    align-self: center;
     grid-area: logo;
-    /* padding-left: 70px; */
+  }
+  .logo img {
+    width: 8em;
+    height: 4em;
+    padding-left: 4em;
+    background-color: #a1cae5;
+    align-self: center;
   }
   .backgroung-help {
     background-color: #a1cae5;
@@ -109,51 +104,71 @@ body {
     grid-area: setting;
   }
   .social {
+    text-align: end;
+    padding-top: 1em;
+    /* padding-left: 3em; */
     background-color: #a1cae5;
     grid-area: social;
   }
+
+  .youtube {
+    font-size: 0.8em;
+    width: 6em;
+    height: 3em;
+  }
+  .github {
+    font-size: 0.8em;
+    width: 6em;
+    height: 3em;
+  }
+  .support {
+    font-size: 0.8em;
+    width: 7em;
+    height: 3em;
+  }
   .rotem_ifrach {
-    font-size: 1.5vw;
+    font-size: 1.1em;
+    font-style: italic;
+    padding-right: 1em;
+    /* text-align: end; */
     background-color: #a1cae5;
     grid-area: rotem_ifrach;
   }
   .trainbld_header {
     background-color: #a1cae5;
-
     text-align: center;
+    /* padding-top: 0.5em; */
     font-style: italic;
-    margin-top: 1;
-    font-size: 5vw;
+    font-size: 5em;
     grid-area: trainbld_header;
   }
   .stats_bar {
     text-decoration: none;
-    font-size: 17px;
-    padding-left: 7px;
-    padding-top: 15px;
-    width: 37vmin;
+    padding-left: 1em;
+    padding-top: 1em;
+    width: 40vmin;
     background-color: #a1cae5;
     grid-area: stats_bar;
   }
   .stats_bar_reset {
     text-decoration: none;
-    font-size: 1.1vw;
+    font-size: 1em;
   }
   .stats_bar_export_stats {
     text-decoration: none;
-    font-size: 1.1vw;
+    font-size: 1em;
   }
   .stats_bar_plus_2 {
     text-decoration: none;
-    font-size: 1.1vw;
+    font-size: 1em;
   }
   .stats_bar_dnf_last_solve {
     text-decoration: none;
-    font-size: 1.1vw;
+    font-size: 1em;
   }
   .stats_bar_delete_last_solve {
     text-decoration: none;
-    font-size: 1.1vw;
+    font-size: 1em;
   }
   .scrambler {
     grid-area: scrambler;
@@ -167,62 +182,51 @@ body {
   .timer {
     grid-area: timer;
   }
-  .youtube {
-    font-size: 1vw;
-  }
-  .github {
-    font-size: 1vw;
-    width: 5em;
-  }
-  .support {
-    width: 7em;
-    font-size: 1vw;
-  }
   .connect_cube_1 {
     width: 13em;
-    font-size: 1vw;
+    font-size: 1em;
   }
   .setting_btn {
     width: 13em;
-    font-size: 1vw;
+    font-size: 1em;
   }
   .last_btn {
-    font-size: 1.1vw;
+    font-size: 1em;
   }
   .next_btn {
-    font-size: 1.1vw;
+    font-size: 1em;
   }
   .reset_moves {
-    font-size: 1.1vw;
+    font-size: 1em;
   }
   .scramble_seq {
     font-family: "Rubik";
-    font-size: 1.5vw;
+    font-size: 1.1em;
     height: 2.5em;
   }
   .solve_status {
-    font-size: 4vw;
+    font-size: 3em;
     font-family: "Rubik";
   }
   .timer_on_screen {
-    font-size: 10vw;
+    font-size: 9em;
     text-align: start;
-    padding-left: "5vw";
+    padding-left: 0.5em;
     font-family: "digital-7";
     src: "./digital-7.ttf";
   }
   .scramble_image {
-    width: 15vw;
-    height: 15vw;
+    width: 15em;
+    height: 15em;
   }
   .solve_stats_body {
-    width: 37vmin;
+    width: 40vmin;
     height: 35vmin;
     overflow-y: scroll;
     display: block;
   }
   .best_averages {
-    width: 37vmin;
+    width: 40vmin;
     display: inline-table;
   }
 }
@@ -320,10 +324,10 @@ body {
   }
   .stats_bar {
     text-decoration: none;
-    font-size: 17px;
+    font-size: 1em;
     padding-left: 7px;
     padding-top: 15px;
-    width: 37vmin;
+    width: 40vmin;
     background-color: #a1cae5;
     grid-area: stats_bar;
   }
@@ -399,7 +403,7 @@ body {
   .timer_on_screen {
     font-size: 10vw;
     text-align: start;
-    padding-left: "5vw";
+    padding-left: 5vw;
     font-family: "digital-7";
     src: "./digital-7.ttf";
   }

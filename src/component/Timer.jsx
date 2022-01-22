@@ -103,12 +103,11 @@ class Timer extends React.Component {
         onKeyDown={this.handle_key_press_down}
       >
         <div className="row">
-          <div className="col-8 text-center solve_status">
-            <div className={this.state.ready_state}>
+          <div className="col-12">
+            <div class="solve_status">
               {this.props.solve_status}
             </div>
           </div>
-          <div className="col-4 text-center"></div>
         </div>
         <div className="row ">
           <div className="col-8 text-start timer_on_screen">

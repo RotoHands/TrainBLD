@@ -6,7 +6,7 @@ class ConnectCube extends React.Component {
     return (
       <React.Fragment>
         <button
-          className="connect_cube_1 btn btn-primary ms-4 m-2  text-sm-start"
+          className="connect_cube_1 btn btn-primary m-1"
           onClick={onConnect}
         >
           Connect Cube

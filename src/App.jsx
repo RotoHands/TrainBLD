@@ -797,7 +797,7 @@ class App extends React.Component {
           <div class="connect_cube">
             <ConnectCube onConnect={this.GiikerCube} />
           </div>
-          <div class="grid-item trainbld_header">TrainBLD</div>
+          <div class="trainbld_header">TrainBLD</div>
           <div
             className="social btn-toolbar"
             role="group"
@@ -884,80 +884,82 @@ class App extends React.Component {
               Delete
             </a>
           </div>
-          <table class="best_averages">
-            <tbody>
-              <tr>
-                <th>#</th>
-                <th>current</th>
-                <th>best</th>
-              </tr>
-              <tr>
-                <td>bo1</td>
-                <td>
-                  {this.state.averages["current"] != ""
-                    ? this.state.averages["current"]
-                    : ""}
-                </td>
-                <td>
-                  {this.state.averages["best"]["time"] != 10000
-                    ? this.state.averages["best"]["time"]
-                    : ""}
-                </td>
-              </tr>
-              <tr>
-                <td>mo3</td>
-                <td>
-                  {this.state.averages["mo3"] != ""
-                    ? this.state.averages["mo3"]
-                    : ""}
-                </td>
-                <td>
-                  {this.state.averages["bmo3"]["time"] != 10000
-                    ? this.state.averages["bmo3"]["time"]
-                    : ""}
-                </td>
-              </tr>
-              <tr>
-                <td>ao5</td>
-                <td>
-                  {this.state.averages["ao5"] != ""
-                    ? this.state.averages["ao5"]
-                    : ""}
-                </td>
-                <td>
-                  {this.state.averages["bao5"]["time"] != 10000
-                    ? this.state.averages["bao5"]["time"]
-                    : ""}
-                </td>
-              </tr>
-              <tr>
-                <td>ao12</td>
-                <td>
-                  {this.state.averages["ao12"] != ""
-                    ? this.state.averages["ao12"]
-                    : ""}
-                </td>
-                <td>
-                  {this.state.averages["bao12"]["time"] != 10000
-                    ? this.state.averages["bao12"]["time"]
-                    : ""}
-                </td>
-              </tr>
-              <tr>
-                <td colSpan="3" style={{ whiteSpace: "pre-wrap" }}>
-                  {this.state.averages["aoAll"] +
-                    "(" +
-                    this.state.averages["memo"] +
-                    ", " +
-                    this.state.averages["exe"] +
-                    ") " +
-                    this.state.averages["fluid"] +
-                    "%\t" +
-                    this.state.averages["success"]}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="stats">
+            <table class="best_averages">
+              <tbody>
+                <tr>
+                  <th>#</th>
+                  <th>current</th>
+                  <th>best</th>
+                </tr>
+                <tr>
+                  <td>bo1</td>
+                  <td>
+                    {this.state.averages["current"] != ""
+                      ? this.state.averages["current"]
+                      : ""}
+                  </td>
+                  <td>
+                    {this.state.averages["best"]["time"] != 10000
+                      ? this.state.averages["best"]["time"]
+                      : ""}
+                  </td>
+                </tr>
+                <tr>
+                  <td>mo3</td>
+                  <td>
+                    {this.state.averages["mo3"] != ""
+                      ? this.state.averages["mo3"]
+                      : ""}
+                  </td>
+                  <td>
+                    {this.state.averages["bmo3"]["time"] != 10000
+                      ? this.state.averages["bmo3"]["time"]
+                      : ""}
+                  </td>
+                </tr>
+                <tr>
+                  <td>ao5</td>
+                  <td>
+                    {this.state.averages["ao5"] != ""
+                      ? this.state.averages["ao5"]
+                      : ""}
+                  </td>
+                  <td>
+                    {this.state.averages["bao5"]["time"] != 10000
+                      ? this.state.averages["bao5"]["time"]
+                      : ""}
+                  </td>
+                </tr>
+                <tr>
+                  <td>ao12</td>
+                  <td>
+                    {this.state.averages["ao12"] != ""
+                      ? this.state.averages["ao12"]
+                      : ""}
+                  </td>
+                  <td>
+                    {this.state.averages["bao12"]["time"] != 10000
+                      ? this.state.averages["bao12"]["time"]
+                      : ""}
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan="3" style={{ whiteSpace: "pre-wrap" }}>
+                    {this.state.averages["aoAll"] +
+                      "(" +
+                      this.state.averages["memo"] +
+                      ", " +
+                      this.state.averages["exe"] +
+                      ") " +
+                      this.state.averages["fluid"] +
+                      "%\t" +
+                      this.state.averages["success"]}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <div class="solve_stats">
             <SolveStats
               id="upper_page"
@@ -974,15 +976,9 @@ class App extends React.Component {
               onClick_scramble={this.handle_scramble}
               onClick_last_scramble={this.handle_last_scramble}
             />{" "}
-            <div
-              class="moves_scramble"
-              className=""
-              style={{ fontFamily: "Rubik", fontSize: "1.3vw" }}
-            >
-              {this.state.moves_to_show}
-            </div>
           </div>
           <div class="timer">
+            <div class="moves_scramble">{this.state.moves_to_show}</div>
             <Timer
               // parsed_solve_txt={this.state.parsed_solve_txt}
               scramble={this.state.scramble}

@@ -12,37 +12,33 @@ class Scrambler extends React.Component {
 
   render() {
     return (
-      <div className="row m-1">
-        <div className="col-8 mt-1">
-          <div
-            className="text-center scramble_seq"
+      <div class="container container_scrambler">
+        <div className="text-center scramble_seq">{this.props.scramble}</div>
+        <div
+          className="btn-toolbar all_scramble_button"
+          role="group"
+          aria-label="Basic example"
+        >
+          <button
+            className="btn btn-primary m-1 btn-sm last_btn"
+            onClick={this.props.onClick_last_scramble}
           >
-            {this.props.scramble}
-          </div>
-        </div>
-        <div className="col-4">
-          <div className="btn-toolbar last_btn" role="group" aria-label="Basic example">
-            <button
-              className="btn btn-primary m-1 btn-sm last_btn"
-              onClick={this.props.onClick_last_scramble}
-            >
-              {" "}
-              Last
-            </button>
-            <button
-              className="btn btn-primary m-1 btn-sm next_btn"
-              onClick={this.props.onClick_scramble}
-            >
-              {" "}
-              Next
-            </button>
-            <button
-              className="btn btn-primary  m-1 reset_moves"
-              onClick={this.props.onReset}
-            >
-              Reset moves
-            </button>
-          </div>
+            {" "}
+            Last
+          </button>
+          <button
+            className="btn btn-primary m-1 btn-sm next_btn"
+            onClick={this.props.onClick_scramble}
+          >
+            {" "}
+            Next
+          </button>
+          <button
+            className="btn btn-primary  m-1 reset_moves"
+            onClick={this.props.onReset}
+          >
+            Reset moves
+          </button>
         </div>
       </div>
     );

@@ -785,7 +785,7 @@ class App extends React.Component {
         <div className="application">
           <Helmet id="background_page"></Helmet>
         </div>
-        <div id="container_new" class="container container_2">
+        <div class="container container_2">
           <div class="logo">
             <img
               class="logo_img"
@@ -830,9 +830,7 @@ class App extends React.Component {
               Support :)
             </button>
           </div>
-          <div className="rotem_ifrach">
-            By Rotem Ifrach
-          </div>
+          <div className="rotem_ifrach">By Rotem Ifrach</div>
           <div class="setting">
             <Setting
               cur_setting={this.state.parse_settings}
@@ -886,82 +884,80 @@ class App extends React.Component {
               Delete
             </a>
           </div>
-          <div class="stats">
-            <table class="best_averages">
-              <tbody>
-                <tr>
-                  <th>#</th>
-                  <th>current</th>
-                  <th>best</th>
-                </tr>
-                <tr>
-                  <td>bo1</td>
-                  <td>
-                    {this.state.averages["current"] != ""
-                      ? this.state.averages["current"]
-                      : ""}
-                  </td>
-                  <td>
-                    {this.state.averages["best"]["time"] != 10000
-                      ? this.state.averages["best"]["time"]
-                      : ""}
-                  </td>
-                </tr>
-                <tr>
-                  <td>mo3</td>
-                  <td>
-                    {this.state.averages["mo3"] != ""
-                      ? this.state.averages["mo3"]
-                      : ""}
-                  </td>
-                  <td>
-                    {this.state.averages["bmo3"]["time"] != 10000
-                      ? this.state.averages["bmo3"]["time"]
-                      : ""}
-                  </td>
-                </tr>
-                <tr>
-                  <td>ao5</td>
-                  <td>
-                    {this.state.averages["ao5"] != ""
-                      ? this.state.averages["ao5"]
-                      : ""}
-                  </td>
-                  <td>
-                    {this.state.averages["bao5"]["time"] != 10000
-                      ? this.state.averages["bao5"]["time"]
-                      : ""}
-                  </td>
-                </tr>
-                <tr>
-                  <td>ao12</td>
-                  <td>
-                    {this.state.averages["ao12"] != ""
-                      ? this.state.averages["ao12"]
-                      : ""}
-                  </td>
-                  <td>
-                    {this.state.averages["bao12"]["time"] != 10000
-                      ? this.state.averages["bao12"]["time"]
-                      : ""}
-                  </td>
-                </tr>
-                <tr>
-                  <td colSpan="3" style={{ whiteSpace: "pre-wrap" }}>
-                    {this.state.averages["aoAll"] +
-                      "(" +
-                      this.state.averages["memo"] +
-                      ", " +
-                      this.state.averages["exe"] +
-                      ") " +
-                      this.state.averages["fluid"] +
-                      "%\t" +
-                      this.state.averages["success"]}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <table class="best_averages">
+            <tbody>
+              <tr>
+                <th>#</th>
+                <th>current</th>
+                <th>best</th>
+              </tr>
+              <tr>
+                <td>bo1</td>
+                <td>
+                  {this.state.averages["current"] != ""
+                    ? this.state.averages["current"]
+                    : ""}
+                </td>
+                <td>
+                  {this.state.averages["best"]["time"] != 10000
+                    ? this.state.averages["best"]["time"]
+                    : ""}
+                </td>
+              </tr>
+              <tr>
+                <td>mo3</td>
+                <td>
+                  {this.state.averages["mo3"] != ""
+                    ? this.state.averages["mo3"]
+                    : ""}
+                </td>
+                <td>
+                  {this.state.averages["bmo3"]["time"] != 10000
+                    ? this.state.averages["bmo3"]["time"]
+                    : ""}
+                </td>
+              </tr>
+              <tr>
+                <td>ao5</td>
+                <td>
+                  {this.state.averages["ao5"] != ""
+                    ? this.state.averages["ao5"]
+                    : ""}
+                </td>
+                <td>
+                  {this.state.averages["bao5"]["time"] != 10000
+                    ? this.state.averages["bao5"]["time"]
+                    : ""}
+                </td>
+              </tr>
+              <tr>
+                <td>ao12</td>
+                <td>
+                  {this.state.averages["ao12"] != ""
+                    ? this.state.averages["ao12"]
+                    : ""}
+                </td>
+                <td>
+                  {this.state.averages["bao12"]["time"] != 10000
+                    ? this.state.averages["bao12"]["time"]
+                    : ""}
+                </td>
+              </tr>
+              <tr>
+                <td colSpan="3" style={{ whiteSpace: "pre-wrap" }}>
+                  {this.state.averages["aoAll"] +
+                    "(" +
+                    this.state.averages["memo"] +
+                    ", " +
+                    this.state.averages["exe"] +
+                    ") " +
+                    this.state.averages["fluid"] +
+                    "%\t" +
+                    this.state.averages["success"]}
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <div class="solve_stats">
             <SolveStats
               id="upper_page"

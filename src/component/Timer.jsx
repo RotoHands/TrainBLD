@@ -66,6 +66,23 @@ class Timer extends React.Component {
       this.props.onStart(Date.now());
     }
   };
+  handle_touch_press_up = (event) => {
+    if (this.state.ready_state === "text-success") {
+      this.reset();
+      this.start();
+      this.props.onStart(Date.now());
+    }
+  };
+  handle_touch_press_down = (event) => {
+    if (!this.state.running && this.state.ready_state != "text-success") {
+      this.setState({ ready_state: "text-success" });
+    }
+    if (this.state.running && this.state.ready_state == "text-success") {
+      this.setState({ ready_state: "" });
+      this.stop();
+      this.props.onStop(this.state.update_ref);
+    }
+  };
 
   handle_key_press_down = (event) => {
     if (
@@ -101,12 +118,12 @@ class Timer extends React.Component {
         tabIndex="0"
         onKeyUp={this.handle_key_press_up}
         onKeyDown={this.handle_key_press_down}
+        onTouchStart={this.handle_touch_press_down}
+        onTouchEnd={this.handle_touch_press_up}
       >
         <div className="row">
           <div className="col-12">
-            <div class="solve_status">
-              {this.props.solve_status}
-            </div>
+            <div class="solve_status">{this.props.solve_status}</div>
           </div>
         </div>
         <div className="row ">

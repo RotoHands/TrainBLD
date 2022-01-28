@@ -724,6 +724,7 @@ class App extends React.Component {
   };
   handle_parse_solve = (timer_finish) => {
     const setting = this.extract_solve_from_cube_moves(timer_finish);
+    console.log(setting);
     let result;
     const requestOptions = {
       method: "POST",
@@ -732,8 +733,9 @@ class App extends React.Component {
       },
       body: JSON.stringify(setting),
     };
+
     fetch("https://rotohands-bld-parser.herokuapp.com/", requestOptions)
-      // fetch("http://127.0.0.1:8080", requestOptions)
+    // fetch("http://127.0.0.1:8080", requestOptions)
       .then((response) =>
         response.json().then((data) => {
           result = data;

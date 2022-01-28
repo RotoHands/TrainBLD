@@ -10,6 +10,7 @@
           DATE_SOLVE: "9/18/2021, 09:52 PM",
           DIFF_BETWEEN_ALGS: "0.87",
           EDGES_BUFFER: "UF",
+          CUBE_OREINTATION: "white-green",
           GEN_PARSED_TO_CUBEDB: true,
           GEN_PARSED_TO_TXT: true,
           GEN_WITH_MOVE_COUNT: true,
@@ -35,6 +36,7 @@
           body: JSON.stringify(parse_settings),
         };
         fetch("https://rotohands-bld-parser.herokuapp.com/", requestOptions).then(
+          //  fetch("http://127.0.0.1:8080", requestOptions).then(
           (response) =>
             response.json().then((data) => {
               let result = data;

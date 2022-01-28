@@ -148,22 +148,18 @@ class SettingGeneral extends React.Component {
                   defaultValue={this.props.cur_setting["CUBE_OREINTATION"]}
                 >
                   <option value="white-green">white-green</option>
-                  <option value="white-yellow">white-yellow</option>
                   <option value="white-blue">white-blue</option>
                   <option value="white-orange">white-orange</option>
                   <option value="white-red">white-red</option>
                   <option value="green-white">green-white</option>
                   <option value="green-yellow">green-yellow</option>
-                  <option value="green-blue">green-blue</option>
                   <option value="green-orange">green-orange</option>
                   <option value="green-red">green-red</option>
-                  <option value="yellow-white">yellow-white</option>
                   <option value="yellow-green">yellow-green</option>
                   <option value="yellow-blue">yellow-blue</option>
                   <option value="yellow-orange">yellow-orange</option>
                   <option value="yellow-red">yellow-red</option>
                   <option value="blue-white">blue-white</option>
-                  <option value="blue-green">blue-green</option>
                   <option value="blue-yellow">blue-yellow</option>
                   <option value="blue-orange">blue-orange</option>
                   <option value="blue-red">blue-red</option>
@@ -171,12 +167,10 @@ class SettingGeneral extends React.Component {
                   <option value="orange-green">orange-green</option>
                   <option value="orange-yellow">orange-yellow</option>
                   <option value="orange-blue">orange-blue</option>
-                  <option value="orange-red">orange-red</option>
                   <option value="red-white">red-white</option>
                   <option value="red-green">red-green</option>
                   <option value="red-yellow">red-yellow</option>
                   <option value="red-blue">red-blue</option>
-                  <option value="red-orange">red-orange</option>
                 </select>
               </div>
             </div>

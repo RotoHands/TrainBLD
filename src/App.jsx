@@ -67,7 +67,7 @@ class App extends React.Component {
               COMMS_UNPARSED: false,
               EDGES_BUFFER: "UF",
               CORNER_BUFFER: "UFR",
-              CUBE_OREINTATION : "white-green",
+              CUBE_OREINTATION: "white-green",
               PARSE_TO_LETTER_PAIR: true,
               GEN_WITH_MOVE_COUNT: true,
               LETTER_PAIRS_DICT:
@@ -704,7 +704,11 @@ class App extends React.Component {
     let new_settings = { ...this.state.parse_settings };
     for (var key in settings) {
       if (!(key in this.state.parse_settings)) {
-        console.log("wrong keys : ", key);
+        if (key == "CUBE_OREINTATION") {
+          new_settings[key] = settings[key];
+        } else {
+          console.log("wrong keys : ", key);
+        }
       } else {
         new_settings[key] = settings[key];
       }

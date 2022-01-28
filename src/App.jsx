@@ -67,6 +67,7 @@ class App extends React.Component {
               COMMS_UNPARSED: false,
               EDGES_BUFFER: "UF",
               CORNER_BUFFER: "UFR",
+              CUBE_OREINTATION : "white-green",
               PARSE_TO_LETTER_PAIR: true,
               GEN_WITH_MOVE_COUNT: true,
               LETTER_PAIRS_DICT:

@@ -1832,6 +1832,9 @@ class App extends React.Component {
       var _gyro;
       var _debug;
 
+      var faces_state = { D: 0, L: 0, B: 0, R: 0, F: 0, U: 0 };
+      var faces_dict = { 0: "D", 1: "L", 2: "B", 3: "R", 4: "F", 5: "U" };
+
       var UUID_SUFFIX = "-0000-1000-8000-00805f9b34fb";
       var SERVICE_UUID = "00001000" + UUID_SUFFIX;
       var TURN_CHRCT = "00001003" + UUID_SUFFIX;
@@ -1847,7 +1850,7 @@ class App extends React.Component {
             this_App.handle_solve_status("Ready for scrambling");
             _server = server;
             console.log("here 1");
-            return server.getPrimaryService(SERVICE_UUID);
+            return _server.getPrimaryService(SERVICE_UUID);
           })
           .then(function (service) {
             _service = service;
@@ -1856,7 +1859,6 @@ class App extends React.Component {
           })
           .then(function (chrct) {
             _write = chrct;
-            console.log("here 3");
             return _service.getCharacteristic(TURN_CHRCT);
           })
           .then(function (chrct) {
@@ -1884,6 +1886,21 @@ class App extends React.Component {
             );
           })
           .then(function (chrct) {
+            _read = chrct;
+            return _service.getCharacteristic(READ_CHRCT);
+          })
+          .then(function (chrct) {
+            _read = chrct;
+            return _read.startNotifications();
+          })
+          .then(function () {
+            return _read.addEventListener(
+              "characteristicvaluechanged",
+              onStateChangedRead
+            );
+          })
+
+          .then(function (chrct) {
             _debug = chrct;
             return _service.getCharacteristic(DEBUG_CHRCT);
           })
@@ -1897,20 +1914,14 @@ class App extends React.Component {
               onStateChangedDebug
             );
           })
-          .then(function (chrct) {
-            _read = chrct;
-            return _service.getCharacteristic(READ_CHRCT);
-          })
-          .then(function (chrct) {
-            _read = chrct;
-            return _read.startNotifications();
-          })
+
           .then(function () {
-            console.log("here 3");
-            return _read.addEventListener(
-              "characteristicvaluechanged",
-              onStateChangedRead
-            );
+            // var write_value = new Uint8Array([10 | 1 << 4 | 0 << 5]).buffer;
+            // _write.
+            // return _write.writeValue(write_value).then(console.log("finish"));
+            // var write_value = new Uint8Array([10 | (0 << 4) | (1 << 5)]).buffer;
+            // console.log(write_value);
+            // return _write.writeValue(write_value).then(console.log("finish"));
           });
       }
       function onStateChanged(event) {
@@ -1919,13 +1930,14 @@ class App extends React.Component {
       }
       function onStateChangedTurn(event) {
         var value = event.target.value;
-        console.log("turn");
-        console.log(value);
+        // console.log("turn");
+        parseTurns(value);
       }
       function onStateChangedRead(event) {
         var value = event.target.value;
         console.log("read");
-        console.log(value);
+        var array = new Uint8Array(value.buffer);
+        console.log(array);
       }
       function onStateChangedGyro(event) {
         var value = event.target.value;
@@ -1943,6 +1955,32 @@ class App extends React.Component {
       //     .writeValue(new Uint8Array([WRITE_STATE]).buffer)
       //     .then(console.log("finish"));
       // }
+      function checkMoves() {}
+
+      function parseTurns(value) {
+        var array = new Uint8Array(value.buffer);
+        var number_of_turns = array[0];
+        var face_turned;
+        var turn_direction;
+        var move_applied;
+        for (var i = 0; i < number_of_turns; i++) {
+          face_turned = faces_dict[array[5 + i * 6]];
+          turn_direction = array[6 + i * 6] == 220 ? -10 : 10;
+          // console.log(face_turned);
+          // console.log(turn_direction);
+          faces_state[face_turned] += turn_direction;
+          if (faces_state[face_turned] == 90) {
+            move_applied = face_turned;
+            faces_state[face_turned] = 0;
+            console.log(move_applied);
+          } else if (faces_state[face_turned] == -90) {
+            move_applied = face_turned + "'";
+            faces_state[face_turned] = 0;
+            console.log(move_applied);
+          }
+        }
+        // console.log(faces_state);
+      }
 
       function parseData(value) {
         const cube_moves_new = [...this_App.state.cube_moves];

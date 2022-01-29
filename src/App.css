@@ -12,6 +12,13 @@ body {
   background-color: #1a1aca48;
   background-color: #11324d;
   color: #f6f6f6;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 ::-webkit-scrollbar {
@@ -223,7 +230,6 @@ body {
     grid-area: stats;
   }
   .solve_stats {
-    
     grid-area: solve_stats;
   }
   .timer {
@@ -489,7 +495,6 @@ body {
     display: block;
   }
   .best_averages {
-
     display: inline-table;
   }
 }

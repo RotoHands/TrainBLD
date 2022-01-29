@@ -94,7 +94,7 @@ class Timer extends React.Component {
   handle_key_press_up = (event) => {
     var current_time = Date.now();
 
-    if (current_time - this.state.pressKeyTimeCount > 300) {
+    if (current_time - this.state.pressKeyTimeCount > 150) {
       if (this.state.ready_state === "text-success" && event.key === " ") {
         this.reset();
         this.start();
@@ -125,7 +125,7 @@ class Timer extends React.Component {
       !this.state.running &&
       event.key === " " &&
       this.state.ready_state != "text-success" &&
-      cur_diff > 300
+      cur_diff > 150
     ) {
       this.setState({ ready_state: "text-success" });
     }

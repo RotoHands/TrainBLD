@@ -14,6 +14,7 @@ class Timer extends React.Component {
       currentTimeMs: 0,
       currentTimeSec: 0,
       currentTimeMin: 0,
+      pressKeyTimeCount: null,
     };
   }
 
@@ -59,36 +60,72 @@ class Timer extends React.Component {
       currentTimeMin: 0,
     });
   };
-  handle_key_press_up = (event) => {
-    if (this.state.ready_state === "text-success" && event.key === " ") {
-      this.reset();
-      this.start();
-      this.props.onStart(Date.now());
-    }
-  };
+
   handle_touch_press_up = (event) => {
-    if (this.state.ready_state === "text-success") {
-      this.reset();
-      this.start();
-      this.props.onStart(Date.now());
+    var current_time = Date.now();
+    console.log(current_time - this.state.pressKeyTimeCount);
+    if (current_time - this.state.pressKeyTimeCount > 150) {
+      if (this.state.ready_state === "text-success") {
+        this.reset();
+        this.start();
+        this.props.onStart(Date.now());
+      }
+    } else {
+      this.setState({ ready_state: "" });
+      this.setState({ pressKeyTimeCount: null });
     }
   };
+
   handle_touch_press_down = (event) => {
+    if (this.state.pressKeyTimeCount == null) {
+      console.log("here");
+      this.setState({ pressKeyTimeCount: Date.now() });
+    }
     if (!this.state.running && this.state.ready_state != "text-success") {
       this.setState({ ready_state: "text-success" });
     }
     if (this.state.running && this.state.ready_state == "text-success") {
+      this.setState({ pressKeyTimeCount: null });
       this.setState({ ready_state: "" });
       this.stop();
       this.props.onStop(this.state.update_ref);
     }
   };
+  handle_key_press_up = (event) => {
+    var current_time = Date.now();
 
+    if (current_time - this.state.pressKeyTimeCount > 150) {
+      if (this.state.ready_state === "text-success" && event.key === " ") {
+        this.reset();
+        this.start();
+        this.props.onStart(Date.now());
+      }
+    } else {
+      this.setState({ ready_state: "" });
+      this.setState({ pressKeyTimeCount: null });
+    }
+  };
   handle_key_press_down = (event) => {
+    var cur_diff;
+    if (this.state.pressKeyTimeCount == null) {
+      this.setState({ pressKeyTimeCount: Date.now() });
+      cur_diff = 0;
+    } else {
+      var cur_diff = Date.now() - this.state.pressKeyTimeCount;
+    }
     if (
       !this.state.running &&
       event.key === " " &&
       this.state.ready_state != "text-success"
+    ) {
+      this.setState({ ready_state: "text-info" });
+    }
+
+    if (
+      !this.state.running &&
+      event.key === " " &&
+      this.state.ready_state != "text-success" &&
+      cur_diff > 150
     ) {
       this.setState({ ready_state: "text-success" });
     }
@@ -97,11 +134,13 @@ class Timer extends React.Component {
       event.key === " " &&
       this.state.ready_state == "text-success"
     ) {
+      this.setState({ pressKeyTimeCount: null });
       this.setState({ ready_state: "" });
       this.stop();
       this.props.onStop(this.state.update_ref);
     }
   };
+
   // componentDidUpdate() {
   // document.getElementById('timer_element_2').focus();
   // }

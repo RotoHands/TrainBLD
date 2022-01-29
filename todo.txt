@@ -1,5 +1,5 @@
 Add support to mobile devices - done
 Add support in the website for cube orientation - done
 Add support for moyu AI - done!
-Add support for u R insted D B
+Add support for u R insted D B - done
 Add support to ignore parity in OP

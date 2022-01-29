@@ -18,9 +18,10 @@ Thanks for [CSTIMER](https://github.com/cs0x7f/cstimer/blob/fc627f0970d8982c7582
 ## Main features
 
 - reconstruct 3bld solves : commutator seperation, move count, timer per alg, letter pair, execution time, memo time, fluidness (execution time without pauses between algs), solve description
-- fully coustomizable : buffers, letter scheme
+- mobile support
+- fully coustomizable : buffers, letter scheme, cube orientations
 - support 3Style, M2, Old-pochmann, Orozco
-- best with Rubiks-connected/Go-cube --> Gan356i (I think specific my cube has problems) --> Giiker (didn't managed to implement it good enough)
+- best with Moyu-AI/Rubiks-connected/Go-cube --> Gan356i --> Giiker (didn't managed to implement it good enough)
 - Export stats : all solves are saved, mo3, ao5, ao12, mean all
 - Execution mistake recognition
 - only on Chrome (because of the support for bluetooth API)

@@ -1846,15 +1846,18 @@ class App extends React.Component {
           .then(function (server) {
             this_App.handle_solve_status("Ready for scrambling");
             _server = server;
+            console.log("here 1");
             return server.getPrimaryService(SERVICE_UUID);
+          })
+          .then(function (service) {
+            _service = service;
+            console.log("here 2");
+            return _service.getCharacteristic(WRITE_CHRCT);
           })
           .then(function (chrct) {
             _write = chrct;
-            return _write.getCharacteristic(WRITE_CHRCT);
-          })
-          .then(function (chrct) {
-            _turn = chrct;
-            return _turn.getCharacteristic(TURN_CHRCT);
+            console.log("here 3");
+            return _service.getCharacteristic(TURN_CHRCT);
           })
           .then(function (chrct) {
             _turn = chrct;
@@ -1868,7 +1871,7 @@ class App extends React.Component {
           })
           .then(function (chrct) {
             _gyro = chrct;
-            return _gyro.getCharacteristic(GYRO_CHRCT);
+            return _service.getCharacteristic(GYRO_CHRCT);
           })
           .then(function (chrct) {
             _gyro = chrct;
@@ -1881,21 +1884,35 @@ class App extends React.Component {
             );
           })
           .then(function (chrct) {
+            _debug = chrct;
+            return _service.getCharacteristic(DEBUG_CHRCT);
+          })
+          .then(function (chrct) {
+            _debug = chrct;
+            return _debug.startNotifications();
+          })
+          .then(function () {
+            return _debug.addEventListener(
+              "characteristicvaluechanged",
+              onStateChangedDebug
+            );
+          })
+          .then(function (chrct) {
             _read = chrct;
-            return _read.getCharacteristic(READ_CHRCT);
+            return _service.getCharacteristic(READ_CHRCT);
           })
           .then(function (chrct) {
             _read = chrct;
             return _read.startNotifications();
           })
           .then(function () {
+            console.log("here 3");
             return _read.addEventListener(
               "characteristicvaluechanged",
               onStateChangedRead
             );
           });
       }
-
       function onStateChanged(event) {
         var value = event.target.value;
         parseData(value);
@@ -1912,117 +1929,44 @@ class App extends React.Component {
       }
       function onStateChangedGyro(event) {
         var value = event.target.value;
-        console.log("gyro");
-        console.log(value);
+        // console.log("gyro");
+        // console.log(value);
+      }
+      function onStateChangedDebug(event) {
+        var value = event.target.value;
+        // console.log("debug");
+        // console.log(value);
       }
 
-      function reset_cube() {
-        return _write
-          .writeValue(new Uint8Array([WRITE_STATE]).buffer)
-          .then(console.log("finish"));
-      }
-      function toHexVal(value) {
-        var valhex = [];
-        for (var i = 0; i < value.byteLength; i++) {
-          valhex.push((value.getUint8(i) >> 4) & 0xf);
-          valhex.push(value.getUint8(i) & 0xf);
-        }
-        return valhex;
-      }
-
-      var axisPerm = [5, 2, 0, 3, 1, 4];
-      var facePerm = [0, 1, 2, 5, 8, 7, 6, 3];
-      var faceOffset = [0, 0, 6, 2, 0, 0];
-      var curBatteryLevel = -1;
-      var batteryResolveList = [];
-      var moveCntFree = 100;
+      // function reset_cube() {
+      //   return _write
+      //     .writeValue(new Uint8Array([WRITE_STATE]).buffer)
+      //     .then(console.log("finish"));
+      // }
 
       function parseData(value) {
-        if (value.byteLength < 4) {
-          return;
+        const cube_moves_new = [...this_App.state.cube_moves];
+        const cube_moves_time_new = [...this_App.state.cube_moves_time];
+        if (cube_moves_new.length === 0) {
+          this_App.handle_solve_status("Scrambling");
         }
-        if (
-          value.getUint8(0) != 0x2a ||
-          value.getUint8(value.byteLength - 2) != 0x0d ||
-          value.getUint8(value.byteLength - 1) != 0x0a
-        ) {
-          return;
+        if (this_App.state.solve_status == "Memo") {
+          this_App.handle_solve_status("Solving");
         }
-        var msgType = value.getUint8(2);
-        var msgLen = value.byteLength - 6;
-        if (msgType == 1) {
-          // move
-          // console.log(toHexVal(value));
-          for (var i = 0; i < msgLen; i += 2) {
-            var axis = axisPerm[value.getUint8(3 + i) >> 1];
-            var power = [0, 2][value.getUint8(3 + i) & 1];
-            var m = axis * 3 + power;
+        // cube_moves_new.push("URFDLB".charAt(axis) + " 2'".charAt(power));
+        cube_moves_time_new.push(Date.now());
+        this_App.setState({ cube_moves: cube_moves_new });
+        this_App.setState({ cube_moves_time: cube_moves_time_new });
+        this_App.handle_moves_to_show(cube_moves_new);
 
-            const cube_moves_new = [...this_App.state.cube_moves];
-            const cube_moves_time_new = [...this_App.state.cube_moves_time];
-            if (cube_moves_new.length === 0) {
-              this_App.handle_solve_status("Scrambling");
-            }
-            if (this_App.state.solve_status == "Memo") {
-              this_App.handle_solve_status("Solving");
-            }
-            cube_moves_new.push("URFDLB".charAt(axis) + " 2'".charAt(power));
-            cube_moves_time_new.push(Date.now());
-            this_App.setState({ cube_moves: cube_moves_new });
-            this_App.setState({ cube_moves_time: cube_moves_time_new });
-            this_App.handle_moves_to_show(cube_moves_new);
-
-            // console.log(this_App.state.cube_moves.join(" "));
-            // document.getElementById("moves_print").textContent = this.state.cube_moves.join(' ')
-          }
-        } else if (msgType === 2) {
-          // cube state
-          var facelet = [];
-          for (var a = 0; a < 6; a++) {
-            var axis = axisPerm[a] * 9;
-            var aoff = faceOffset[a];
-            facelet[axis + 4] = "BFUDRL".charAt(value.getUint8(3 + a * 9));
-            for (var i = 0; i < 8; i++) {
-              facelet[axis + facePerm[(i + aoff) % 8]] = "BFUDRL".charAt(
-                value.getUint8(3 + a * 9 + i + 1)
-              );
-            }
-          }
-          var newFacelet = facelet.join("");
-          // if (newFacelet != curFacelet) {
-          //     console.log('facelet', newFacelet);
-          //
-          // }
-        } else if (msgType === 3) {
-          // quaternion
-        } else if (msgType === 5) {
-          // battery level
-          console.log("battery level", toHexVal(value));
-          curBatteryLevel = value.getUint8(3);
-          while (batteryResolveList.length !== 0) {
-            batteryResolveList.shift()(curBatteryLevel);
-          }
-        } else if (msgType === 7) {
-          // offline stats
-          console.log("offline stats", toHexVal(value));
-        } else if (msgType === 8) {
-          // cube type
-          console.log("cube type", toHexVal(value));
-        }
-      }
-
-      function getBatteryLevel() {
-        _write.writeValue(new Uint8Array([WRITE_BATTERY]).buffer);
-        return new Promise(function (resolve) {
-          batteryResolveList.push(resolve);
-        });
+        // console.log(this_App.state.cube_moves.join(" "));
+        // document.getElementById("moves_print").textContent = this.state.cube_moves.join(' ')
       }
 
       return {
         init: init,
         opservs: [SERVICE_UUID],
-        getBatteryLevel: getBatteryLevel,
-        reset_cube: reset_cube,
+        // reset_cube: reset_cube,
       };
     })();
     function init() {
@@ -2066,7 +2010,8 @@ class App extends React.Component {
           optionalServices: [].concat(
             GiikerCube.opservs,
             GanCube.opservs,
-            GoCube.opservs
+            GoCube.opservs,
+            MoyuCube.opservs
           ),
         })
         .then(function (device) {
@@ -2091,6 +2036,10 @@ class App extends React.Component {
             cube = GoCube;
             this_App.setState({ cube: cube });
             return GoCube.init(device);
+          } else if (device.name.startsWith("MHC")) {
+            cube = MoyuCube;
+            this_App.setState({ cube: cube });
+            return MoyuCube.init(device);
           } else {
             return Promise.resolve();
           }

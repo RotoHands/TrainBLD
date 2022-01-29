@@ -1955,7 +1955,29 @@ class App extends React.Component {
       //     .writeValue(new Uint8Array([WRITE_STATE]).buffer)
       //     .then(console.log("finish"));
       // }
-      function checkMoves() {}
+      function newMoves(face_turned) {
+        const cube_moves_new = [...this_App.state.cube_moves];
+        const cube_moves_time_new = [...this_App.state.cube_moves_time];
+        if (cube_moves_new.length === 0) {
+          this_App.handle_solve_status("Scrambling");
+        }
+        if (this_App.state.solve_status == "Memo") {
+          this_App.handle_solve_status("Solving");
+        }
+        var move_applied;
+        if (faces_state[face_turned] == 90) {
+          move_applied = face_turned;
+          faces_state[face_turned] = 0;
+        } else if (faces_state[face_turned] == -90) {
+          move_applied = face_turned + "'";
+          faces_state[face_turned] = 0;
+        }
+        cube_moves_new.push(move_applied);
+        cube_moves_time_new.push(Date.now());
+        this_App.setState({ cube_moves: cube_moves_new });
+        this_App.setState({ cube_moves_time: cube_moves_time_new });
+        this_App.handle_moves_to_show(cube_moves_new);
+      }
 
       function parseTurns(value) {
         var array = new Uint8Array(value.buffer);
@@ -1966,20 +1988,11 @@ class App extends React.Component {
         for (var i = 0; i < number_of_turns; i++) {
           face_turned = faces_dict[array[5 + i * 6]];
           turn_direction = array[6 + i * 6] == 220 ? -10 : 10;
-          // console.log(face_turned);
-          // console.log(turn_direction);
           faces_state[face_turned] += turn_direction;
-          if (faces_state[face_turned] == 90) {
-            move_applied = face_turned;
-            faces_state[face_turned] = 0;
-            console.log(move_applied);
-          } else if (faces_state[face_turned] == -90) {
-            move_applied = face_turned + "'";
-            faces_state[face_turned] = 0;
-            console.log(move_applied);
+          if (faces_state[face_turned] % 90 == 0) {
+            newMoves(face_turned);
           }
         }
-        // console.log(faces_state);
       }
 
       function parseData(value) {

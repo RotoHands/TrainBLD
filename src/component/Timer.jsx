@@ -123,7 +123,9 @@ class Timer extends React.Component {
       >
         <div className="row">
           <div className="col-12">
-            <div class="solve_status">{this.props.solve_status}</div>
+            <div className={this.state.ready_state}>
+              <div class="solve_status">{this.props.solve_status}</div>
+            </div>
           </div>
         </div>
         <div className="row ">

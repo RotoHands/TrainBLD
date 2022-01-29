@@ -1847,14 +1847,11 @@ class App extends React.Component {
         return device.gatt
           .connect()
           .then(function (server) {
-            this_App.handle_solve_status("Ready for scrambling");
             _server = server;
-            console.log("here 1");
             return _server.getPrimaryService(SERVICE_UUID);
           })
           .then(function (service) {
             _service = service;
-            console.log("here 2");
             return _service.getCharacteristic(WRITE_CHRCT);
           })
           .then(function (chrct) {
@@ -1894,6 +1891,7 @@ class App extends React.Component {
             return _read.startNotifications();
           })
           .then(function () {
+            this_App.handle_solve_status("Ready for scrambling");
             return _read.addEventListener(
               "characteristicvaluechanged",
               onStateChangedRead
@@ -1984,7 +1982,6 @@ class App extends React.Component {
         var number_of_turns = array[0];
         var face_turned;
         var turn_direction;
-        var move_applied;
         for (var i = 0; i < number_of_turns; i++) {
           face_turned = faces_dict[array[5 + i * 6]];
           turn_direction = array[6 + i * 6] == 220 ? -10 : 10;

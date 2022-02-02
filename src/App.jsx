@@ -1,5 +1,6 @@
 import React from "react";
 import * as SRScrambler from "sr-scrambler";
+import cubeSolver from "cube-solver";
 import ConnectCube from "./component/ConnectCube";
 import Setting from "./component/Settings";
 import "bootstrap/dist/css/bootstrap.css";
@@ -68,6 +69,7 @@ class App extends React.Component {
               EDGES_BUFFER: "UF",
               CORNER_BUFFER: "UFR",
               CUBE_OREINTATION: "white-green",
+              SCRAMBLE_TYPE: "3x3",
               PARSE_TO_LETTER_PAIR: true,
               GEN_WITH_MOVE_COUNT: true,
               LETTER_PAIRS_DICT:
@@ -706,6 +708,8 @@ class App extends React.Component {
       if (!(key in this.state.parse_settings)) {
         if (key == "CUBE_OREINTATION") {
           new_settings[key] = settings[key];
+        } else if (key == "SCRAMBLE_TYPE") {
+          new_settings[key] = settings[key];
         } else {
           console.log("wrong keys : ", key);
         }
@@ -763,7 +767,9 @@ class App extends React.Component {
   };
   handle_scramble = () => {
     this.setState({ last_scramble: this.state.scramble });
-    this.setState({ scramble: SRScrambler.generateHtmlScramble(3, 23) });
+    this.setState({
+      scramble: cubeSolver.scramble(this.state.parse_settings["SCRAMBLE_TYPE"]),
+    });
   };
   handle_moves_to_show = (cube_moves) => {
     if (this.state.solve_status === "Scrambling") {

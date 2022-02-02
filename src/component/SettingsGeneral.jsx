@@ -174,6 +174,22 @@ class SettingGeneral extends React.Component {
                 </select>
               </div>
             </div>
+            <div className="col-sm-3">
+              <div>
+                <span className="m-2"> scramble type </span>
+                <select
+                  id="scramble_type"
+                  className="form-select"
+                  aria-label="Default select example"
+                  onChange={this.props.onChange_scramble_type}
+                  defaultValue={this.props.cur_setting["CUBE_OREINTATION"]}
+                >
+                  <option value="3x3">normal</option>
+                  <option value="edges">edges only</option>
+                  <option value="corners">corners only</option>
+                </select>
+              </div>
+            </div>
           </div>{" "}
         </div>
       </React.Fragment>

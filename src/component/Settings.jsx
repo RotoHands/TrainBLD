@@ -29,6 +29,7 @@ class Setting extends React.Component {
             edge_buffer: "UF",
             corner_buffer: "UFR",
             cube_oreintation : "white-green",
+            scramble_type : "3x3",
             GEN_PARSED_TO_CUBEDB: true,
             letter_pair_dict: this.get_letter_pair_dict(),
           }
@@ -42,6 +43,7 @@ class Setting extends React.Component {
             edge_buffer: props.cur_setting["EDGES_BUFFER"],
             corner_buffer: props.cur_setting["CORNER_BUFFER"],
             cube_oreintation : props.cur_setting["CUBE_OREINTATION"],
+            scramble_type : props.cur_setting["SCRAMBLE_TYPE"],
             GEN_PARSED_TO_CUBEDB: true,
             letter_pair_dict: JSON.parse(
               props.cur_setting["LETTER_PAIRS_DICT"]
@@ -77,6 +79,11 @@ class Setting extends React.Component {
     this.setState({ cube_oreintation: event.target.value });
     this.setState({ setting_save_statue: " - Changes unsaved" });
   };
+  handle_scramble_type = (event) => {
+    this.setState({ scramble_type: event.target.value });
+    this.setState({ setting_save_statue: " - Changes unsaved" });
+  };
+
 
   handle_letter_pair_dict = (event) => {
     const letter_pair_dict_new = { ...this.state.letter_pair_dict };
@@ -86,12 +93,11 @@ class Setting extends React.Component {
   };
 
   handle_save_setting = () => {
-    console.log("here")
-    console.log(this.state.cube_oreintation)
     const setting = {
       EDGES_BUFFER: this.state.edge_buffer,
       CORNER_BUFFER: this.state.corner_buffer,
       CUBE_OREINTATION : this.state.cube_oreintation,
+      SCRAMBLE_TYPE : this.state.scramble_type,
       PARSE_TO_LETTER_PAIR: this.state.parse_with_letter_pair,
       GEN_WITH_MOVE_COUNT: this.state.gen_with_move_count,
       GEN_PARSED_TO_CUBEDB: this.state.GEN_PARSED_TO_CUBEDB,
@@ -218,10 +224,14 @@ class Setting extends React.Component {
                       onChange_corner_buffer={this.handle_corner_buffer}
                       onChange_edge_buffer={this.handle_edge_buffer}
                       onChange_cube_oreintation={this.handle_cube_oreintation}
+                      onChange_scramble_type={this.handle_scramble_type}
+
                       edge_buffer={this.state.edge_buffer}
                       corner_buffer={this.state.corner_buffer}
                       cube_oreintation={this.state.corner_buffer}
+                      scramble_type={this.props.scramble_type}
                       cur_setting={this.props.cur_setting}
+
                     />
                   </Tab>
                   <Tab eventKey="second" title="letter scheme">

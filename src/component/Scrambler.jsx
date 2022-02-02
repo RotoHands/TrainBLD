@@ -8,6 +8,7 @@ class Scrambler extends React.Component {
       scramble: this.props.scramble,
       last_scramble: this.props.last_scramble,
     };
+    
   }
 
   render() {

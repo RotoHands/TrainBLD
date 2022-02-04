@@ -936,7 +936,7 @@ class App extends React.Component {
                 <tr>
                   <td>bo1</td>
                   <td>
-                    {this.state.averages["current"] != ""
+                    {this.state.averages["current"] != null
                       ? this.convert_sec_to_format(
                           this.state.averages["current"]
                         )

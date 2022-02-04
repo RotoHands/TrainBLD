@@ -99,7 +99,6 @@ class App extends React.Component {
     return parseFloat(split_time[0]) * 60 + parseFloat(split_time[1]);
   };
   convert_sec_to_format = (time) => {
-    console.log(time);
     if (typeof time == "string") {
       return time;
     }
@@ -485,7 +484,8 @@ class App extends React.Component {
     for (var i = 0; i < solve_stats.length; i++) {
       if (i + 1 <= len) {
         cur["best"] = solve_stats[i]["time_solve"];
-        if (cur["best"] < best["best"]["time"]) {
+        console.log(solve_stats[i]);
+        if (cur["best"] < best["best"]["time"] && !solve_stats[i]["DNF"]) {
           best["best"]["time"] = parseFloat(cur["best"]);
           best["best"]["num"] = i;
           best["best"]["solve"] = solve_stats[i];

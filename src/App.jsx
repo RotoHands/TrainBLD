@@ -91,6 +91,32 @@ class App extends React.Component {
   componentDidUpdate = () => {
     document.getElementById("timer_element_2").focus();
   };
+  convert_time_to_sec = (time) => {
+    let split_time = time.split(":");
+    if (split_time.length == 1) {
+      return parseFloat(time);
+    }
+    return parseFloat(split_time[0]) * 60 + parseFloat(split_time[1]);
+  };
+  convert_sec_to_format = (time) => {
+    console.log(time);
+    if (typeof time == "string") {
+      return time;
+    }
+    let time_str;
+    let minute = Math.floor(time / 60);
+    let sec = (time - minute * 60).toFixed(2);
+    if (minute != 0) {
+      if (sec < 10) {
+        time_str = `${minute}:0${sec}`;
+      } else {
+        time_str = `${minute}:${sec}`;
+      }
+    } else {
+      time_str = `${sec}`;
+    }
+    return time_str;
+  };
 
   calc_average = (arr) => {
     let average;
@@ -176,7 +202,7 @@ class App extends React.Component {
       if (solve_stats.length > 0) {
         let time = solve_stats[solve_stats.length - 1]["time_solve"];
         if (solve_stats[solve_stats.length - 1]["DNF"] === true) {
-          current = "DNF(" + time + ")";
+          current = "DNF(" + this.convert_sec_to_format(time) + ")";
         } else {
           current = time;
         }
@@ -244,12 +270,10 @@ class App extends React.Component {
   plus_two_last_solve = () => {
     let solve_stats = [...this.state.solves_stats];
     let num_solve = solve_stats.length - 1;
-    solve_stats[num_solve]["time_solve"] = (
-      parseFloat(solve_stats[num_solve]["time_solve"]) + 2
-    ).toFixed(2);
-    solve_stats[num_solve]["exe_time"] = (
-      parseFloat(solve_stats[num_solve]["exe_time"]) + 2
-    ).toFixed(2);
+    solve_stats[num_solve]["time_solve"] =
+      parseFloat(solve_stats[num_solve]["time_solve"]) + 2;
+    solve_stats[num_solve]["exe_time"] =
+      parseFloat(solve_stats[num_solve]["exe_time"]) + 2;
     localStorage.setItem("solves", JSON.stringify(solve_stats));
 
     this.initialStatsFromLocalstorage();
@@ -323,8 +347,12 @@ class App extends React.Component {
               <div>{len - index}</div>
             </a>
           </td>
-          <td>{DNF ? "DNF(" + time_solve + ")" : time_solve} </td>
-          <td>{memo_time}</td>
+          <td>
+            {DNF
+              ? "DNF(" + this.convert_sec_to_format(time_solve) + ")"
+              : this.convert_sec_to_format(time_solve)}{" "}
+          </td>
+          <td>{this.convert_sec_to_format(memo_time)}</td>
           {/* <td>{exe_time}</td> */}
           <td>
             {!DNF ? fluidness : ""}
@@ -527,9 +555,9 @@ class App extends React.Component {
 
     let solve_stats = {
       date: Date.now(),
-      time_solve: times[0],
-      memo_time: times[1],
-      exe_time: times[2],
+      time_solve: this.convert_time_to_sec(times[0]),
+      memo_time: this.convert_time_to_sec(times[1]),
+      exe_time: this.convert_time_to_sec(times[2]),
       txt_solve: data["txt"],
       link: data["cubedb"],
     };
@@ -909,12 +937,16 @@ class App extends React.Component {
                   <td>bo1</td>
                   <td>
                     {this.state.averages["current"] != ""
-                      ? this.state.averages["current"]
+                      ? this.convert_sec_to_format(
+                          this.state.averages["current"]
+                        )
                       : ""}
                   </td>
                   <td>
                     {this.state.averages["best"]["time"] != 10000
-                      ? this.state.averages["best"]["time"]
+                      ? this.convert_sec_to_format(
+                          this.state.averages["best"]["time"]
+                        )
                       : ""}
                   </td>
                 </tr>
@@ -922,12 +954,14 @@ class App extends React.Component {
                   <td>mo3</td>
                   <td>
                     {this.state.averages["mo3"] != ""
-                      ? this.state.averages["mo3"]
+                      ? this.convert_sec_to_format(this.state.averages["mo3"])
                       : ""}
                   </td>
                   <td>
                     {this.state.averages["bmo3"]["time"] != 10000
-                      ? this.state.averages["bmo3"]["time"]
+                      ? this.convert_sec_to_format(
+                          this.state.averages["bmo3"]["time"]
+                        )
                       : ""}
                   </td>
                 </tr>
@@ -935,12 +969,14 @@ class App extends React.Component {
                   <td>ao5</td>
                   <td>
                     {this.state.averages["ao5"] != ""
-                      ? this.state.averages["ao5"]
+                      ? this.convert_sec_to_format(this.state.averages["ao5"])
                       : ""}
                   </td>
                   <td>
                     {this.state.averages["bao5"]["time"] != 10000
-                      ? this.state.averages["bao5"]["time"]
+                      ? this.convert_sec_to_format(
+                          this.state.averages["bao5"]["time"]
+                        )
                       : ""}
                   </td>
                 </tr>
@@ -948,22 +984,24 @@ class App extends React.Component {
                   <td>ao12</td>
                   <td>
                     {this.state.averages["ao12"] != ""
-                      ? this.state.averages["ao12"]
+                      ? this.convert_sec_to_format(this.state.averages["ao12"])
                       : ""}
                   </td>
                   <td>
                     {this.state.averages["bao12"]["time"] != 10000
-                      ? this.state.averages["bao12"]["time"]
+                      ? this.convert_sec_to_format(
+                          this.state.averages["bao12"]["time"]
+                        )
                       : ""}
                   </td>
                 </tr>
                 <tr>
                   <td colSpan="3" style={{ whiteSpace: "pre-wrap" }}>
-                    {this.state.averages["aoAll"] +
+                    {this.convert_sec_to_format(this.state.averages["aoAll"]) +
                       "(" +
-                      this.state.averages["memo"] +
+                      this.convert_sec_to_format(this.state.averages["memo"]) +
                       ", " +
-                      this.state.averages["exe"] +
+                      this.convert_sec_to_format(this.state.averages["exe"]) +
                       ") " +
                       this.state.averages["fluid"] +
                       "%\t" +

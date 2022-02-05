@@ -449,9 +449,11 @@ class App extends React.Component {
       }
     }
     if (solve_stats.length > 0) {
+      console.log("heree");
+      console.log(solve_stats[solve_stats.length - 1]);
       if (
         solve_stats[solve_stats.length - 1] != "" &&
-        solve_stats[solve_stats.length - 1] != "DNF"
+        solve_stats[solve_stats.length - 1]["DNF"] !== true
       ) {
         if (
           solve_stats[solve_stats.length - 1]["time_solve"] <

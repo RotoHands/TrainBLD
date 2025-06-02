@@ -1,5 +1,7 @@
 # _TrainBLD_
 
+#### [03/06/2025] - The website runs with docker now, you can find the updated repo here - [TrainBLD_with_docker](https://github.com/RotoHands/TrainBLD_with_docker)
+
 ### [TrainBLD.com](https://trainbld.com), [Video demo](https://www.youtube.com/watch?v=wQnM1zwroVU), [Post](https://www.speedsolving.com/threads/trainbld-new-web-timer-that-reconstructs-your-3bld-solves.85466/)
 
 ### A new web timer that makes Rubik's blindfolded training easier and more efficient.
